@@ -25,13 +25,9 @@ public class SalvoApplication {
 		};
 	}
 	@Bean
-	public CommandLineRunner initGames(GameRepository repository) {
+	public CommandLineRunner initGamePlayers(GameRepository repository) {
 		return (args) -> {
-			repository.save(new Game("2/17/2018:4:20:15 PM"));
-			repository.save(new Game("2/17/2018:4:20:15 PM"));
-			repository.save(new Game("2/17/2018:4:20:15 PM"));
-			repository.save(new Game("2/17/2018:4:20:15 PM"));
-			repository.save(new Game("2/17/2018:4:20:15 PM"));
+
 		};
 	}
 }
