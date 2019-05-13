@@ -4,7 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 public class GamePlayer {
     @Id
@@ -13,10 +13,10 @@ public class GamePlayer {
     private Long id;
     private String creationDate;
     private Game gameInstance;
-    private Player username;
+    private Player playerOne;
 
     public GamePlayer() { }
-
+//relationship with game defined here
     public Game getGameInstance() {
         return gameInstance;
     }
@@ -25,16 +25,15 @@ public class GamePlayer {
         this.gameInstance = gameInstance;
     }
 
-    public Player getUsername() {
-        return username;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "player_id")
+    public Player getPlayerOne() {
+        return playerOne;
     }
 
-    public void setUsername(Player username) {
-        this.username = username;
+    public void setPlayerOne(Player playerOne) {
+        this.playerOne = playerOne;
     }
-
-//    public Game(String date) {
-//    }
 
     public String getCreationDate() {
         return creationDate;

@@ -21,14 +21,14 @@ public class Player {
     private String username;
 
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
-    Set<Game> games = new HashSet<>();
+    Set<GamePlayer> gamePlayers = new HashSet<>();
 
-    public Set<Game> getGames() {
-        return games;
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
     }
 
-    public void addGame(Game game) {
-        games.add(game);
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
     }
 
     public Player() { }
