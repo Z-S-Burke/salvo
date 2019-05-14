@@ -6,7 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -23,13 +23,14 @@ public class Player {
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers = new HashSet<>();
 
-    public Set<GamePlayer> getGamePlayers() {
+
+        public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }
 
-    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-        this.gamePlayers = gamePlayers;
-    }
+//    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+//        this.gamePlayers = gamePlayers;
+//    }
 
     public Player() { }
 

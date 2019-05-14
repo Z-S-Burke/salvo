@@ -9,39 +9,36 @@ import java.util.Set;
 
 @Entity
 public class Game {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
     private Date creationDate;
+
+    public Game () { }
+
+    public Game (Date date) {
+        this.creationDate = date;
+    }
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
-    Set<GamePlayer> gamePlayers = new HashSet<>();
-
+    Set<GamePlayer> gamePlayers;
+//
     public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }
 
-    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-        this.gamePlayers = gamePlayers;
-    }
+//    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+//        this.gamePlayers = gamePlayers;
+//    }
 
-    public Game() { }
-
-    public String getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(String date) {
-        this.creationDate = date;
-    }
-
-    public String toString() {
-        return creationDate;
-    }
 }

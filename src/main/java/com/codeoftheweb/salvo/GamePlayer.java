@@ -1,49 +1,60 @@
 package com.codeoftheweb.salvo;
 
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.Entity;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.*;
+import java.util.Date;
 
+@Entity
 public class GamePlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private Long id;
-    private String creationDate;
-    private Game gameInstance;
-    private Player playerOne;
+    private Date creationDate;
 
     public GamePlayer() { }
-//relationship with game defined here
-    public Game getGameInstance() {
-        return gameInstance;
-    }
 
-    public void setGameInstance(Game gameInstance) {
-        this.gameInstance = gameInstance;
+    public GamePlayer(Game game, Player player) {
+        this.game = game;
+        this.player = player;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id")
-    public Player getPlayerOne() {
-        return playerOne;
+    private Player player;
+
+    public Player getPlayer() {
+        return player;
+    }
+//
+//    public String getPlayer() {
+//        return player.getUsername();
+//    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
-    public void setPlayerOne(Player playerOne) {
-        this.playerOne = playerOne;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "game_id")
+    private Game game;
+
+    public Game getGameInstance(Game game) {
+        return game;
     }
 
-    public String getCreationDate() {
+    public void setGameInstance(Game game) {
+        this.game = game;
+    }
+
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(String date) {
-        this.creationDate = date;
-    }
-
-    public String toString() {
-        return creationDate;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }
