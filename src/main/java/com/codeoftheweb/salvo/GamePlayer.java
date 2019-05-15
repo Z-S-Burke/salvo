@@ -9,10 +9,21 @@ import java.util.Date;
 
 @Entity
 public class GamePlayer {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
+    //ID FUNCTIONS
     private Long id;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     private Date creationDate;
 
     public GamePlayer() { }

@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,30 +14,29 @@ import java.util.HashSet;
 
 @Entity
 public class Player {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
+    //ID
     private long id;
-    private String username;
-
-    @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
-    Set<GamePlayer> gamePlayers = new HashSet<>();
-
-
-        public Set<GamePlayer> getGamePlayers() {
-        return gamePlayers;
+    public long getId() {
+        return id;
     }
 
-//    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-//        this.gamePlayers = gamePlayers;
-//    }
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    //PLAYER CONSTRUCTOR
 
     public Player() { }
 
     public Player(String name) {
         this.username = name;
     }
+
+    //USERNAME
+    private String username;
 
     public String getUsername() {
         return username;
@@ -46,7 +46,23 @@ public class Player {
         this.username = name;
     }
 
+    //GAMEPLAYERS
+    @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
+    Set<GamePlayer> gamePlayers = new HashSet<>();
+
+        @JsonIgnore
+        public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    //UTILITY
     public String toString() {
         return username;
     }
+
+/*
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
+*/
 }
