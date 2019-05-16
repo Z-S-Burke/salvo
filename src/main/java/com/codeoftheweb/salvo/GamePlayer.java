@@ -32,10 +32,6 @@ public class GamePlayer {
         this.player = player;
     }
 
-    public GamePlayer(Game game, Player playerOne, Player playerTwo) {
-
-    }
-
     //GET.PLAYER UTILITIES
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id")
@@ -70,6 +66,6 @@ public class GamePlayer {
     }
 
     public void setCreationDate(Date creationDate) {
-        this.creationDate = new Date();
+        this.creationDate = game.getCreationDate();
     }
 }
