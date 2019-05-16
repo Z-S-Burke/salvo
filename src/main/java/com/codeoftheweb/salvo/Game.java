@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Game {
@@ -39,12 +37,15 @@ public class Game {
 
 
     //GAME CONSTRUCTOR AND UTILITIES
-    public Game () { }
+    public Game () {}
 
+    public Game (Date date) {
+        this.creationDate = date;
+    }
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
 
-    @JsonIgnore
+//    @JsonIgnore
     public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }

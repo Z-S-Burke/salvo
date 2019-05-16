@@ -27,7 +27,6 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			playerRepository.save(p3);
 
 			Date creationDate = new Date();
-			System.out.println(creationDate);
 			Game g1 = new Game(creationDate);
 			gameRepository.save(g1);
 			Game g2 = new Game(creationDate);
@@ -35,8 +34,8 @@ public class SalvoApplication extends SpringBootServletInitializer {
 
 			GamePlayer gp1 = new GamePlayer(g1, p1);
 			gamePlayerRepository.save(gp1);
-
-			System.out.println(gp1.getPlayer());
+			GamePlayer gp2 = new GamePlayer(g1, p2);
+			gamePlayerRepository.save(gp2);
 		};
 	}
 }

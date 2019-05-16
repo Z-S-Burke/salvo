@@ -26,16 +26,49 @@ public class SalvoController {
     public List<Map> getGameInfo() {
 
         List<Map> gameList = new ArrayList<>();
+        List<Map> playerList = new ArrayList<>();
+        List<Map> gamePlayerList = new ArrayList<>();
+
+        gameRepo.findAll().stream().forEach(oneGame -> {
+            System.out.println("GAME LOOP");
+            Map<String, Object> oneGameMap = new HashMap<>();
+            oneGameMap.put("Created:", oneGame.getCreationDate());
+            oneGameMap.put("ID", oneGame.getId());
+            oneGame.getGamePlayers().stream().forEach(oneGamePlayer -> {
+                System.out.println("GAMEPLAYER LOOP");
+                Map<String, Object> gamePlayerMap = new HashMap<>();
+                gamePlayerMap.put("GamePlayer ID: ", oneGamePlayer.getId());
+                gamePlayerMap.put("Player: ", oneGamePlayer.getPlayer());
+                Map<String, Object> playerMap = new HashMap<>();
+                playerMap.put("Username: ", oneGamePlayer.getPlayer().getUsername());
+                playerMap.put("Player ID: ", oneGamePlayer.getPlayer().getId());
+//                playerList.add(playerMap);
+//                gamePlayerList.add(gamePlayerMap);
+                gameList.add(playerMap);
+                gameList.add(gamePlayerMap);
+
+            });
+
+            System.out.println("ONE GAME MAP");
+            gameList.add(oneGameMap);
+        });
+        System.out.println("RETURN GAME LIST");
+        return gameList;
+    }
+/*
+    public List<Map> getGameInfo() {
+
+        List<Map> gameList = new ArrayList<>();
         gameRepo.findAll().stream().forEach(oneGame -> {
             Map<String, Object> oneGameMap = new HashMap<>();
             oneGameMap.put("Created:", oneGame.getCreationDate());
             oneGameMap.put("ID", oneGame.getId());
             gameList.add(oneGameMap);
-
         });
 
         return gameList;
-    }
+*/
+
 
 
     //PLAYER CONTROLLER CALLS
