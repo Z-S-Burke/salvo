@@ -22,14 +22,16 @@ public class SalvoController {
        return gameRepo.findAll();
     }
 
-    @RequestMapping("/api/games/game_ids")
-    public List<Map> getGameIDs() {
+    @RequestMapping("/api/games/game_info")
+    public List<Map> getGameInfo() {
 
         List<Map> gameList = new ArrayList<>();
         gameRepo.findAll().stream().forEach(oneGame -> {
             Map<String, Object> oneGameMap = new HashMap<>();
-            oneGameMap.put("id", oneGame.getId());
+            oneGameMap.put("Created:", oneGame.getCreationDate());
+            oneGameMap.put("ID", oneGame.getId());
             gameList.add(oneGameMap);
+
         });
 
         return gameList;
@@ -45,14 +47,15 @@ public class SalvoController {
         return playerRepo.findAll();
     }
 
-    @RequestMapping("/api/players/player_ids")
+    @RequestMapping("/api/players/player_info")
     public List<Map> getPlayerIDs() {
 
 
         List<Map> playerList = new ArrayList<>();
         playerRepo.findAll().stream().forEach(onePlayer -> {
             Map<String, Object> onePlayerMap = new HashMap<>();
-            onePlayerMap.put("id", onePlayer.getId());
+            onePlayerMap.put("Username:", onePlayer.getUsername());
+            onePlayerMap.put("ID", onePlayer.getId());
             playerList.add(onePlayerMap);
         });
         return  playerList;
@@ -75,13 +78,15 @@ public class SalvoController {
         return gamePlayerRepo.findAll();
     }
 
-    @RequestMapping("/api/gameplayers/gameplayer_ids")
+    @RequestMapping("/api/gameplayers/gameplayer_info")
     public List<Map> getGamePlayerIDs() {
 
         List<Map> gamePlayerList = new ArrayList<>();
         gamePlayerRepo.findAll().stream().forEach(oneGamePlayer -> {
             Map<String, Object> oneGamePlayerMap = new HashMap<>();
-            oneGamePlayerMap.put("id", oneGamePlayer.getId());
+            oneGamePlayerMap.put("Linked Game: ", oneGamePlayer.getGameInstance());
+            oneGamePlayerMap.put("Linked Player: ", oneGamePlayer.getPlayer());
+            oneGamePlayerMap.put("GamePlayer Instance ID: ", oneGamePlayer.getId());
             gamePlayerList.add(oneGamePlayerMap);
         });
 

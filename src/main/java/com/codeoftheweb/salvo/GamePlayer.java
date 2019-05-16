@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 public class GamePlayer {
 
-
+    //GAMEPLAYER.ID UTILITIES
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
@@ -24,8 +24,7 @@ public class GamePlayer {
         this.id = id;
     }
 
-    private Date creationDate;
-
+    //GAMEPLAYER CONSTRUCTOR AND UTILITIES
     public GamePlayer() { }
 
     public GamePlayer(Game game, Player player) {
@@ -33,6 +32,11 @@ public class GamePlayer {
         this.player = player;
     }
 
+    public GamePlayer(Game game, Player playerOne, Player playerTwo) {
+
+    }
+
+    //GET.PLAYER UTILITIES
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "player_id")
     private Player player;
@@ -40,32 +44,32 @@ public class GamePlayer {
     public Player getPlayer() {
         return player;
     }
-//
-//    public String getPlayer() {
-//        return player.getUsername();
-//    }
 
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    //GET.GAME UTILITIES
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     private Game game;
 
-    public Game getGameInstance(Game game) {
+    public Game getGameInstance() {
         return game;
     }
 
-    public void setGameInstance(Game game) {
+    public void setGame(Game game) {
         this.game = game;
     }
+
+    //GAMEPLAYER.CREATIONDATE UTILITIES
+    private Date creationDate;
 
     public Date getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+        this.creationDate = new Date();
     }
 }

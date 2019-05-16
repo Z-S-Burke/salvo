@@ -10,9 +10,11 @@ import java.util.Set;
 
 @Entity
 public class Game {
+    //GAME.ID UTILITIES
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
+
     public Long id;
 
     public Long getId() {
@@ -23,21 +25,21 @@ public class Game {
         this.id = id;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
+    //GAME.CREATIONDATE UTILITIES
     private Date creationDate;
 
-    public Game () { }
 
-    public Game (Date date) {
-        this.creationDate = date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
+
+
+    //GAME CONSTRUCTOR AND UTILITIES
+    public Game () { }
 
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
@@ -46,9 +48,4 @@ public class Game {
     public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }
-
-//    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-//        this.gamePlayers = gamePlayers;
-//    }
-
 }
