@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Salvo - Games</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body class="bg-dark d-flex justify-content-center">
+    <div class="border border-light" id="app">
+        <h1 class="display-1 text-light"> GAMES </h1>
+        <div v-for="(value, name, index) in games" :key="games.id" class="bg-dark border border-light text-light" id="game_list"> 
+            <ol> 
+                {{index}}. {{name}}: {{value}}
+            </ol>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+<script src="games.js"> </script>
+</html>

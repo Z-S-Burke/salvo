@@ -1,5 +1,10 @@
 package com.codeoftheweb.salvo;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -40,25 +45,25 @@ public class SalvoController {
 
     public static Map mapGame (Game game, List gamePlayerList) {
         Map<String, Object> oneGameMap = new LinkedHashMap<>();
-        oneGameMap.put("Game ID: ", game.getId());
-        oneGameMap.put("Date Created: ", game.getCreationDate());
-        oneGameMap.put("GamePlayers: ", gamePlayerList);
+        oneGameMap.put("GameID", game.getId());
+        oneGameMap.put("DateCreated", game.getCreationDate());
+        oneGameMap.put("GamePlayers", gamePlayerList);
 
         return oneGameMap;
     }
 
     public static Map mapGamePlayers (GamePlayer gamePlayer) {
         Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
-        gamePlayerMap.put("GamePlayer ID: ", gamePlayer.getId());
-        gamePlayerMap.put("Player: ", mapGamePlayerPlayers(gamePlayer));
+        gamePlayerMap.put("GamePlayerID", gamePlayer.getId());
+        gamePlayerMap.put("Player", mapGamePlayerPlayers(gamePlayer));
 
         return gamePlayerMap;
     }
 
     public static Map mapGamePlayerPlayers (GamePlayer gamePlayer) {
         Map<String, Object> playerMap = new LinkedHashMap<>();
-        playerMap.put("Username: ", gamePlayer.getPlayer().getUsername());
-        playerMap.put("Player ID: ", gamePlayer.getPlayer().getId());
+        playerMap.put("Username", gamePlayer.getPlayer().getUsername());
+        playerMap.put("PlayerID", gamePlayer.getPlayer().getId());
 
         return playerMap;
     }
@@ -120,8 +125,18 @@ public class SalvoController {
     }
 
 
+    @Bean
+        public WebMvcConfigurer corsConfigurer() {
+            return new WebMvcConfigurerAdapter() {
+                @Override
+                public void addCorsMappings(CorsRegistry registry) {
+                    registry.addMapping("/**")
+                            .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+                }
+            };
+        }
+    }
 
-}
 
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
