@@ -21,8 +21,9 @@ new Vue({
                 .then(data => {
                     console.log(data)
                     this.games = data;
-                    console.log(Object.entries(this.games)); 
-                    this.games = this.convertObjects(this.games);
+                    //console.log(Object.entries(this.games)); 
+                    //this.games = this.convertObjects(this.games);
+                    //this.games = this.games[1];
                 })
                 .catch(err => console.log(err))
         },

@@ -58,6 +58,18 @@ public class GamePlayer {
         this.game = game;
     }
 
+    //GET.SHIPS UTILITIES
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ship_id")
+    private Ship ship;
+
+    public Ship getShips() {
+        return ship;
+    }
+
+    public void setShip(Ship ship) {
+        this.ship = ship;
+    }
     //GAMEPLAYER.CREATIONDATE UTILITIES
     private Date creationDate;
 

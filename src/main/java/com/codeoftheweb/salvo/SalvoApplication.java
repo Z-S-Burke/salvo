@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 
 import java. util. Date;
 import java. sql. Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 public class SalvoApplication extends SpringBootServletInitializer {
@@ -17,7 +19,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository) {
+	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository) {
 		return (args) -> {
 			Player p1 = new Player("p1@p1.com");
 			playerRepository.save(p1);
@@ -38,6 +40,15 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			gamePlayerRepository.save(gp2);
 			GamePlayer gp3 = new GamePlayer(g2, p3);
 			gamePlayerRepository.save(gp3);
+
+			Set<String> location1 = new HashSet<>();
+			location1.add("A1");
+			location1.add("A2");
+			location1.add("A3");
+
+			Ship s1 = new Ship ("Cruiser", location1);
+			shipRepository.save(s1);
+
 		};
 	}
 }
