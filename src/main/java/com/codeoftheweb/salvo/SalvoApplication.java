@@ -42,12 +42,29 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			gamePlayerRepository.save(gp3);
 
 			Set<String> location1 = new HashSet<>();
-			location1.add("A1");
-			location1.add("A2");
-			location1.add("A3");
+			location1.add("A1");location1.add("A2"); location1.add("A3");
+
+			Set<String> location2 = new HashSet<>();
+			location2.add("B1"); location2.add("B2"); location2.add("B3");
+
+			Set<String> location3 = new HashSet<>();
+			location3.add("C1"); location3.add("C2"); location3.add("C3");
+
+			Set<String> location4 = new HashSet<>();
+			location4.add("B4");
+
 
 			Ship s1 = new Ship ("Cruiser", location1);
+			Ship s2 = new Ship ("Destroyer", location2);
+			Ship s3 = new Ship ("Lifeboat", location4);
+			Ship s4 = new Ship ("AirCraft Carrier", location3);
+
+			shipRepository.save(s1); shipRepository.save(s2); shipRepository.save(s3); shipRepository.save(s4);
+			gp1.addShip(s1);
+			gp1.addShip(s2);
+			shipRepository.save(s2);
 			shipRepository.save(s1);
+			gamePlayerRepository.save(gp1);
 
 		};
 	}

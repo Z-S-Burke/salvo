@@ -104,6 +104,9 @@ public class SalvoController {
     @Autowired
     private GamePlayerRepository gamePlayerRepo;
 
+    @Autowired
+    private ShipRepository shipRepo;
+
     @RequestMapping("/api/gameplayers")
     public List<GamePlayer> getGamePlayers() {
         return gamePlayerRepo.findAll();
@@ -118,11 +121,20 @@ public class SalvoController {
             oneGamePlayerMap.put("Linked Game: ", oneGamePlayer.getGameInstance());
             oneGamePlayerMap.put("Linked Player: ", oneGamePlayer.getPlayer());
             oneGamePlayerMap.put("GamePlayer Instance ID: ", oneGamePlayer.getId());
+            oneGamePlayerMap.put("Ships: ", oneGamePlayer.getShips());
             gamePlayerList.add(oneGamePlayerMap);
         });
 
         return gamePlayerList;
     }
+
+
+
+    @RequestMapping("/api/ships")
+    public List<Ship> getShips() {
+        return shipRepo.findAll();
+    }
+
 
 
     @Bean

@@ -52,17 +52,18 @@ public class Ship {
 
     public Ship (String type, Set<String> location) { this.type = type; this.locationOnBoard = location; }
 
-//    public Ship (String type, Set<GamePlayer> gamePlayer) {
-//        this.type = type;
-//        this.gamePlayers = gamePlayer;
-//    }
-//
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    Set<GamePlayer> gamePlayers = new HashSet<>();
-//
-//    @JsonIgnore
-//    public Set<GamePlayer> getGamePlayers() {
-//        return gamePlayers;
-//    }
 
+    //SHIP.GAMEPLAYER
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="gamePlayer_id")
+    private GamePlayer gamePlayer;
+
+    @JsonIgnore
+    public GamePlayer getGamePlayer() {
+        return gamePlayer;
+    }
+
+    public void setGamePlayer (GamePlayer gameplayer) {
+        this.gamePlayer = gameplayer;
+    }
 }
