@@ -11,272 +11,187 @@
 </head>
 
 <body class="bg-dark d-flex justify-content-center">
-    <div> It is an ancient Mariner, 
-            And he stoppeth one of three. 
-            'By thy long grey beard and glittering eye, 
-            Now wherefore stopp'st thou me? 
-            
-            The Bridegroom's doors are opened wide, 
-            And I am next of kin; 
-            The guests are met, the feast is set: 
-            May'st hear the merry din.' 
-            
-            He holds him with his skinny hand, 
-            'There was a ship,' quoth he. 
-            'Hold off! unhand me, grey-beard loon!' 
-            Eftsoons his hand dropt he. 
-            
-            He holds him with his glittering eye— 
-            The Wedding-Guest stood still, 
-            And listens like a three years' child: 
-            The Mariner hath his will. 
-            
-            The Wedding-Guest sat on a stone: 
-            He cannot choose but hear; 
-            And thus spake on that ancient man, 
-            The bright-eyed Mariner. 
-            
-            'The ship was cheered, the harbour cleared, 
-            Merrily did we drop 
-            Below the kirk, below the hill, 
-            Below the lighthouse top. 
-            
-            The Sun came up upon the left, 
-            Out of the sea came he! 
-            And he shone bright, and on the right 
-            Went down into the sea. 
-            
-            Higher and higher every day, 
-            Till over the mast at noon—' 
-            The Wedding-Guest here beat his breast, 
-            For he heard the loud bassoon. 
-            
-            The bride hath paced into the hall, 
-            Red as a rose is she; 
-            Nodding their heads before her goes 
-            The merry minstrelsy. 
-            
-            The Wedding-Guest he beat his breast, 
-            Yet he cannot choose but hear; 
-            And thus spake on that ancient man, 
-            The bright-eyed Mariner. 
-            
-            And now the STORM-BLAST came, and he 
-            Was tyrannous and strong: 
-            He struck with his o'ertaking wings, 
-            And chased us south along. 
-            
-            With sloping masts and dipping prow, 
-            As who pursued with yell and blow 
-            Still treads the shadow of his foe, 
-            And forward bends his head, 
-            The ship drove fast, loud roared the blast, 
-            And southward aye we fled. 
-            
-            And now there came both mist and snow, 
-            And it grew wondrous cold: 
-            And ice, mast-high, came floating by, 
-            As green as emerald. 
-            
-            And through the drifts the snowy clifts 
-            Did send a dismal sheen: 
-            Nor shapes of men nor beasts we ken— 
-            The ice was all between. 
-            
-            The ice was here, the ice was there, 
-            The ice was all around: 
-            It cracked and growled, and roared and howled, 
-            Like noises in a swound! 
-            
-            At length did cross an Albatross, 
-            Thorough the fog it came; 
-            As if it had been a Christian soul, 
-            We hailed it in God's name. 
-            
-            It ate the food it ne'er had eat, 
-            And round and round it flew. 
-            The ice did split with a thunder-fit; 
-            The helmsman steered us through! 
-            
-            And a good south wind sprung up behind; 
-            The Albatross did follow, 
-            And every day, for food or play, 
-            Came to the mariner's hollo! 
-            
-            In mist or cloud, on mast or shroud, 
-            It perched for vespers nine; 
-            Whiles all the night, through fog-smoke white, 
-            Glimmered the white Moon-shine.' 
-            
-            'God save thee, ancient Mariner! 
-            From the fiends, that plague thee thus!— 
-            Why look'st thou so?'—With my cross-bow 
-            I shot the ALBATROSS. 
-         </div> 
-    <div class="grid-container ">
-        <div class="NA text-white border border-white grid-cell grid-flex">
-            NULL
+    <div id="app">
+        <div v-for="(player, index) in players" :key="players.id" class="text-white d-flex align-items-center">
+            <div class="bg-white text-dark py-3 px-2">
+                <h3> Player {{player.id}} </h3>
+            </div>
+            <div v-for="(ship, index) in player.ships" :key="ships" class="border border-white mx-3 px-2 mb-2">
+                <div class="d-flex justify-content-around">
+                    <h5> Ship Type </h5>
+                    <p class="px-2"> ------------ <p> 
+                    <h5 class="text-primary"> {{ship.type}} </h5>
+                </div>
+                <div>
+                    <p> Location: {{ship.locationOnBoard}} </p>
+                </div>
+            </div>
         </div>
-        <div class="A text-white border border-white grid-cell grid-flex">
-            A
+        <div class="grid-container">
+            <div class="NA text-white border border-white grid-cell grid-flex">
+                NULL
+            </div>
+            <div class="A text-white border border-white grid-cell grid-flex">
+                A
+            </div>
+            <div class="B text-white border border-white grid-cell grid-flex">
+                B
+            </div>
+            <div class="C text-white border border-white grid-cell grid-flex">
+                C
+            </div>
+            <div class="D text-white border border-white grid-cell grid-flex">
+                D
+            </div>
+            <div class="E text-white border border-white grid-cell grid-flex">
+                E
+            </div>
+            <div class="F text-white border border-white grid-cell grid-flex">
+                F
+            </div>
+            <div class="G text-white border border-white grid-cell grid-flex">
+                G
+            </div>
+            <div class="H text-white border border-white grid-cell grid-flex">
+                H
+            </div>
+            <div class="I text-white border border-white grid-cell grid-flex">
+                I
+            </div>
+            <div class="J text-white border border-white grid-cell grid-flex">
+                J
+            </div>
+            <div class="\31 text-white border border-white grid-cell grid-flex">
+                1
+            </div>
+            <div class="\32 text-white border border-white grid-cell grid-flex">
+                2
+            </div>
+            <div class="\33 text-white border border-white grid-cell grid-flex">
+                3
+            </div>
+            <div class="\34 text-white border border-white grid-cell grid-flex">
+                4
+            </div>
+            <div class="\35 text-white border border-white grid-cell grid-flex">
+                5
+            </div>
+            <div class="\36 text-white border border-white grid-cell grid-flex">
+                6
+            </div>
+            <div class="\37 text-white border border-white grid-cell grid-flex">
+                7
+            </div>
+            <div class="\38 text-white border border-white grid-cell grid-flex">
+                8
+            </div>
+            <div class="\39 text-white border border-white grid-cell grid-flex">
+                9
+            </div>
+            <div class="\31 0 text-white border border-white grid-cell grid-flex">
+                10
+            </div>
+            <div class="A1 bg-white grid-cell grid-flex"> A1 </div>
+            <div class="A2 bg-white grid-cell grid-flex"> A2 </div>
+            <div class="A3 bg-white grid-cell grid-flex"> A3 </div>
+            <div class="A4 bg-white grid-cell grid-flex"> A4 </div>
+            <div class="A5 bg-white grid-cell grid-flex"> A5 </div>
+            <div class="A6 bg-white grid-cell grid-flex"> A6 </div>
+            <div class="A7 bg-white grid-cell grid-flex"> A7 </div>
+            <div class="A8 bg-white grid-cell grid-flex"> A8 </div>
+            <div class="A9 bg-white grid-cell grid-flex"> A9</div>
+            <div class="A10 bg-white grid-cell grid-flex"> A10 </div>
+            <div class="B1 bg-white grid-cell grid-flex"> B1 </div>
+            <div class="B2 bg-white grid-cell grid-flex"> B2 </div>
+            <div class="B3 bg-white grid-cell grid-flex"> B3</div>
+            <div class="B4 bg-white grid-cell grid-flex"> B4</div>
+            <div class="B5 bg-white grid-cell grid-flex"> B5 </div>
+            <div class="B6 bg-white grid-cell grid-flex"> B6 </div>
+            <div class="B7 bg-white grid-cell grid-flex"> B7</div>
+            <div class="B8 bg-white grid-cell grid-flex"> B8</div>
+            <div class="B9 bg-white grid-cell grid-flex"> B9 </div>
+            <div class="B10 bg-white grid-cell grid-flex"> B10 </div>
+            <div class="C1 bg-white grid-cell grid-flex"> C1 </div>
+            <div class="C2 bg-white grid-cell grid-flex"> C2 </div>
+            <div class="C3 bg-white grid-cell grid-flex"> C3</div>
+            <div class="C4 bg-white grid-cell grid-flex"> C4 </div>
+            <div class="C5 bg-white grid-cell grid-flex"> C5 </div>
+            <div class="C6 bg-white grid-cell grid-flex"> C6 </div>
+            <div class="C7 bg-white grid-cell grid-flex"> C7 </div>
+            <div class="C8 bg-white grid-cell grid-flex"> C8 </div>
+            <div class="C9 bg-white grid-cell grid-flex"> C9 </div>
+            <div class="C10 bg-white grid-cell grid-flex"> C10 </div>
+            <div class="D1 bg-white grid-cell grid-flex"> D1 </div>
+            <div class="D2 bg-white grid-cell grid-flex"> D2 </div>
+            <div class="D3 bg-white grid-cell grid-flex"> D3 </div>
+            <div class="D4 bg-white grid-cell grid-flex"> D4 </div>
+            <div class="D5 bg-white grid-cell grid-flex"> D5 </div>
+            <div class="D6 bg-white grid-cell grid-flex"> D6 </div>
+            <div class="D7 bg-white grid-cell grid-flex"> D7 </div>
+            <div class="D8 bg-white grid-cell grid-flex"> D8</div>
+            <div class="D9 bg-white grid-cell grid-flex"> D9 </div>
+            <div class="D10 bg-white grid-cell grid-flex"> D10 </div>
+            <div class="E1 bg-white grid-cell grid-flex"> E1 </div>
+            <div class="E2 bg-white grid-cell grid-flex"> E2 </div>
+            <div class="E3 bg-white grid-cell grid-flex"> E3 </div>
+            <div class="E4 bg-white grid-cell grid-flex"> E4 </div>
+            <div class="E5 bg-white grid-cell grid-flex"> E5 </div>
+            <div class="E6 bg-white grid-cell grid-flex"> E6 </div>
+            <div class="E7 bg-white grid-cell grid-flex"> E7 </div>
+            <div class="E8 bg-white grid-cell grid-flex"> E8 </div>
+            <div class="E9 bg-white grid-cell grid-flex"> E9 </div>
+            <div class="E10 bg-white grid-cell grid-flex"> E10 </div>
+            <div class="F1 bg-white grid-cell grid-flex"> F1 </div>
+            <div class="F2 bg-white grid-cell grid-flex"> F2 </div>
+            <div class="F3 bg-white grid-cell grid-flex"> F3 </div>
+            <div class="F4 bg-white grid-cell grid-flex"> F4 </div>
+            <div class="F5 bg-white grid-cell grid-flex"> F5 </div>
+            <div class="F6 bg-white grid-cell grid-flex"> F6 </div>
+            <div class="F7 bg-white grid-cell grid-flex"> F7 </div>
+            <div class="F8 bg-white grid-cell grid-flex"> F8 </div>
+            <div class="F9 bg-white grid-cell grid-flex"> F9 </div>
+            <div class="F10 bg-white grid-cell grid-flex"> F10 </div>
+            <div class="G1 bg-white grid-cell grid-flex"> G1 </div>
+            <div class="G2 bg-white grid-cell grid-flex"> G2 </div>
+            <div class="G3 bg-white grid-cell grid-flex"> G3 </div>
+            <div class="G4 bg-white grid-cell grid-flex"> G4 </div>
+            <div class="G5 bg-white grid-cell grid-flex"> G5 </div>
+            <div class="G6 bg-white grid-cell grid-flex"> G6 </div>
+            <div class="G7 bg-white grid-cell grid-flex"> G7 </div>
+            <div class="G8 bg-white grid-cell grid-flex"> G8 </div>
+            <div class="G9 bg-white grid-cell grid-flex"> G9 </div>
+            <div class="G10 bg-white grid-cell grid-flex"> G10 </div>
+            <div class="H1 bg-white grid-cell grid-flex"> H1 </div>
+            <div class="H2 bg-white grid-cell grid-flex"> H2 </div>
+            <div class="H3 bg-white grid-cell grid-flex"> H3 </div>
+            <div class="H4 bg-white grid-cell grid-flex"> H4 </div>
+            <div class="H5 bg-white grid-cell grid-flex"> H5 </div>
+            <div class="H6 bg-white grid-cell grid-flex"> H6 </div>
+            <div class="H7 bg-white grid-cell grid-flex"> H7 </div>
+            <div class="H8 bg-white grid-cell grid-flex"> H8 </div>
+            <div class="H9 bg-white grid-cell grid-flex"> H9 </div>
+            <div class="H10 bg-white grid-cell grid-flex"> H10 </div>
+            <div class="I1 bg-white grid-cell grid-flex"> I1 </div>
+            <div class="I2 bg-white grid-cell grid-flex"> I2 </div>
+            <div class="I3 bg-white grid-cell grid-flex"> I3 </div>
+            <div class="I4 bg-white grid-cell grid-flex"> I4 </div>
+            <div class="I5 bg-white grid-cell grid-flex"> I5 </div>
+            <div class="I6 bg-white grid-cell grid-flex"> I6 </div>
+            <div class="I7 bg-white grid-cell grid-flex"> I7 </div>
+            <div class="I8 bg-white grid-cell grid-flex"> I8 </div>
+            <div class="I9 bg-white grid-cell grid-flex"> I9 </div>
+            <div class="I10 bg-white grid-cell grid-flex"> I10 </div>
+            <div class="J1 bg-white grid-cell grid-flex"> J1 </div>
+            <div class="J2 bg-white grid-cell grid-flex"> J2 </div>
+            <div class="J3 bg-white grid-cell grid-flex"> J3 </div>
+            <div class="J4 bg-white grid-cell grid-flex"> J4 </div>
+            <div class="J5 bg-white grid-cell grid-flex"> J5 </div>
+            <div class="J6 bg-white grid-cell grid-flex"> J6 </div>
+            <div class="J7 bg-white grid-cell grid-flex"> J7 </div>
+            <div class="J8 bg-white grid-cell grid-flex"> J8 </div>
+            <div class="J9 bg-white grid-cell grid-flex"> J9 </div>
+            <div class="J10 bg-white grid-cell grid-flex"> J10 </div>
         </div>
-        <div class="B text-white border border-white grid-cell grid-flex">
-            B
-        </div>
-        <div class="C text-white border border-white grid-cell grid-flex">
-            C
-        </div>
-        <div class="D text-white border border-white grid-cell grid-flex">
-            D
-        </div>
-        <div class="E text-white border border-white grid-cell grid-flex">
-            E
-        </div>
-        <div class="F text-white border border-white grid-cell grid-flex">
-            F
-        </div>
-        <div class="G text-white border border-white grid-cell grid-flex">
-            G
-        </div>
-        <div class="H text-white border border-white grid-cell grid-flex">
-            H
-        </div>
-        <div class="I text-white border border-white grid-cell grid-flex">
-            I
-        </div>
-        <div class="J text-white border border-white grid-cell grid-flex">
-            J
-        </div>
-        <div class="\31 text-white border border-white grid-cell grid-flex">
-            1
-        </div>
-        <div class="\32 text-white border border-white grid-cell grid-flex">
-            2
-        </div>
-        <div class="\33 text-white border border-white grid-cell grid-flex">
-            3
-        </div>
-        <div class="\34 text-white border border-white grid-cell grid-flex">
-            4
-        </div>
-        <div class="\35 text-white border border-white grid-cell grid-flex">
-            5
-        </div>
-        <div class="\36 text-white border border-white grid-cell grid-flex">
-            6
-        </div>
-        <div class="\37 text-white border border-white grid-cell grid-flex">
-            7
-        </div>
-        <div class="\38 text-white border border-white grid-cell grid-flex">
-            8
-        </div>
-        <div class="\39 text-white border border-white grid-cell grid-flex">
-            9
-        </div>
-        <div class="\31 0 text-white border border-white grid-cell grid-flex">
-            10
-        </div>
-        <div class="A1 grid-cell grid-flex"> A1 </div>
-        <div class="A2 grid-cell grid-flex"> A2 </div>
-        <div class="A3 grid-cell grid-flex"> A3 </div>
-        <div class="A4 grid-cell grid-flex"> A4 </div>
-        <div class="A5 grid-cell grid-flex"> A5 </div>
-        <div class="A6 grid-cell grid-flex"> A6 </div>
-        <div class="A7 grid-cell grid-flex"> A7 </div>
-        <div class="A8 grid-cell grid-flex"> A8 </div>
-        <div class="A9 grid-cell grid-flex"> A9</div>
-        <div class="A10 grid-cell grid-flex"> A10 </div>
-        <div class="B1 grid-cell grid-flex"> B1 </div>
-        <div class="B2 grid-cell grid-flex"> B2 </div>
-        <div class="B3 grid-cell grid-flex"> B3</div>
-        <div class="B4 grid-cell grid-flex"> B4</div>
-        <div class="B5 grid-cell grid-flex"> B5 </div>
-        <div class="B6 grid-cell grid-flex"> B6 </div>
-        <div class="B7 grid-cell grid-flex"> B7</div>
-        <div class="B8 grid-cell grid-flex"> B8</div>
-        <div class="B9 grid-cell grid-flex"> B9 </div>
-        <div class="B10 grid-cell grid-flex"> B10 </div>
-        <div class="C1 grid-cell grid-flex"> C1 </div>
-        <div class="C2 grid-cell grid-flex"> C2 </div>
-        <div class="C3 grid-cell grid-flex"> C3</div>
-        <div class="C4 grid-cell grid-flex"> C4 </div>
-        <div class="C5 grid-cell grid-flex"> C5 </div>
-        <div class="C6 grid-cell grid-flex"> C6 </div>
-        <div class="C7 grid-cell grid-flex"> C7 </div>
-        <div class="C8 grid-cell grid-flex"> C8 </div>
-        <div class="C9 grid-cell grid-flex"> C9 </div>
-        <div class="C10 grid-cell grid-flex"> C10 </div>
-        <div class="D1 grid-cell grid-flex"> D1 </div>
-        <div class="D2 grid-cell grid-flex"> D2 </div>
-        <div class="D3 grid-cell grid-flex"> D3 </div>
-        <div class="D4 grid-cell grid-flex"> D4 </div>
-        <div class="D5 grid-cell grid-flex"> D5 </div>
-        <div class="D6 grid-cell grid-flex"> D6 </div>
-        <div class="D7 grid-cell grid-flex"> D7 </div>
-        <div class="D8 grid-cell grid-flex"> D8</div>
-        <div class="D9 grid-cell grid-flex"> D9 </div>
-        <div class="D10 grid-cell grid-flex"> D10 </div>
-        <div class="E1"></div>
-        <div class="E2"></div>
-        <div class="E3"></div>
-        <div class="E4"></div>
-        <div class="E5"></div>
-        <div class="E6"></div>
-        <div class="E7"></div>
-        <div class="E8"></div>
-        <div class="E9"></div>
-        <div class="E10"></div>
-        <div class="F1"></div>
-        <div class="F2"></div>
-        <div class="F3"></div>
-        <div class="F4"></div>
-        <div class="F5"></div>
-        <div class="F6"></div>
-        <div class="F7"></div>
-        <div class="F8"></div>
-        <div class="F9"></div>
-        <div class="F10"></div>
-        <div class="G1"></div>
-        <div class="G2"></div>
-        <div class="G3"></div>
-        <div class="G4"></div>
-        <div class="G5"></div>
-        <div class="G6"></div>
-        <div class="G7"></div>
-        <div class="G8"></div>
-        <div class="G9"></div>
-        <div class="G10"></div>
-        <div class="H1"></div>
-        <div class="H2"></div>
-        <div class="H3"></div>
-        <div class="H4"></div>
-        <div class="H5"></div>
-        <div class="H6"></div>
-        <div class="H7"></div>
-        <div class="H8"></div>
-        <div class="H9"></div>
-        <div class="H10"></div>
-        <div class="I1"></div>
-        <div class="I2"></div>
-        <div class="I3"></div>
-        <div class="I4"></div>
-        <div class="I5"></div>
-        <div class="I6"></div>
-        <div class="I7"></div>
-        <div class="I8"></div>
-        <div class="I9"></div>
-        <div class="I10"></div>
-        <div class="J1"></div>
-        <div class="J2"></div>
-        <div class="J3"></div>
-        <div class="J4"></div>
-        <div class="J5"></div>
-        <div class="J6"></div>
-        <div class="J7"></div>
-        <div class="J8"></div>
-        <div class="J9"></div>
-        <div class="J10"></div>
     </div>
 </body>
 

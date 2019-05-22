@@ -2,8 +2,8 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "http://localhost:8080/api/ships",
-            games: [],
+            games_URL: "http://localhost:8080/api/gameplayers/",
+            players: [],
             proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/"
         };
     },
@@ -20,10 +20,8 @@ new Vue({
                 })
                 .then(data => {
                     console.log(data)
-                    this.games = data;
-                    //console.log(Object.entries(this.games)); 
-                    //this.games = this.convertObjects(this.games);
-                    //this.games = this.games[1];
+                    this.players = data;
+                    console.log(Object.entries(this.players)); 
                 })
                 .catch(err => console.log(err))
         },
@@ -32,10 +30,6 @@ new Vue({
                 return [Number(key), dataObject[key]];
             });
             return result;
-        },
-        listGames(games) {
-            let listAnchor = document.getElementById("game_list");
-            document.createElement("ol")
         }
     },
     mounted() {

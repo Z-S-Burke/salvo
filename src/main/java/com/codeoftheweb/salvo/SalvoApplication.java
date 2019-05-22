@@ -62,10 +62,15 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			shipRepository.save(s1); shipRepository.save(s2); shipRepository.save(s3); shipRepository.save(s4);
 			gp1.addShip(s1);
 			gp1.addShip(s2);
+			gp2.addShip(s3);
+			gp3.addShip((s4));
 			shipRepository.save(s2);
 			shipRepository.save(s1);
+			shipRepository.save(s3);
+			shipRepository.save(s4);
 			gamePlayerRepository.save(gp1);
-
+			gamePlayerRepository.save(gp2);
+			gamePlayerRepository.save(gp3);
 		};
 	}
 }
