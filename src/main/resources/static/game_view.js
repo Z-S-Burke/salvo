@@ -2,7 +2,7 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "http://localhost:8080/api/games/game_info",
+            games_URL: "http://localhost:8080/api/ships",
             games: [],
             proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/"
         };
