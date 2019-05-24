@@ -11,21 +11,21 @@
 </head>
 
 <body class="bg-info">
-    <div class="bg-dark pt-2 mb-3 text-info d-flex flex-column justify-content-center align-items-center">
+    <div class="bg-dark mainTable pt-2 text-info d-flex flex-column justify-content-center align-items-center">
         <p class="display-2"> Super Antiquated Warfare </p>
         <p> &#40; the game &#41; </p>
     </div>
-    <div class="bg-info d-flex justify-content-center" id="app">
-        <div class="mainTable">
+    <div class="bg-dark d-flex justify-content-center" id="app">
+        <div class="mainTable bg-info">
             <table class="grid-container d-flex" id="shipGrid">
                 {{mainGridMaker(alphaArray, numeralArray)}}
             </table>
         </div>
         <div class="d-flex">
-            <div class="d-flex flex-column justify-content-between">
+            <div class="d-flex flex-column justify-content-between pr-3">
                 <div>
                     <table class="mx-3 my-3" id="hitGrid">
-                        <caption class="text-light text-right"> Shots Fired </caption>
+                        <caption class="text-light text-center"> Shots Fired </caption>
                         {{hitGridMaker(alphaArray, numeralArray)}}
                     </table>
                 </div>
@@ -50,6 +50,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="bg-dark mainTable text-info d-flex flex-column justify-content-center align-items-center">
+        <p class="display-2"> </p>
     </div>
 </body>
 
