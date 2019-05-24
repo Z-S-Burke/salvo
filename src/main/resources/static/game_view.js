@@ -4,7 +4,9 @@ new Vue({
         return {
             games_URL: "http://localhost:8080/api/gameplayers/",
             players: [],
-            proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/"
+            proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/",
+            numeralArray: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            alphaArray: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         };
     },
     methods: {
@@ -21,15 +23,21 @@ new Vue({
                 .then(data => {
                     console.log(data)
                     this.players = data;
-                    console.log(Object.entries(this.players)); 
                 })
                 .catch(err => console.log(err))
         },
-        convertObjects(dataObject) {
-            let result = Object.keys(dataObject).map(function (key) {
-                return [Number(key), dataObject[key]];
-            });
-            return result;
+        gridMaker(numeralArray, alphaArray) {
+            const table = document.getElementById("shipGrid");
+            table.className = "board";
+            numeralArray.forEach(numeral => {
+                let row = table.insertRow();
+                alphaArray.forEach(alpha => {
+                    let cell = row.insertCell();
+                    cell.innerHTML = numeral + alpha;
+                    cell.id = numeral + alpha;
+                    cell.className = "grid-cell bg-white text-dark text-center"
+                })
+            })
         }
     },
     mounted() {
