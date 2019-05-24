@@ -3,9 +3,10 @@
     height: 800px;
 }
 .grid-cell {
-    border-color: black;
-    border: solid;
-    border-width: 1px;
+    border-radius: 75px;
+    font-weight: bold;
+    background-color: black;
+    font-color: white;
     height: 70px;
     width: 70px;
 }
@@ -21,4 +22,10 @@
 .grid-cell-unmarked {
     border-right: white;
     border-bottom: white;
+}
+
+.mainTable {
+    border: double;
+    border-width: 80px;
+    border-color: black;
 }

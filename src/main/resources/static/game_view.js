@@ -26,7 +26,7 @@ new Vue({
                 })
                 .catch(err => console.log(err))
         },
-        gridMaker(numeralArray, alphaArray) {
+        mainGridMaker(numeralArray, alphaArray) {
             const table = document.getElementById("shipGrid");
             table.className = "board";
             numeralArray.forEach(numeral => {
@@ -35,8 +35,30 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = numeral + alpha;
                     cell.id = numeral + alpha;
-                    cell.className = "grid-cell bg-white text-dark text-center"
+                    cell.className = "grid-cell text-light text-center";
                 })
+            })
+        }, 
+        hitGridMaker(numeralArray, alphaArray) {
+            const table = document.getElementById("hitGrid");
+            numeralArray.forEach(numeral => {
+                let row = table.insertRow();
+                alphaArray.forEach(alpha => {
+                    let cell = row.insertCell();
+                    cell.innerHTML = numeral + alpha;
+                    cell.id = numeral + alpha;
+                    cell.className = "p-1 text-light border border-light text-center"
+                    this.shipLocator(this.players);
+                })
+            })
+        }, 
+        shipLocator(players) {
+            let target = [];
+            players.forEach(player => {
+                if (player.ships) {
+                    console.log(player.ships.locationOnBoard)
+                    target = player.ships.locationOnBoard;
+                }
             })
         }
     },
