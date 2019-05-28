@@ -11,48 +11,43 @@
 </head>
 
 <body class="bg-info">
-    <div class="bg-dark mainTable pt-2 text-info d-flex flex-column justify-content-center align-items-center">
-        <p class="display-2"> Super Antiquated Warfare </p>
-        <p> &#40; the game &#41; </p>
-    </div>
-    <div class="bg-dark d-flex justify-content-center" id="app">
-        <div class="mainTable bg-info">
-            <table class="grid-container d-flex" id="shipGrid">
-                {{mainGridMaker(alphaArray, numeralArray)}}
-            </table>
+    <div id="app">
+        <div class="bg-dark mainTable pt-2 text-info d-flex flex-column justify-content-center align-items-center">
+            <p class="display-2"> Super Antiquated Warfare </p>
+            <p> &#40; the game &#41; </p>
         </div>
-        <div class="d-flex">
-            <div class="d-flex flex-column justify-content-between pr-3">
-                <div>
-                    <table class="mx-3 my-3" id="hitGrid">
-                        <caption class="text-light text-center"> Shots Fired </caption>
-                        {{hitGridMaker(alphaArray, numeralArray)}}
-                    </table>
-                </div>
-                <div v-for="(player, index) in players" :key="players.id"
-                    class="d-flex flex-column text-white align-items-center">
-                    <div v-if="player.gameInstance.id == 1" class="bg-white border border-dark text-dark my-2 px-2">
-                        <h2> {{player.player.username}} </h2>
+        <div class="bg-dark d-flex justify-content-center">
+            <div class="mainTable bg-info">
+                <table class="grid-container d-flex" id="shipGrid">
+                </table>
+            </div>
+            <div class="d-flex">
+                <div class="d-flex flex-column justify-content-center align-items-center pr-3">
+                    <div>
+                        <table class="mx-3 my-3" id="hitGrid">
+                            <caption class="text-light text-center"> Shots Fired </caption>
+                        </table>
                     </div>
-                    <div v-if="player.gameInstance.id == 1" class="d-flex flex-column">
-                        <div v-for="(ship, index) in player.ships" :key="ships"
-                            class="border border-white bg-dark px-2 mb-2">
-                            <div class="d-flex">
-                                <p class="mr-2"> Ship Type: </p>
-                                <p class="text-primary"> {{ship.type}} </p>
-                            </div>
-                            <div class="d-flex">
-                                <p class="mr-2"> Location: </p>
-                                <p> {{ship.locationOnBoard}} </p>
-                            </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-dark mainTable text-info d-flex justify-content-center align-items-center">
+            <div v-for="(player, index) in players" :key="players.id"
+                class="d-flex text-white align-items-center">
+                <div v-if="player.gameInstance.id == 1" class="bg-white border border-dark text-dark my-2 px-2">
+                    <h2> {{player.player.username}} </h2>
+                </div>
+                <div v-if="player.gameInstance.id == 1" class="d-flex mx-3">
+                    <div v-for="(ship, index) in player.ships" :key="ships.id"
+                        class="border border-white bg-dark px-2 mb-2">
+                        <div class="d-flex">
+                            <p class="mr-2"> Ship Type: </p>
+                            <p class="text-primary"> {{ship.type}} </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="bg-dark mainTable text-info d-flex flex-column justify-content-center align-items-center">
-        <p class="display-2"> </p>
     </div>
 </body>
 

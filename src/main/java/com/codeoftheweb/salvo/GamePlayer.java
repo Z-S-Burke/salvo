@@ -73,6 +73,17 @@ public class GamePlayer {
         ships.add(ship);
     }
 
+    //GET.SALVOES GAMEPLAYER UTILITIES
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    Set<Salvo> salvoes = new HashSet<>();
+
+    public Set<Salvo> getSalvoes() { return salvoes; }
+
+    public void addSalvo (Salvo salvo) {
+        salvo.setGamePlayer(this);
+        salvoes.add(salvo);
+    }
+
     //GAMEPLAYER.CREATIONDATE UTILITIES
     private Date creationDate;
 

@@ -6,7 +6,6 @@
     border-radius: 75px;
     font-weight: bold;
     background-color: black;
-    font-color: white;
     height: 70px;
     width: 70px;
 }
@@ -28,4 +27,9 @@
     border: double;
     border-width: 80px;
     border-color: black;
+}
+
+.directHit {
+    background-color: red;
+    color: black;
 }
