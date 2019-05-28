@@ -58,20 +58,19 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = "hit" + alpha + numeral;
-                    cell.className = "p-1 text-light border border-light text-center";
+                    cell.className = "p-1 border border-dark font-weight-bold text-dark border border-light text-center";
                 })
             })
         },
         mainShipLocator(p1) {
-            let targets = [];
             let locations = [];
             locations.push(p1.ships);
             locations.forEach(target => {
                 target.forEach(ship => {
-                    targets = ship.locationOnBoard;
                     ship.locationOnBoard.forEach(cell => {
                         let location = document.getElementById(cell);
-                        location.className += "grid-cell text-light text-center bg-primary";
+                        location.classList.remove("grid-cell");
+                        location.className = "ship-location bg-danger text-light text-center";
                     })
                 })
             })

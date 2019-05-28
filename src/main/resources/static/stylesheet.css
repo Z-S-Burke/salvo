@@ -10,6 +10,12 @@
     width: 70px;
 }
 
+.ship-location {
+    border: 30px 50px;
+    border-radius: 75px;
+    box-shadow: 5px 5px 10px 5px black;
+}
+
 .grid-flex {
     display: flex;
     flex-direction: row;
@@ -24,12 +30,39 @@
 }
 
 .mainTable {
-    border: double;
+    border-top: double;
+    border-right: double;
+    border-bottom: solid;
     border-width: 80px;
+    border-color: black;
+}
+
+.mainTable2 {
+    border-top: double;
+    border-bottom: double;
+    border-width: 80px;
+    border-color: black;
+}
+
+.sideTable {
+    border-top: double;
+    border-left: double;
+    border-width: 35px;
+    border-color: black;
+}
+
+.sideTable2 {
+    border-bottom: double;
+    border-top: double;
+    border-width: 35px;
     border-color: black;
 }
 
 .directHit {
     background-color: red;
     color: black;
+}
+
+.hitBoard {
+    width: 100%;
 }

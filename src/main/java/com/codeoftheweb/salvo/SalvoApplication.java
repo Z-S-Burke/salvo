@@ -51,7 +51,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			location3.add("J4"); location3.add("I4"); location3.add("H4");
 
 			Set<String> location4 = new HashSet<>();
-			location4.add("B4");
+			location4.add("E8");
 
 			Set<String> shotsFired = new HashSet<>();
 			shotsFired.add("J2"); shotsFired.add("B5"); shotsFired.add("C4"); shotsFired.add("H5");
@@ -69,8 +69,8 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			gp1.addShip(s1);
 			gp1.addShip(s2);
 			gp1.addSalvo(shotsMatch1);
-			gp2.addShip(s4);
-			gp3.addShip((s3));
+			gp1.addShip(s4);
+			gp1.addShip((s3));
 			shipRepository.save(s2);
 			shipRepository.save(s1);
 			shipRepository.save(s3);
