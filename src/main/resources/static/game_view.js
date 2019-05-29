@@ -30,6 +30,7 @@ new Vue({
                     this.players = data;
                     this.p1 = data[0];
                     this.p2 = data[1];
+                    this.ships = this.p1.ships;
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
 
@@ -61,6 +62,8 @@ new Vue({
                     cell.className = "p-1 border border-dark font-weight-bold text-dark border border-light text-center";
                 })
             })
+
+            this.hitOrMissSideBoard(this.p1, this.p2);
         },
         mainShipLocator(p1) {
             let locations = [];
@@ -71,6 +74,59 @@ new Vue({
                         let location = document.getElementById(cell);
                         location.classList.remove("grid-cell");
                         location.className = "ship-location bg-danger text-light text-center";
+                    })
+                })
+            })
+            this.hitOrMissMainBoard(locations, this.p1, this.p2)
+        },
+        hitOrMissMainBoard(userShipLocations, user, opponent) {
+            let opponentSalvoes = opponent.salvoes;
+            opponentSalvoes.forEach(salvo => {
+                userShipLocations.forEach(shipMap => {
+                    shipMap.forEach(ship => {
+                        ship.locationOnBoard.forEach(vector => {
+                            if (vector == salvo.location) {
+                                console.log("hit")
+                                let hitMarker = document.getElementById(vector);
+                                hitMarker.className = "hitMarker";
+                                hitMarker.innerHTML = "";
+                            } else if (salvo.location != vector) {
+                                console.log("miss" + salvo.location)
+                                let missMarker = document.getElementById(salvo.location);
+                                if (missMarker.className == "hitMarker") {
+                                    console.log("Please don't touch this");
+                                } else {
+                                    missMarker.className = "missMarker";
+                                    missMarker.innerHTML = "";
+                                }
+                            }
+                        })
+                    })
+                })
+            })
+        },
+        hitOrMissSideBoard(user, opponent) {
+            let userSalvoes = user.salvoes;
+            let opponentShipLocations = opponent.ships;
+            console.log(userSalvoes)
+            userSalvoes.forEach(salvo => {
+                opponentShipLocations.forEach(ship => {
+                    ship.locationOnBoard.forEach(vector => {
+                        if (vector == salvo.location) {
+                            console.log("hit opponent" + vector + "V vs S" + salvo.location)
+                            let hitMarker = document.getElementById("hit" + vector);
+                            console.log(hitMarker)
+                            hitMarker.className = "hitMarker";
+                            hitMarker.innerHTML = "";
+                        } else if (salvo.location != vector) {
+                            let missMarker = document.getElementById("hit" + salvo.location);
+                            if (missMarker.className == "hitMarker") {
+                                console.log("Don't touch this")
+                            } else {
+                                missMarker.className = "missMarker2";
+                                missMarker.innerHTML = "";
+                            }
+                        }
                     })
                 })
             })

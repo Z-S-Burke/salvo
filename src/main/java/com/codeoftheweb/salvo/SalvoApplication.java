@@ -48,33 +48,49 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			location2.add("B1"); location2.add("B2"); location2.add("B3");
 
 			Set<String> location3 = new HashSet<>();
-			location3.add("J4"); location3.add("I4"); location3.add("H4");
+			location3.add("J2"); location3.add("I2"); location3.add("H2"); location3.add("G2");
 
 			Set<String> location4 = new HashSet<>();
-			location4.add("E8");
-
-			Set<String> shotsFired = new HashSet<>();
-			shotsFired.add("J2"); shotsFired.add("B5"); shotsFired.add("C4"); shotsFired.add("H5");
+			location4.add("D5"); location4.add("C5"); location4.add("E5");
 
 
 			Ship s1 = new Ship ("Cruiser", location1);
 			Ship s2 = new Ship ("Destroyer", location2);
-			Ship s3 = new Ship ("Lifeboat", location4);
+			Ship s3 = new Ship ("Submarine", location4);
 			Ship s4 = new Ship ("AirCraft Carrier", location3);
 
-			Salvo shotsMatch1 = new Salvo (2, shotsFired);
-			salvoRepository.save(shotsMatch1);
+			Ship s5 = new Ship ("Cruiser", location1);
+			Ship s6 = new Ship ("Destroyer", location2);
+			Ship s7 = new Ship ("Submarine", location4);
+			Ship s8 = new Ship ("AirCraft Carrier", location3);
+
+			Salvo shot1 = new Salvo (1, "H2", gp1);
+			Salvo shot2 = new Salvo (2, "A4", gp1);
+			Salvo shot3 = new Salvo (3, "G4", gp1);
+			Salvo shot4 = new Salvo (1, "E10", gp2);
+			Salvo shot5 = new Salvo (2, "J3", gp2);
+			Salvo shot6 = new Salvo (3, "C8", gp2);
+			salvoRepository.save(shot1);
+			salvoRepository.save(shot2);
+			salvoRepository.save(shot3);
+			salvoRepository.save(shot4);
+			salvoRepository.save(shot5);
+			salvoRepository.save(shot6);
 
 			shipRepository.save(s1); shipRepository.save(s2); shipRepository.save(s3); shipRepository.save(s4);
 			gp1.addShip(s1);
 			gp1.addShip(s2);
-			gp1.addSalvo(shotsMatch1);
 			gp1.addShip(s4);
-			gp1.addShip((s3));
+			gp1.addShip(s3);
+			gp2.addShip(s5);
+			gp2.addShip(s6);
+			gp2.addShip(s7);
+			gp2.addShip(s8);
 			shipRepository.save(s2);
 			shipRepository.save(s1);
 			shipRepository.save(s3);
 			shipRepository.save(s4);
+			shipRepository.save(s5); shipRepository.save(s6); shipRepository.save(s7); shipRepository.save(s8);
 			gamePlayerRepository.save(gp1);
 			gamePlayerRepository.save(gp2);
 			gamePlayerRepository.save(gp3);

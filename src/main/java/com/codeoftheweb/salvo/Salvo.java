@@ -17,13 +17,12 @@ public class Salvo {
 
     public Long id;
     public int turnFired;
-    @ElementCollection
-    public Set<String> locations = new HashSet<>();
+    public String location;
 
 
     Salvo () {};
 
-    Salvo (int turnFired, Set<String> locations) { this.turnFired = turnFired; this.locations = locations;}
+    Salvo (int turnFired, String location, GamePlayer gamePlayer) { this.turnFired = turnFired; this.location = location; this.gamePlayer = gamePlayer;}
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="gamePlayer_id")
@@ -38,12 +37,12 @@ public class Salvo {
         this.gamePlayer = gameplayer;
     }
 
-    public Set<String> getLocations() {
-        return locations;
+    public String getLocation() {
+        return location;
     }
 
-    public void setLocations(Set<String> locations) {
-        this.locations = locations;
+    public void setLocations(String location) {
+        this.location = location;
     }
 
     public Long getId() {

@@ -14,6 +14,9 @@ import java.util.*;
 @RestController
 public class SalvoController {
 
+    @Autowired
+    private SalvoRepository salvoRepo;
+
     //GAME CONTROLLER CALLS
     @Autowired
     private GameRepository gameRepo;
@@ -122,6 +125,7 @@ public class SalvoController {
             oneGamePlayerMap.put("Linked Player: ", oneGamePlayer.getPlayer());
             oneGamePlayerMap.put("GamePlayer Instance ID: ", oneGamePlayer.getId());
             oneGamePlayerMap.put("Ships: ", oneGamePlayer.getShips());
+            oneGamePlayerMap.put("Salvoes", oneGamePlayer.getSalvoes());
             gamePlayerList.add(oneGamePlayerMap);
         });
 
@@ -135,6 +139,10 @@ public class SalvoController {
         return shipRepo.findAll();
     }
 
+    @RequestMapping("/api/salvoes")
+    public List<Salvo> getSalvoes() {
+        return salvoRepo.findAll();
+    }
 
 
     @Bean

@@ -1,20 +1,38 @@
 .board {
     width: 800px;
     height: 800px;
+    background-image: url("assets/blackwater2.gif")
 }
 .grid-cell {
-    border-radius: 75px;
     font-weight: bold;
-    background-color: black;
+    background-size: cover;
+    border: 1px solid white;
     height: 70px;
     width: 70px;
 }
 
 .ship-location {
-    border: 30px 50px;
-    border-radius: 75px;
     box-shadow: 5px 5px 10px 5px black;
+    background-image: url("assets/shipTexture.jpeg");
+    filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+    animation: float 5s ease-in-out infinite;
 }
+
+@keyframes float {
+	0% {
+		box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+		transform: translatey(-5px);
+    }
+    50% {
+		box-shadow: 0 25px 15px 0px rgba(0,0,0,0.2);
+		transform: translatey(5px);
+    }
+	100% {
+		box-shadow: 0 5px 15px 0px rgba(0,0,0,0.6);
+		transform: translatey(-5px);
+    }
+}
+
 
 .grid-flex {
     display: flex;
@@ -65,4 +83,24 @@
 
 .hitBoard {
     width: 100%;
+}
+
+.hitMarker {
+    background-size: cover;
+    background-image: url("assets/fire.gif");
+    filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+}
+
+.missMarker {
+    background-size: cover;
+    background-image: url("assets/blackX.jpeg");
+    background-position-x: -30px;
+    filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+}
+
+.missMarker2 {
+    background-size: cover;
+    background-image: url("assets/missMarker2.png");
+    /* background-position-x: -25px; */
+    filter: grayscale(100%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
 }
