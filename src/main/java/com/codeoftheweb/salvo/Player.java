@@ -55,6 +55,14 @@ public class Player {
         return gamePlayers;
     }
 
+    @OneToMany(mappedBy = "playerScore", fetch=FetchType.EAGER)
+    Set<Player> playerScore = new HashSet<>();
+
+        @JsonIgnore
+        public Set<Player> getScores() {
+            return playerScore;
+        }
+
     //UTILITY
     public String toString() {
         return username;

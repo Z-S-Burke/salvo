@@ -49,4 +49,12 @@ public class Game {
     public Set<GamePlayer> getGamePlayers() {
         return gamePlayers;
     }
+
+    @OneToMany(mappedBy = "gameScore", fetch=FetchType.EAGER)
+    Set<Game> gameScore = new HashSet<>();
+
+    @JsonIgnore
+    public Set<Game> getScores() {
+        return gameScore;
+    }
 }

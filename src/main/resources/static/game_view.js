@@ -59,10 +59,9 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = "hit" + alpha + numeral;
-                    cell.className = "p-1 border border-dark font-weight-bold text-dark border border-light text-center";
+                    cell.className = "px-3 py-2 font-weight-bold text-light bg-danger border border-dark text-center";
                 })
             })
-
             this.hitOrMissSideBoard(this.p1, this.p2);
         },
         mainShipLocator(p1) {
@@ -86,12 +85,10 @@ new Vue({
                     shipMap.forEach(ship => {
                         ship.locationOnBoard.forEach(vector => {
                             if (vector == salvo.location) {
-                                console.log("hit")
                                 let hitMarker = document.getElementById(vector);
                                 hitMarker.className = "hitMarker";
                                 hitMarker.innerHTML = "";
                             } else if (salvo.location != vector) {
-                                console.log("miss" + salvo.location)
                                 let missMarker = document.getElementById(salvo.location);
                                 if (missMarker.className == "hitMarker") {
                                     console.log("Please don't touch this");
@@ -108,14 +105,11 @@ new Vue({
         hitOrMissSideBoard(user, opponent) {
             let userSalvoes = user.salvoes;
             let opponentShipLocations = opponent.ships;
-            console.log(userSalvoes)
             userSalvoes.forEach(salvo => {
                 opponentShipLocations.forEach(ship => {
                     ship.locationOnBoard.forEach(vector => {
                         if (vector == salvo.location) {
-                            console.log("hit opponent" + vector + "V vs S" + salvo.location)
                             let hitMarker = document.getElementById("hit" + vector);
-                            console.log(hitMarker)
                             hitMarker.className = "hitMarker";
                             hitMarker.innerHTML = "";
                         } else if (salvo.location != vector) {

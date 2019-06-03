@@ -11,38 +11,57 @@
 </head>
 
 <body class="bg-danger">
-    <div class="mb-5" id="app">
+    <div class="mb-5 pb-5" id="app">
         <div class="bg-danger mainTable pt-2 text-light d-flex flex-column justify-content-center align-items-center">
             <p class="display-2 font-weight-bold"> Super Antiquated Warfare </p>
             <p> &#40; the game &#41; </p>
         </div>
         <div class="bg-light d-flex justify-content-center">
-            <div class="mainTable bg-light">
+            <div class="mainTable2 bg-light m-3">
                 <table class="grid-container d-flex" id="shipGrid">
                 </table>
             </div>
-            <div class="d-flex flex-column mainTable2">
-                <div class="bg-light sideTable text-info d-flex flex-wrap flex-column justify-content-center align-items-center">
+            <div class="d-flex flex-column mainTable3">
+                <div
+                    class="bg-light mainTable2 text-info d-flex flex-wrap flex-column justify-content-center align-items-center">
                     <div v-for="(player, index) in players" :key="players.id"
-                        class="d-flex flex-column text-white align-items-center">
-                        <div v-if="player.gameInstance.id == 1" class="bg-white border border-dark text-dark my-2 px-2">
+                        class="d-flex text-white align-items-center">
+                        <div v-if="player.id == 1" class="bg-white border border-dark text-dark my-2 px-2">
                             <h3> {{player.player.username}} </h3>
                         </div>
-                        <div v-if="player.gameInstance.id == 1" class="d-flex mx-3">
+                        <div v-if="player.id == 1" class="d-flex mx-3">
                             <div v-for="(ship, index) in player.ships" :key="ships.id"
                                 class="border border-white bg-danger px-2 mb-2">
                                 <div class="d-flex align-items-center">
-                                    <h5 class="my-2 text-light font-italic"> {{ship.type}} </h5>
+                                    <h5 class="my-2 text-light font-italic"> {{ship.type}} –
+                                        &#40{{ship.locationOnBoard.length}}&#41</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-left pr-3">
-                    <div class="mainTable">
+                    <div class="mainTable3">
                         <table class="mx-3 my-3 d-flex justify-content-center" id="hitGrid">
                         </table>
-                        <h2 class="text-dark text-center"> Shots Fired </h2>
+                    </div>
+                </div>
+                <div
+                    class="bg-light mainTable2 text-info d-flex flex-wrap flex-column justify-content-center align-items-center">
+                    <div v-for="(player, index) in players" :key="players.id"
+                        class="d-flex text-white align-items-center">
+                        <div v-if="player.id == 2" class="bg-white border border-dark text-dark my-2 px-2">
+                            <h3> {{player.player.username}} </h3>
+                        </div>
+                        <div v-if="player.id == 2" class="d-flex mx-3">
+                            <div v-for="(ship, index) in player.ships" :key="ships.id"
+                                class="border border-white bg-danger px-2 mb-2">
+                                <div class="d-flex align-items-center">
+                                    <h5 class="my-2 text-light font-italic"> {{ship.type}} –
+                                        &#40{{ship.locationOnBoard.length}}&#41</h5>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

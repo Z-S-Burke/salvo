@@ -17,6 +17,9 @@ public class SalvoController {
     @Autowired
     private SalvoRepository salvoRepo;
 
+    @Autowired
+    private ScoreRepository scoreRepo;
+
     //GAME CONTROLLER CALLS
     @Autowired
     private GameRepository gameRepo;
@@ -71,6 +74,9 @@ public class SalvoController {
         return playerMap;
     }
 
+    //SCORE CONTROLLER CALLS
+    @RequestMapping("/api/scoreboard")
+    public List<Score> getScores() { return scoreRepo.findAll(); }
 
     //PLAYER CONTROLLER CALLS
     @Autowired

@@ -19,7 +19,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository) {
+	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
 			Player p1 = new Player("p1@p1.com");
 			playerRepository.save(p1);
@@ -65,8 +65,9 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Ship s8 = new Ship ("AirCraft Carrier", location3);
 
 			Salvo shot1 = new Salvo (1, "H2", gp1);
-			Salvo shot2 = new Salvo (2, "A4", gp1);
-			Salvo shot3 = new Salvo (3, "G4", gp1);
+			Salvo shot2 = new Salvo (2, "I2", gp1);
+			Salvo shot3 = new Salvo (3, "J2", gp1);
+			Salvo shot = new Salvo(4, "A10", gp1);
 			Salvo shot4 = new Salvo (1, "E10", gp2);
 			Salvo shot5 = new Salvo (2, "J3", gp2);
 			Salvo shot6 = new Salvo (3, "C8", gp2);
@@ -76,6 +77,8 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			salvoRepository.save(shot4);
 			salvoRepository.save(shot5);
 			salvoRepository.save(shot6);
+			salvoRepository.save(shot);
+
 
 			shipRepository.save(s1); shipRepository.save(s2); shipRepository.save(s3); shipRepository.save(s4);
 			gp1.addShip(s1);
@@ -94,6 +97,10 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			gamePlayerRepository.save(gp1);
 			gamePlayerRepository.save(gp2);
 			gamePlayerRepository.save(gp3);
+
+			Date finishDate = new Date();
+			Score g1p1s = new Score(p1, g1, 1, finishDate);
+			scoreRepository.save(g1p1s);
 		};
 	}
 }
