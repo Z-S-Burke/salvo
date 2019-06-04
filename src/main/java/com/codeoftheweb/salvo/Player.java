@@ -19,49 +19,66 @@ public class Player {
     @GenericGenerator(name = "native", strategy = "native")
     //ID
     private long id;
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    //PLAYER CONSTRUCTOR
-
-    public Player() { }
-
-    public Player(String name) {
-        this.username = name;
-    }
 
     //USERNAME
     private String username;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String name) {
-        this.username = name;
-    }
+    //PASSWORD
+    private String password;
 
     //GAMEPLAYERS
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers = new HashSet<>();
 
-        @JsonIgnore
-        public Set<GamePlayer> getGamePlayers() {
-        return gamePlayers;
-    }
-
+    //PlayerScore
     @OneToMany(mappedBy = "playerScore", fetch=FetchType.EAGER)
     Set<Player> playerScore = new HashSet<>();
 
-        @JsonIgnore
-        public Set<Player> getScores() {
-            return playerScore;
-        }
+    //PLAYER CONSTRUCTOR
+    public Player() { }
+
+    public Player(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+
+    //GET
+    public long getId() {
+        return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonIgnore
+    public Set<Player> getScores() {
+        return playerScore;
+    }
+
+    @JsonIgnore
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+
+    //SET
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     //UTILITY
     public String toString() {

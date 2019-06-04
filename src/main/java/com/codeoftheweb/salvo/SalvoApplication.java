@@ -1,15 +1,32 @@
 package com.codeoftheweb.salvo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java. util. Date;
-import java. sql. Timestamp;
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.hibernate.cfg.AvailableSettings.USER;
 
 @SpringBootApplication
 public class SalvoApplication extends SpringBootServletInitializer {
@@ -18,14 +35,74 @@ public class SalvoApplication extends SpringBootServletInitializer {
 		SpringApplication.run(SalvoApplication.class);
 	}
 
+	@Configuration
+	class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+		@Autowired
+		private PlayerRepository playerRepository;
+
+		@Override
+		public void init(AuthenticationManagerBuilder auth) throws Exception { auth.userDetailsService(
+				username -> {
+					Player player = playerRepository.findByUsername(username);
+					if (player != null) {
+						return new User(player.getUsername(), player.getPassword(), AuthorityUtils.createAuthorityList("USER"));
+					} else {
+						throw new UsernameNotFoundException("Unknown User: " + username);
+					}
+				});
+		};
+	};
+
+	@EnableWebSecurity
+	@Configuration
+	class WebAccessConfig extends WebSecurityConfigurerAdapter {
+
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+
+			http.authorizeRequests()
+					.antMatchers("/web/games.html").permitAll();
+//					.antMatchers("/web/game_view.html").permitAll()
+//					.antMatchers("/web/stylesheet.css").permitAll()
+//					.antMatchers("/rest/games").permitAll()
+//					.antMatchers("/api/").denyAll()
+//					.anyRequest().fullyAuthenticated();
+
+			http.csrf().disable();
+			http.exceptionHandling().authenticationEntryPoint(((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
+			http.formLogin().successHandler(((request, response, authentication) -> clearAuthenticationAttributes(request)));
+			http.formLogin().failureHandler(((request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
+			http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+		}
+
+		private void clearAuthenticationAttributes(HttpServletRequest request) {
+			HttpSession httpSession = request.getSession(false);
+			if (httpSession != null) {
+				httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+			}
+		}
+	}
+
+
+
 	@Bean
 	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
-			Player p1 = new Player("p1@p1.com");
+
+
+
+
+
+
+
+
+
+			Player p1 = new Player("p1@p1.com", "Password1");
 			playerRepository.save(p1);
-			Player p2 = new Player("p2@p2.com");
+			Player p2 = new Player("p2@p2.com", "Password2");
 			playerRepository.save(p2);
-			Player p3 = new Player("p3@p3.com");
+			Player p3 = new Player("p3@p3.com", "Password3");
 			playerRepository.save(p3);
 
 			Date creationDate = new Date();
