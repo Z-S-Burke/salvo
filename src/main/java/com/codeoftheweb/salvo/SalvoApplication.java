@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,77 +25,18 @@ import java. util. Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hibernate.cfg.AvailableSettings.USER;
+//import static org.hibernate.cfg.AvailableSettings.USER;
 
 @SpringBootApplication
 public class SalvoApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SalvoApplication.class);
+		SpringApplication.run(SalvoApplication.class, args);
 	}
-
-	@Configuration
-	class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
-
-		@Autowired
-		private PlayerRepository playerRepository;
-
-		@Override
-		public void init(AuthenticationManagerBuilder auth) throws Exception { auth.userDetailsService(
-				username -> {
-					Player player = playerRepository.findByUsername(username);
-					if (player != null) {
-						return new User(player.getUsername(), player.getPassword(), AuthorityUtils.createAuthorityList("USER"));
-					} else {
-						throw new UsernameNotFoundException("Unknown User: " + username);
-					}
-				});
-		};
-	};
-
-	@EnableWebSecurity
-	@Configuration
-	class WebAccessConfig extends WebSecurityConfigurerAdapter {
-
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-
-			http.authorizeRequests()
-					.antMatchers("/web/games.html").permitAll();
-//					.antMatchers("/web/game_view.html").permitAll()
-//					.antMatchers("/web/stylesheet.css").permitAll()
-//					.antMatchers("/rest/games").permitAll()
-//					.antMatchers("/api/").denyAll()
-//					.anyRequest().fullyAuthenticated();
-
-			http.csrf().disable();
-			http.exceptionHandling().authenticationEntryPoint(((request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
-			http.formLogin().successHandler(((request, response, authentication) -> clearAuthenticationAttributes(request)));
-			http.formLogin().failureHandler(((request, response, exception) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)));
-			http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
-		}
-
-		private void clearAuthenticationAttributes(HttpServletRequest request) {
-			HttpSession httpSession = request.getSession(false);
-			if (httpSession != null) {
-				httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-			}
-		}
-	}
-
-
 
 	@Bean
 	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository, GamePlayerRepository gamePlayerRepository, ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
-
-
-
-
-
-
-
-
 
 			Player p1 = new Player("p1@p1.com", "Password1");
 			playerRepository.save(p1);
@@ -179,5 +119,74 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Score g1p1s = new Score(p1, g1, 1, finishDate);
 			scoreRepository.save(g1p1s);
 		};
+	}
+}
+
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+
+	@Autowired
+	private PlayerRepository playerRepository;
+
+	@Override
+	public void init(AuthenticationManagerBuilder auth) throws Exception { auth.userDetailsService(
+			username -> {
+				Player player = playerRepository.findByUsername(username);
+				if (player != null) {
+					return new User(player.getUsername(), player.getPassword(), AuthorityUtils.createAuthorityList("USER"));
+				} else {
+					throw new UsernameNotFoundException("Unknown User: " + username);
+				}
+			});
+	};
+};
+
+@EnableWebSecurity
+@Configuration
+class WebAccessConfig extends WebSecurityConfigurerAdapter {
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+
+		http.authorizeRequests()
+				.antMatchers("/games.js").permitAll()
+				.antMatchers("/games.html").permitAll()
+				.antMatchers("/game_view.html").permitAll()
+				.antMatchers("/game_view.js").permitAll()
+				.antMatchers("/stylesheet.css").permitAll()
+				.antMatchers("/rest").permitAll()
+				.antMatchers("/api").permitAll()
+				.antMatchers("/api/login.html").permitAll()
+				.antMatchers("/api/gameplayers").permitAll()
+//				.anyRequest().fullyAuthenticated()
+				.and()
+				.csrf().disable()
+				.formLogin()
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.loginPage("/api/login.html")
+				.and()
+				.logout()
+				.logoutUrl("/api/logout");
+
+
+		// if user is not authenticated, just send an authentication failure response
+		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if login is successful, just clear the flags asking for authentication
+		http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+		// if login fails, just send an authentication failure response
+		http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if logout is successful, just send a success response
+		http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+	}
+
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession httpSession = request.getSession(false);
+		if (httpSession != null) {
+			httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+		}
 	}
 }

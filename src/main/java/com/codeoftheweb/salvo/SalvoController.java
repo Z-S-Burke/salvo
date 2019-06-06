@@ -2,6 +2,9 @@ package com.codeoftheweb.salvo;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -9,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RestController
@@ -28,6 +33,30 @@ public class SalvoController {
     public List<Game> getGames() {
 
        return gameRepo.findAll();
+    }
+
+    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
+    public String loginPage(@RequestParam(value = "error", required = false) String error,
+                            @RequestParam(value = "logout", required = false) String logout,
+                            Model model) {
+        String errorMessge = null;
+        if(error != null) {
+            errorMessge = "Username or Password is incorrect!";
+        }
+        if(logout != null) {
+            errorMessge = "You have been successfully logged out!";
+        }
+        model.addAttribute("errorMessge", errorMessge);
+        return "login";
+    }
+
+    @RequestMapping(value="/logout", method = RequestMethod.POST)
+    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return "redirect:/login?logout=true";
     }
 
     @RequestMapping("/api/games/game_info")
@@ -162,6 +191,9 @@ public class SalvoController {
             };
         }
     }
+
+
+
 
 
 //import org.springframework.context.annotation.Bean;
