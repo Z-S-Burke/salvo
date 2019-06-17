@@ -71,6 +71,12 @@
     border-color: black;
 }
 
+.loginBar {
+    border-top: solid;
+    border-bottom: solid;
+    border-width: 80px;
+}
+
 .sideTable {
     border-top: double;
     border-left: double;
@@ -112,4 +118,10 @@
 .missMarker2 {
     background-size: cover;
     background-image: url("assets/missMarker2.png");
+}
+
+.loginContainer {
+    font-size: 32px;
+    height: 100%;
+    width: 100%;
 }

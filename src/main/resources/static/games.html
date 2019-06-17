@@ -9,21 +9,30 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body class="bg-dark d-flex justify-content-center">
+<body class="bg-dark text-light d-flex">
+    <!-- <div class="d-flex justify-content-center">
+        <form id="login-form" method="POST" onclick="login()">
+            <label>Username: <input type="text" id="loginUsername" name="username"></label>
+            <label>Password: <input type="text" id="loginPassword" name="password"></label>
+            <button id="submit-btn" type="submit">Log In</button>
+            <button action="/api/register"> ...or sign up </button>
+        </form>
+    </div> -->
     <div class="border border-light" id="app">
-        <h1 class="display-1 text-light m-4"> GAMES </h1>
+        <h1 class="display-1 text-light mx-4"> GAMES </h1>
+        <h4 class="text-light text-center"> &#40;for {{games[0].GamePlayers[0].Player.username}}&#41;</h4>
         <div v-for="(game, index) in games" class="text-light border border-light p-2" :key="games.id">
-            <h4 class="bg-light text-dark text-center"> Match ID: {{game.GameID}} </h4>
+            <h4 class="bg-light text-dark text-center"> Match: {{game.GameInstance.id}} </h4>
             <div v-for="(oneGamePlayer, index) in game.GamePlayers" :key="index" class="bg-dark text-light"
                 id="game_list">
                 <div class="bg-info text-light">
                     <ol>
-                        <p>Player ID: {{oneGamePlayer.GamePlayerID}}</p>
+                        <p>Player ID: {{oneGamePlayer.Ships}}</p>
                         <p>Username: {{oneGamePlayer.Player.Username}}</p>
                     </ol>
                 </div>
             </div>
-            <p class="text-center"> &#40;Date: {{game.DateCreated}}&#41; </p>
+            <p class="text-center"> &#40;Date: {{game.GameInstance.creationDate}}&#41; </p>
         </div>
     </div>
 </body>

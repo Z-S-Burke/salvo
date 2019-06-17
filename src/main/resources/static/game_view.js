@@ -2,7 +2,7 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "http://localhost:8080/api/gameplayers/",
+            games_URL: "http://localhost:8080/api/gameplayers",
             ships_URL: "http://localhost:8080/api/ships",
             players: [],
             hits: [],

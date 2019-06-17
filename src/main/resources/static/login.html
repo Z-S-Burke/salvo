@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
-<form id="login-form" method="POST" action="/api/login">
-    <label>Username: <input type="text" name="username"></label>
-    <label>Password: <input type="text" name="password"></label>
-    <button id="submit-btn" type="submit">Log In</button>
-</form>
+
+<body class="bg-danger">
+    <div id="app" class="d-flex flex-column justify-content-center align-items-center ">
+        <div class="loginContainer loginBar bg-light">
+            <h1 class="display-1 text-center"> Salvo </h1>
+            <div>
+                <form id="login-form"  method="POST" class="d-flex flex-column align-items-center">
+                    <label>Username: <input type="text" id="loginUsername" name="username"></label>
+                    <label>Password: <input type="text" id="loginPassword" name="password"></label>
+                    <div>
+                        <button id="submit-btn" type="submit" class="mx-3 px-3 my-3 bg-light">Log In</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 </body>
+
+<script src="login.js"> </script>
+
 </html>

@@ -2,8 +2,10 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "http://localhost:8080/api/scoredboard",
+            games_URL: "http://localhost:8080/user_games",
             games: [],
+            players_URL: "http://localhost:8080/api/playerList",
+            players: [],
             proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/"
         };
     },
@@ -36,7 +38,18 @@ new Vue({
         listGames(games) {
             let listAnchor = document.getElementById("game_list");
             document.createElement("ol")
-        }
+        },
+        login() {
+            getData(this.proxy_URL, this.players_URL);
+            let username = document.getElementById("loginUsername").innerHTML;
+            let password = document.getElementById("loginPassword").innerHTML;
+
+            // let loginAnchor = document.getElementById("login-form");
+            // let username = document.createElement("label"); username.inputMode("text"); username.innerHTML("Username...");
+            // let password = document.createElement("label"); password.inputMode("text"); password.innerHTML("Password...");
+            // let submit = document.createElement("button"); submit.id = "submit-btn"; submit.innerHTML("Log In");
+            // loginAnchor.appendChild(username); loginAnchor.appendChild(password); loginAnchor.appendChild(submit);
+        }   
     },
     mounted() {
         this.getData(this.proxy_URL, this.games_URL);
