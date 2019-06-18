@@ -2,38 +2,55 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "http://localhost:8080/user_games",
-            games: [],
-            players_URL: "http://localhost:8080/api/playerList",
-            players: [],
-            proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/"
+            currentUser: [],
+            currentUserURL: "http://localhost:8080/api/username",
+            loginStatus: false,
+            loginURL: "http://localhost:8080/api/login",
+            username: "",
+            password: ""
         };
     },
     methods: {
-        getData(proxy_URL, playes_URL) {
-            fetch(players_URL, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    mode: "cors"
+        login() {
+            console.log('logging in')
+            console.log(this.username)
+            console.log(this.password)
+            fetch(this.loginURL, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "username=" + this.username + "&password=" + this.password
+            })
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 200) {
+                        console.log("You have successfully logged in")
+                        loginStatus = true;
+                        this.accountStatus();
+                    }
+                    return response.json();
                 })
+                .catch(err => console.log(err))
+        },
+        accountStatus() {
+            fetch(this.currentUserURL, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
                 .then(response => {
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data)
-                    this.games = data;
+                    this.currentUser = data;
                 })
                 .catch(err => console.log(err))
         },
-        login() {
-            // getData(this.proxy_URL, this.players_URL);
-            // let username = document.getElementById("loginUsername").innerHTML;
-            // let password = document.getElementById("loginPassword").innerHTML;
-        }   
+        signup() {
+
+        }
     },
-    mounted() {
-        // this.getData(this.proxy_URL, this.games_URL);
-        this.login();
-    }
 });

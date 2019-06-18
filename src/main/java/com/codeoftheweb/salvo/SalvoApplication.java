@@ -57,6 +57,8 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			gamePlayerRepository.save(gp2);
 			GamePlayer gp3 = new GamePlayer(g2, p3);
 			gamePlayerRepository.save(gp3);
+			GamePlayer gp4 = new GamePlayer(g2, p1);
+			gamePlayerRepository.save(gp4);
 
 			Set<String> location1 = new HashSet<>();
 			location1.add("E7");location1.add("E8"); location1.add("E9");location1.add("E10");
@@ -118,6 +120,9 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Date finishDate = new Date();
 			Score g1p1s = new Score(p1, g1, 1, finishDate);
 			scoreRepository.save(g1p1s);
+			Score g1p2s = new Score(p2, g1, 0, finishDate);
+			finishDate = new Date();
+			scoreRepository.save(g1p2s);
 		};
 	}
 }
@@ -151,23 +156,24 @@ class WebAccessConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/games.js").permitAll()
 				.antMatchers("/games.html").permitAll()
-				.antMatchers("/game_view.html").permitAll()
+				.antMatchers("/game_view.html").hasAnyAuthority("USER")
 				.antMatchers("/game_view.js").permitAll()
-				.antMatchers("/stylesheet.css").permitAll()
 				.antMatchers("/rest").permitAll()
 				.antMatchers("/api").permitAll()
-				.antMatchers("/api/login.html").permitAll()
+				.antMatchers("/login.html").permitAll()
 				.antMatchers("/api/gameplayers").permitAll()
+				.antMatchers("/api/players").permitAll()
 //				.anyRequest().fullyAuthenticated()
 				.and()
-				.csrf().disable()
 				.formLogin()
-				.usernameParameter("username")
-				.passwordParameter("password")
-				.loginPage("/api/login.html")
+					.usernameParameter("username")
+					.passwordParameter("password")
+					.loginPage("/api/login")
+//					.defaultSuccessUrl("/games.html")
 				.and()
 				.logout()
 				.logoutUrl("/api/logout");
+		http.csrf().disable();
 
 
 		// if user is not authenticated, just send an authentication failure response

@@ -1,10 +1,7 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -12,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 public class SalvoController {
@@ -29,39 +27,26 @@ public class SalvoController {
     @Autowired
     private GameRepository gameRepo;
 
+    private String currentUser;
+
+
+    @RequestMapping(value = "/api/username", method = RequestMethod.GET)
+    @ResponseBody
+    public Map currentUserName(Authentication authentication) {
+        currentUser = authentication.getName();
+        Player loggedPlayer = playerRepo.findByUsername(currentUser);
+        Map<String, Object> currentUserMap = new LinkedHashMap<>();
+        currentUserMap.put("username", loggedPlayer.getUsername());
+        currentUserMap.put("id", loggedPlayer.getId());
+
+        return currentUserMap;
+    }
+
     @RequestMapping("/api/games")
-    public List<Game> getGames() {
+    public Map<String, Object> getGames(Authentication authentication) {
 
-       return gameRepo.findAll();
-    }
-
-    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
-    public String loginPage(@RequestParam(value = "error", required = false) String error,
-                            @RequestParam(value = "logout", required = false) String logout,
-                            Model model) {
-        String errorMessge = null;
-        if(error != null) {
-            errorMessge = "Username or Password is incorrect!";
-        }
-        if(logout != null) {
-            errorMessge = "You have been successfully logged out!";
-        }
-        model.addAttribute("errorMessge", errorMessge);
-        return "login";
-    }
-
-    @RequestMapping(value="/logout", method = RequestMethod.POST)
-    public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/login?logout=true";
-    }
-
-    @RequestMapping("/api/games/game_info")
-    public List<Map> getGameInfo() {
-
+        Map<String, Object> currentUserMap = new LinkedHashMap<>();
+        currentUserMap.put("player", playerRepo.findByUsername(authentication.getName()));
         List<Map> gameList = new ArrayList<>();
         gameRepo.findAll().stream().forEach(oneGame -> {
             System.out.println("GAME LOOP");
@@ -75,30 +60,38 @@ public class SalvoController {
             gameList.add(oneGameMap);
         });
         System.out.println("RETURN GAME LIST");
-        return gameList;
+
+        currentUserMap.put("games", gameList);
+
+        return currentUserMap;
     }
 
     public static Map mapGame (Game game, List gamePlayerList) {
         Map<String, Object> oneGameMap = new LinkedHashMap<>();
-        oneGameMap.put("GameID", game.getId());
-        oneGameMap.put("DateCreated", game.getCreationDate());
-        oneGameMap.put("GamePlayers", gamePlayerList);
+        oneGameMap.put("gameID", game.getId());
+        oneGameMap.put("dateCreated", game.getCreationDate());
+        oneGameMap.put("gamePlayers", gamePlayerList);
+
 
         return oneGameMap;
     }
 
+    public Player loggedInPlayer (Authentication authentication) {
+        return playerRepo.findByUsername(authentication.getName());
+    }
+
     public static Map mapGamePlayers (GamePlayer gamePlayer) {
         Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
-        gamePlayerMap.put("GamePlayerID", gamePlayer.getId());
-        gamePlayerMap.put("Player", mapGamePlayerPlayers(gamePlayer));
+        gamePlayerMap.put("gamePlayerID", gamePlayer.getId());
+        gamePlayerMap.put("player", mapGamePlayerPlayers(gamePlayer));
 
         return gamePlayerMap;
     }
 
     public static Map mapGamePlayerPlayers (GamePlayer gamePlayer) {
         Map<String, Object> playerMap = new LinkedHashMap<>();
-        playerMap.put("Username", gamePlayer.getPlayer().getUsername());
-        playerMap.put("PlayerID", gamePlayer.getPlayer().getId());
+        playerMap.put("username", gamePlayer.getPlayer().getUsername());
+        playerMap.put("playerID", gamePlayer.getPlayer().getId());
 
         return playerMap;
     }
@@ -111,9 +104,28 @@ public class SalvoController {
     @Autowired
     private PlayerRepository playerRepo;
 
-    @RequestMapping("/api/players")
+    @RequestMapping(value = "/api/playerList")
     public List<Player> getPlayers() {
         return playerRepo.findAll();
+    }
+
+    @RequestMapping(value = "/api/players")
+    public Player newPlayerAuthorization(Authentication authentication) {
+        Boolean isValid = playerRepo.findByUsername(authentication.getName()) == null ?  true : false;
+        if (isValid) {
+            Player newPlayer = null;
+            newPlayer.setUsername(authentication.getName());
+            System.out.println("This player has been created.");
+            return newPlayer;
+        }
+        else {
+            System.out.println("This player already exists.");
+            return playerRepo.findByUsername(authentication.getName());
+        }
+    }
+
+    public void addPlayer () {
+
     }
 
     @RequestMapping("/api/players/player_info")
@@ -146,8 +158,29 @@ public class SalvoController {
     private ShipRepository shipRepo;
 
     @RequestMapping("/api/gameplayers")
+
     public List<GamePlayer> getGamePlayers() {
         return gamePlayerRepo.findAll();
+    }
+
+    @RequestMapping("/user_games")
+    public List<Map> getUserGames() {
+
+        List<Map> currentUserGameList = new ArrayList<>();
+        gameRepo.findAll().stream().forEach(oneGame -> {
+            System.out.println("GAME LOOP");
+            List<Map> gamePlayerList = new ArrayList<>();
+            oneGame.getGamePlayers().stream().forEach(oneGamePlayer -> {
+                System.out.println("GAMEPLAYER LOOP");
+                gamePlayerList.add(mapGamePlayers(oneGamePlayer));
+            });
+            Map<String, Object> oneGameMap = mapGame(oneGame, gamePlayerList);
+            System.out.println("ONE GAME MAP");
+            currentUserGameList.add(oneGameMap);
+        });
+        System.out.println("RETURN GAME LIST");
+
+        return currentUserGameList;
     }
 
     @RequestMapping("/api/gameplayers/gameplayer_info")
@@ -157,7 +190,8 @@ public class SalvoController {
         gamePlayerRepo.findAll().stream().forEach(oneGamePlayer -> {
             Map<String, Object> oneGamePlayerMap = new HashMap<>();
             oneGamePlayerMap.put("Linked Game: ", oneGamePlayer.getGameInstance());
-            oneGamePlayerMap.put("Linked Player: ", oneGamePlayer.getPlayer());
+            oneGamePlayerMap.put("Linked Username: ", oneGamePlayer.getPlayer().getUsername());
+            oneGamePlayerMap.put("Linked Player ID: ", oneGamePlayer.getPlayer().getId());
             oneGamePlayerMap.put("GamePlayer Instance ID: ", oneGamePlayer.getId());
             oneGamePlayerMap.put("Ships: ", oneGamePlayer.getShips());
             oneGamePlayerMap.put("Salvoes", oneGamePlayer.getSalvoes());
@@ -166,7 +200,6 @@ public class SalvoController {
 
         return gamePlayerList;
     }
-
 
 
     @RequestMapping("/api/ships")
@@ -178,7 +211,6 @@ public class SalvoController {
     public List<Salvo> getSalvoes() {
         return salvoRepo.findAll();
     }
-
 
     @Bean
         public WebMvcConfigurer corsConfigurer() {

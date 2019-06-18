@@ -4,28 +4,86 @@ new Vue({
         return {
             games_URL: "http://localhost:8080/user_games",
             games: [],
-            players_URL: "http://localhost:8080/api/playerList",
-            players: [],
-            proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/"
+            currentUserURL: "http://localhost:8080/api/username",
+            currentUser: [],
+            loginStatus: false,
+            loginURL: "http://localhost:8080/api/login",
+            logoutURL: "http://localhost:8080/api/logout",
+            username: "",
+            password: ""
         };
     },
     methods: {
-        getData(proxy_URL, games_URL) {
+        getData(games_URL) {
             fetch(games_URL, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    mode: "cors"
-                })
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
                 .then(response => {
                     return response.json();
                 })
                 .then(data => {
                     console.log(data)
                     this.games = data;
-                    //console.log(Object.entries(this.games)); 
-                    //this.games = this.convertObjects(this.games);
-                    //this.games = this.games[1];
+                })
+                .catch(err => console.log(err))
+        },
+        login() {
+            console.log('logging in')
+            console.log(this.username)
+            console.log(this.password)
+            fetch(this.loginURL, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "username=" + this.username + "&password=" + this.password
+            })
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 200) {
+                        console.log("You have successfully logged in")
+                        loginStatus = true;
+                        this.accountStatus();
+                    }
+                    return response.json();
+                })
+                .catch(err => console.log(err))
+        },
+        accountStatus() {
+            fetch(this.currentUserURL, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.currentUser = data;
+                })
+                .catch(err => console.log(err))
+        },
+        logout() {
+            console.log("Logging out")
+            fetch(this.loginURL, {
+                method: "POST",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+            })
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 200) {
+                        console.log("You have successfully logged out")
+                        loginStatus = false;
+                    }
+                    return response.json();
                 })
                 .catch(err => console.log(err))
         },
@@ -35,23 +93,8 @@ new Vue({
             });
             return result;
         },
-        listGames(games) {
-            let listAnchor = document.getElementById("game_list");
-            document.createElement("ol")
-        },
-        login() {
-            getData(this.proxy_URL, this.players_URL);
-            let username = document.getElementById("loginUsername").innerHTML;
-            let password = document.getElementById("loginPassword").innerHTML;
+        signup() {
 
-            // let loginAnchor = document.getElementById("login-form");
-            // let username = document.createElement("label"); username.inputMode("text"); username.innerHTML("Username...");
-            // let password = document.createElement("label"); password.inputMode("text"); password.innerHTML("Password...");
-            // let submit = document.createElement("button"); submit.id = "submit-btn"; submit.innerHTML("Log In");
-            // loginAnchor.appendChild(username); loginAnchor.appendChild(password); loginAnchor.appendChild(submit);
-        }   
+        }
     },
-    mounted() {
-        this.getData(this.proxy_URL, this.games_URL);
-    }
 });

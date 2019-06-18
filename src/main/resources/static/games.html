@@ -5,24 +5,64 @@
     <meta charset="UTF-8">
     <title>Salvo - Games</title>
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body class="bg-dark text-light d-flex">
-    <!-- <div class="d-flex justify-content-center">
-        <form id="login-form" method="POST" onclick="login()">
-            <label>Username: <input type="text" id="loginUsername" name="username"></label>
-            <label>Password: <input type="text" id="loginPassword" name="password"></label>
-            <button id="submit-btn" type="submit">Log In</button>
-            <button action="/api/register"> ...or sign up </button>
-        </form>
-    </div> -->
-    <div class="border border-light" id="app">
+<body class="games-page">
+    <h1 class="titleText"> S A L V O </h1>
+    <div class="text-dark d-flex" id="app">
+        <div class="loginContainer">
+            <div v-if="!currentUser.username" class="d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-column">
+                    <div class="d-flex flex-column align-items-end">
+                        <label class="text-danger"> Username:
+                            <input type="text" id="loginUsername" v-model="username">
+                        </label>
+                        <label class="text-danger"> Password:
+                            <input type="text" id="loginPassword" v-model="password">
+                        </label>
+                    </div>
+                    <div class="d-flex flex-column align-items-end">
+                        <button v-on:click="login" id="login-btn" type="submit" class="m-3 px-3">
+                            Log In
+                        </button>
+                    </div>
+                    <div class="d-flex flex-column align-items-end">
+                        <p class="text-danger text-center"> Don't have an account? </p>
+                        <button v-on:click="signup" id="signup-btn" type="submit" class="mr-3">
+                            Register
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between" v-else>
+                <div class="d-flex flex-column">
+                    <div class="d-flex justify-content-around">
+                        <div class="d-flex">
+                            <p class="pr-3 text-danger font-weight-bold"> Username: </p>
+                            <p class="text-light"> {{currentUser.username}} </p>
+                        </div>
+                        <div class="d-flex px-3">
+                            <p class="pr-3 text-danger font-weight-bold"> ID: </p>
+                            <p class="text-light"> {{currentUser.id}} </p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button v-on:click="logout" id="logoutButton" type="submit" class="my-3 mr-3 bg-light">
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="border border-light" id="app">
         <h1 class="display-1 text-light mx-4"> GAMES </h1>
-        <h4 class="text-light text-center"> &#40;for {{games[0].GamePlayers[0].Player.username}}&#41;</h4>
+        <h4 class="text-light text-center"> &#40; {{games.player.username}} &#41;</h4>
         <div v-for="(game, index) in games" class="text-light border border-light p-2" :key="games.id">
-            <h4 class="bg-light text-dark text-center"> Match: {{game.GameInstance.id}} </h4>
+            <h4 class="bg-light text-dark text-center"> Match: {{game.gameID}} </h4>
             <div v-for="(oneGamePlayer, index) in game.GamePlayers" :key="index" class="bg-dark text-light"
                 id="game_list">
                 <div class="bg-info text-light">
@@ -34,7 +74,7 @@
             </div>
             <p class="text-center"> &#40;Date: {{game.GameInstance.creationDate}}&#41; </p>
         </div>
-    </div>
+    </div> -->
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>

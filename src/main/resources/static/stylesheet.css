@@ -4,6 +4,15 @@
     background-image: url("assets/blackwater2.gif"); 
     background-size: cover;
 }
+
+.games-page {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    background-image: url("assets/water_tile.gif"); 
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 .grid-cell {
     font-weight: bold;
     background-size: cover;
@@ -71,12 +80,6 @@
     border-color: black;
 }
 
-.loginBar {
-    border-top: solid;
-    border-bottom: solid;
-    border-width: 80px;
-}
-
 .sideTable {
     border-top: double;
     border-left: double;
@@ -121,7 +124,19 @@
 }
 
 .loginContainer {
-    font-size: 32px;
-    height: 100%;
-    width: 100%;
+    top: 0;
+    right: 0;
+    position: fixed;
+}
+
+.loginBar {
+    border-top: double black;
+    border-bottom: double black;
+    border-width: 25px;
+}
+
+.titleText {
+    font-size: 200px;
+    color: white;
+    position: fixed;
 }
