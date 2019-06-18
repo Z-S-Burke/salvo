@@ -172,7 +172,8 @@ class WebAccessConfig extends WebSecurityConfigurerAdapter {
 //					.defaultSuccessUrl("/games.html")
 				.and()
 				.logout()
-				.logoutUrl("/api/logout");
+				.logoutUrl("/api/logout")
+				.logoutSuccessUrl("/games.html")
 		http.csrf().disable();
 
 

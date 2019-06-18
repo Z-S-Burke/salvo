@@ -47,7 +47,7 @@ new Vue({
                     console.log(response)
                     if (response.status == 200) {
                         console.log("You have successfully logged in")
-                        loginStatus = true;
+                        this.loginStatus = true;
                         this.accountStatus();
                     }
                     return response.json();
@@ -70,18 +70,16 @@ new Vue({
         },
         logout() {
             console.log("Logging out")
-            fetch(this.loginURL, {
-                method: "POST",
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
+            fetch(this.logoutURL, {
+                method: "POST"
             })
                 .then(response => {
                     console.log(response)
                     if (response.status == 200) {
                         console.log("You have successfully logged out")
-                        loginStatus = false;
+                        this.loginStatus = false;
+                        this.username = "";
+                        this.password = "";
                     }
                     return response.json();
                 })

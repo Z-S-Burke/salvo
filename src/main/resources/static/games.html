@@ -14,10 +14,10 @@
     <h1 class="titleText"> S A L V O </h1>
     <div class="text-dark d-flex" id="app">
         <div class="loginContainer">
-            <div v-if="!currentUser.username" class="d-flex justify-content-between align-items-center">
+            <div v-if="!loginStatus" class="d-flex justify-content-between align-items-center pt-3 pr-3">
                 <div class="d-flex flex-column">
-                    <div class="d-flex flex-column align-items-end">
-                        <label class="text-danger"> Username:
+                    <div class="d-flex flex-column align-items-end pr-3">
+                        <label class="text-danger pt-4"> Username:
                             <input type="text" id="loginUsername" v-model="username">
                         </label>
                         <label class="text-danger"> Password:
@@ -30,14 +30,15 @@
                         </button>
                     </div>
                     <div class="d-flex flex-column align-items-end">
-                        <p class="text-danger text-center"> Don't have an account? </p>
+                        <p class="text-danger pr-3"> Don't have an account? </p>
+                        <p class="text-danger pr-3"> Fill in your details above and then click: </p>
                         <button v-on:click="signup" id="signup-btn" type="submit" class="mr-3">
                             Register
                         </button>
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-between" v-else>
+            <div class="d-flex justify-content-between pt-3 pr-3" v-else>
                 <div class="d-flex flex-column">
                     <div class="d-flex justify-content-around">
                         <div class="d-flex">
