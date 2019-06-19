@@ -139,4 +139,36 @@
     font-size: 200px;
     color: white;
     position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.gameListContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.gameList {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameContainer {
+    background-color: black;
+    width: 250px;
+}
+
+.gamesTitleText {
+    font-size: 100px;
+    background-color: black;
+}
+
+.matchTitleText {
+    background-color: black;
 }

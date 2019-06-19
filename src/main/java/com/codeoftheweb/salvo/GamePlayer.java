@@ -85,13 +85,13 @@ public class GamePlayer {
     }
 
     //GAMEPLAYER.CREATIONDATE UTILITIES
-    private Date creationDate;
+    private String creationDate;
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = game.getCreationDate();
     }
 }

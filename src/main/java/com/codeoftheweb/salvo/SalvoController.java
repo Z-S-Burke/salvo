@@ -1,6 +1,8 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -84,6 +86,8 @@ public class SalvoController {
         Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
         gamePlayerMap.put("gamePlayerID", gamePlayer.getId());
         gamePlayerMap.put("player", mapGamePlayerPlayers(gamePlayer));
+        gamePlayerMap.put("ships", gamePlayer.getShips());
+        gamePlayerMap.put("salvoes", gamePlayer.getSalvoes());
 
         return gamePlayerMap;
     }
@@ -109,23 +113,23 @@ public class SalvoController {
         return playerRepo.findAll();
     }
 
-    @RequestMapping(value = "/api/players")
-    public Player newPlayerAuthorization(Authentication authentication) {
-        Boolean isValid = playerRepo.findByUsername(authentication.getName()) == null ?  true : false;
-        if (isValid) {
-            Player newPlayer = null;
-            newPlayer.setUsername(authentication.getName());
-            System.out.println("This player has been created.");
-            return newPlayer;
+    @RequestMapping(value = "/api/players", method = RequestMethod.POST)
+    public ResponseEntity<Object> addPlayer (@RequestParam String username, @RequestParam String password) {
+
+        System.out.println(username + password);
+
+        Boolean playerIsNew = playerRepo.findByUsername(username) == null ?  true : false;
+        Boolean passwordLength = password.length() >= 8 ? true : false;
+        Boolean emptyPassword = password.isEmpty() ? false : true;
+        if (playerIsNew && passwordLength && emptyPassword) {
+            Player newPlayer = new Player(username, password);
+            playerRepo.save(newPlayer);
+            System.out.println("New player account created");
         }
         else {
-            System.out.println("This player already exists.");
-            return playerRepo.findByUsername(authentication.getName());
+            System.out.println("This player already exists or the password provided did not match the proper format.");
         }
-    }
-
-    public void addPlayer () {
-
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping("/api/players/player_info")

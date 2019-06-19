@@ -24,14 +24,14 @@ public class Game {
     }
 
     //GAME.CREATIONDATE UTILITIES
-    private Date creationDate;
+    private String creationDate;
 
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -39,7 +39,7 @@ public class Game {
     //GAME CONSTRUCTOR AND UTILITIES
     public Game () {}
 
-    public Game (Date date) {
+    public Game (String date) {
         this.creationDate = date;
     }
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)

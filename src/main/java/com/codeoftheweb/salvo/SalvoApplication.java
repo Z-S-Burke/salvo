@@ -21,6 +21,9 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java. util. Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,10 +49,16 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			playerRepository.save(p3);
 
 			Date creationDate = new Date();
-			Game g1 = new Game(creationDate);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String strDate = dateFormat.format(creationDate);
+			Game g1 = new Game(strDate);
 			gameRepository.save(g1);
-			Game g2 = new Game(creationDate);
+			Game g2 = new Game(strDate);
 			gameRepository.save(g2);
+			Game g3 = new Game(strDate);
+			gameRepository.save(g3);
+			Game g4 = new Game(strDate);
+			gameRepository.save(g4);
 
 			GamePlayer gp1 = new GamePlayer(g1, p1);
 			gamePlayerRepository.save(gp1);
@@ -59,6 +68,15 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			gamePlayerRepository.save(gp3);
 			GamePlayer gp4 = new GamePlayer(g2, p1);
 			gamePlayerRepository.save(gp4);
+			GamePlayer gp5 = new GamePlayer(g3, p1);
+			gamePlayerRepository.save(gp5);
+			GamePlayer gp6 = new GamePlayer(g3, p2);
+			gamePlayerRepository.save(gp6);
+			GamePlayer gp7 = new GamePlayer(g4, p1);
+			gamePlayerRepository.save(gp7);
+			GamePlayer gp8 = new GamePlayer(g4, p2);
+			gamePlayerRepository.save(gp8);
+
 
 			Set<String> location1 = new HashSet<>();
 			location1.add("E7");location1.add("E8"); location1.add("E9");location1.add("E10");
@@ -173,7 +191,7 @@ class WebAccessConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.logout()
 				.logoutUrl("/api/logout")
-				.logoutSuccessUrl("/games.html")
+				.logoutSuccessUrl("/games.html");
 		http.csrf().disable();
 
 
