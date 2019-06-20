@@ -46,7 +46,7 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = alpha + numeral;
-                    cell.className = "grid-cell text-light text-center";
+                    cell.className = "grid-cell text-dark text-center bg-light";
                 })
             })
             this.mainShipLocator(this.p1, this.p2);
@@ -59,7 +59,7 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = "hit" + alpha + numeral;
-                    cell.className = "px-3 py-2 font-weight-bold text-light bg-danger border border-dark text-center";
+                    cell.className = "px-3 py-2 font-weight-bold text-dark bg-light border border-dark text-center";
                 })
             })
             this.hitOrMissSideBoard(this.p1, this.p2);
@@ -110,11 +110,11 @@ new Vue({
                     ship.locationOnBoard.forEach(vector => {
                         if (vector == salvo.location) {
                             let hitMarker = document.getElementById("hit" + vector);
-                            hitMarker.className = "hitMarker";
+                            hitMarker.className = "hitMarker2";
                             hitMarker.innerHTML = "";
                         } else if (salvo.location != vector) {
                             let missMarker = document.getElementById("hit" + salvo.location);
-                            if (missMarker.className == "hitMarker") {
+                            if (missMarker.className == "hitMarker2") {
                                 console.log("Don't touch this")
                             } else {
                                 missMarker.className = "missMarker2";

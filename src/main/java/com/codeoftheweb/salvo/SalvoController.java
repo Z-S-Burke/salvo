@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,6 +67,23 @@ public class SalvoController {
         currentUserMap.put("games", gameList);
 
         return currentUserMap;
+    }
+
+    @RequestMapping(value = "/api/newGame", method = RequestMethod.POST)
+    public Map<String, Object> newGame(Authentication authentication) {
+
+        Map<String, Object> newGameMap = new LinkedHashMap<>();
+        Date creationDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String strDate = dateFormat.format(creationDate);
+        Game newGame = new Game(strDate);
+        GamePlayer newGamePlayer = new GamePlayer(newGame, playerRepo.findByUsername(authentication.getName()));
+        gameRepo.save(newGame);
+        gamePlayerRepo.save(newGamePlayer);
+        playerRepo.save(playerRepo.findByUsername(authentication.getName()));
+
+        newGameMap.put("gameplayer", newGamePlayer);
+        return newGameMap;
     }
 
     public static Map mapGame (Game game, List gamePlayerList) {
@@ -146,11 +164,11 @@ public class SalvoController {
         return  playerList;
     }
 
-    @RequestMapping(value="/api/players/{player_id}", method= RequestMethod.GET)
-    public String findPlayer(@RequestParam("id") Long id, Model model) {
-        model.addAttribute("Player_id", id);
+    @RequestMapping(value="/api/players/{id}", method= RequestMethod.GET)
+    public String findPlayer(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("player", id);
 
-        return "player details";
+        return "player";
     }
 
 
