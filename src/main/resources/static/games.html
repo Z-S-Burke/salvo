@@ -80,13 +80,13 @@
                                         <ol>
                                             <p> Username: {{oneGamePlayer.player.username}}</p>
                                         </ol>
+                                        <div v-if="oneGamePlayer.player.username == currentUser.username" class="d-flex justify-content-center align-items-center">
+                                            <button @click="rejoin(oneGamePlayer.gamePlayerID)"> Rejoin Game </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <h5 class="bg-light text-dark text-center"> Start Date: </h5>
                                 <p class="text-center"> {{game.dateCreated}} </p>
-                                <div class="d-flex justify-content-center">
-                                    <button> Rejoin Game </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,9 +97,9 @@
                     <div class="text-light pr-3">
                         <h1 class="gamesTitleText"> START A WAR </h1>
                     </div>
-                    <div class="gameContainer d-flex justify-content-center align-items-center border border-light">
-                        <a href="http://localhost:8080/game_view.html" v-on:click="newGame" class="text-light m-3 px-2"> NEW
-                            GAME </a> 
+                    <div class="gameContainer d-flex justify-content-center align-items-center border border-light text-light m-3 px-2"
+                        v-on:click="newGame">
+                        <h3> NEW GAME </h3>
                     </div>
                     <div class="d-flex flex-wrap justify-content-end">
                         <div v-for="(game, index) in joinableGames" class="text-light border border-light p-2 m-3"
@@ -122,7 +122,7 @@
                                 <h5 class="bg-light text-dark text-center"> Start Date: </h5>
                                 <p class="text-center"> {{game.dateCreated}} </p>
                                 <div class="d-flex justify-content-center">
-                                    <button> Join Game </button>
+                                    <button @click="addPlayerToGame(game.gameID)"> Join Game </button>
                                 </div>
                             </div>
                         </div>

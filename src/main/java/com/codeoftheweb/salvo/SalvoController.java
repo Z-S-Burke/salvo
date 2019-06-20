@@ -83,6 +83,7 @@ public class SalvoController {
         playerRepo.save(playerRepo.findByUsername(authentication.getName()));
 
         newGameMap.put("gameplayer", newGamePlayer);
+        newGameMap.put("gamePlayerID", newGamePlayer.getId());
         return newGameMap;
     }
 
@@ -109,6 +110,7 @@ public class SalvoController {
 
         return gamePlayerMap;
     }
+
 
     public static Map mapGamePlayerPlayers (GamePlayer gamePlayer) {
         Map<String, Object> playerMap = new LinkedHashMap<>();
@@ -165,10 +167,68 @@ public class SalvoController {
     }
 
     @RequestMapping(value="/api/players/{id}", method= RequestMethod.GET)
-    public String findPlayer(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("player", id);
+    public Player findPlayer(@PathVariable Long id) {
 
-        return "player";
+        return playerRepo.findById(id);
+    }
+
+    @RequestMapping(value="/api/gameplayers/{id}", method= RequestMethod.GET)
+    public GamePlayer findGamePlayer(@PathVariable Long id) {
+
+        return gamePlayerRepo.findById(id);
+    }
+
+    @RequestMapping(value="/api/games/{id}", method = RequestMethod.POST)
+    public Long joinExistingGame(@PathVariable Long id, Authentication authentication) {
+
+        Game game = gameRepo.findById(id);
+        System.out.println(game);
+
+        GamePlayer newGamePlayer = new GamePlayer(game, playerRepo.findByUsername(authentication.getName()));
+        System.out.println(newGamePlayer);
+        System.out.println(playerRepo.findByUsername(authentication.getName()));
+
+        gameRepo.save(game);
+        gamePlayerRepo.save(newGamePlayer);
+        playerRepo.save(playerRepo.findByUsername(authentication.getName()));
+
+        return newGamePlayer.getId();
+    }
+
+    @RequestMapping(value = "/api/games/{id}", method = RequestMethod.GET)
+    public Map<String, Object> getGamePlayerMatchInfo (@PathVariable Long id, Authentication authentication) {
+        Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
+
+        Game joiningGame = gameRepo.findById(id);
+        joiningGame.getGamePlayers().stream().forEach(gamePlayer -> {
+            if (gamePlayer.getPlayer().getUsername() == authentication.getName()) {
+                GamePlayer newGamePlayer = gamePlayer;
+                gamePlayerMap.put("gamePlayerID", newGamePlayer.getId());
+                gamePlayerMap.put("player", mapGamePlayerPlayers(newGamePlayer));
+                gamePlayerMap.put("ships", newGamePlayer.getShips());
+                gamePlayerMap.put("salvoes", newGamePlayer.getSalvoes());
+            }
+        });
+
+        return gamePlayerMap;
+    }
+
+    @RequestMapping(value = "/game_view.html/{id}", method = RequestMethod.GET)
+    public Map<String, Object> gameView (@PathVariable Long id, Authentication authentication) {
+        Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
+
+        Game joiningGame = gameRepo.findById(id);
+        joiningGame.getGamePlayers().stream().forEach(gamePlayer -> {
+            if (gamePlayer.getPlayer().getUsername() == authentication.getName()) {
+                GamePlayer newGamePlayer = gamePlayer;
+                gamePlayerMap.put("gamePlayerID", newGamePlayer.getId());
+                gamePlayerMap.put("player", mapGamePlayerPlayers(newGamePlayer));
+                gamePlayerMap.put("ships", newGamePlayer.getShips());
+                gamePlayerMap.put("salvoes", newGamePlayer.getSalvoes());
+            }
+        });
+
+        return gamePlayerMap;
     }
 
 

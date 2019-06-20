@@ -2,40 +2,41 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "http://localhost:8080/api/gameplayers",
-            ships_URL: "http://localhost:8080/api/ships",
-            players: [],
+            games_URL: "http://localhost:8080/api/gameplayers/" + this.urlParse(),
+            player: [],
             hits: [],
             misses: [],
             p1: [],
             p2: [],
             ships: [],
-            proxy_URL: "proxyUrl: 'https://cors-anywhere.herokuapp.com/",
             numeralArray: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             alphaArray: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         };
     },
     methods: {
-        getPlayerData(proxy_URL, games_URL) {
+        getPlayerData(games_URL) {
             fetch(games_URL, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    mode: "cors"
-                })
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
                 .then(response => {
                     return response.json();
                 })
                 .then(data => {
-                    this.players = data;
-                    this.p1 = data[0];
-                    this.p2 = data[1];
-                    this.ships = this.p1.ships;
+                    this.player = data;
+                    this.ships = this.player.ships;
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
 
                 })
                 .catch(err => console.log(err))
+        },
+        urlParse() {
+            let url = new URL(window.location.href);
+            let searchParams = new URLSearchParams(url.search);
+            return searchParams.get('userid');
         },
         mainGridMaker(numeralArray, alphaArray) {
             const table = document.getElementById("shipGrid");
@@ -49,7 +50,7 @@ new Vue({
                     cell.className = "grid-cell text-dark text-center bg-light";
                 })
             })
-            this.mainShipLocator(this.p1, this.p2);
+            this.mainShipLocator(this.player);
         },
         hitGridMaker(numeralArray, alphaArray) {
             const table = document.getElementById("hitGrid");
@@ -62,11 +63,11 @@ new Vue({
                     cell.className = "px-3 py-2 font-weight-bold text-dark bg-light border border-dark text-center";
                 })
             })
-            this.hitOrMissSideBoard(this.p1, this.p2);
+            //this.hitOrMissSideBoard(this.player);
         },
         mainShipLocator(p1) {
             let locations = [];
-            locations.push(p1.ships);
+            locations.push(this.ships);
             locations.forEach(target => {
                 target.forEach(ship => {
                     ship.locationOnBoard.forEach(cell => {
@@ -76,7 +77,7 @@ new Vue({
                     })
                 })
             })
-            this.hitOrMissMainBoard(locations, this.p1, this.p2)
+            //this.hitOrMissMainBoard(locations, this.player)
         },
         hitOrMissMainBoard(userShipLocations, user, opponent) {
             let opponentSalvoes = opponent.salvoes;
@@ -127,6 +128,6 @@ new Vue({
         }
     },
     mounted() {
-        this.getPlayerData(this.proxy_URL, this.games_URL);
+        this.getPlayerData(this.games_URL);
     }
 });

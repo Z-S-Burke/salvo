@@ -4,6 +4,8 @@ new Vue({
         return {
             gamesURL: "http://localhost:8080/api/games",
             games: [],
+            joinURL: "",
+            joinData: [],
             newGameURL: "http://localhost:8080/api/newGame",
             currentUserURL: "http://localhost:8080/api/username",
             currentUser: [],
@@ -13,6 +15,7 @@ new Vue({
             loginURL: "http://localhost:8080/api/login",
             logoutURL: "http://localhost:8080/api/logout",
             registerURL: "http://localhost:8080/api/players",
+            joinGameURL: "http://localhost:8080/api/games",
             username: "",
             password: ""
         };
@@ -29,7 +32,6 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data)
                     this.games = data;
                     this.filterGames(this.games);
                     this.filterJoiningNewGames(this.games);
@@ -47,8 +49,8 @@ new Vue({
                 body: "username=" + this.username + "&password=" + this.password
             })
                 .then(response => {
+                    console.log(response)
                     if (response.status == 200) {
-                        console.log("You have successfully logged in")
                         this.loginStatus = true;
                         this.accountStatus();
                         this.getData(this.gamesURL);
@@ -65,21 +67,47 @@ new Vue({
                         this.userGames.push(game);
                     }
                 }
-                console.log(this.userGames)
                 return this.userGames;
             })
         },
         filterJoiningNewGames(gameData) {
             gameData.games.forEach(game => {
-                console.log(game);
                 if (game.gamePlayers.length == 1) {
                     if (game.gamePlayers[0].player.username != this.currentUser.username) {
                         this.joinableGames.push(game);
                     }
                 }
-                console.log(this.joinableGames)
                 return this.joinableGames;
             })
+        },
+        addPlayerToGame(gameID) {
+            fetch(this.joinGameURL + "/" + gameID, {
+                method: "POST",
+            })
+                .then(response => {
+                    console.log(response)
+                    if (response.status == 200) {
+                        console.log("success");
+                        this.joinMatch(gameID);
+                    }
+                })
+                .catch(err => console.log(err))
+        },
+        joinMatch(gameID) {
+            fetch("http://localhost:8080/api/games/" + gameID, {
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.joinData = data;
+                    console.log(this.joinData)
+                    window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
+                })
+                .catch(err => console.log)
+        },
+        rejoin(gamePlayerID) {
+            window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + gamePlayerID);
         },
         accountStatus() {
             fetch(this.currentUserURL, {
@@ -91,8 +119,6 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    localStorage.setItem('logInStatus', true)
-                    console.log(localStorage)
                     this.currentUser = data;
                 })
                 .catch(err => console.log(err))
@@ -105,7 +131,9 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data);
+                    this.joinData = data;
+                    console.log(this.joinData)
+                    window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log(err))
         },
@@ -121,7 +149,7 @@ new Vue({
                         this.password = "";
                         this.userGames = [];
                         this.currentUser = [];
-                        localStorage.
+                        this.joinableGames = [];
                     }
                     return response.json();
                 })
@@ -145,5 +173,5 @@ new Vue({
             });
             return result;
         }
-    },
+    }
 });
