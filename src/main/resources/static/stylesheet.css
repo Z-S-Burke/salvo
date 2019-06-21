@@ -185,10 +185,10 @@
 .gameViewMenu {
     width: 25%;
     height: 25%;
-    position: absolute;
+    /* position: absolute;
     top: 0;
-    right: 0;
-    padding-top: 100px;
+    right: 0; */
+    padding-top: 80px;
     margin-right: 50px;
     display: flex;
     flex-direction: column;
@@ -209,6 +209,22 @@
     width: 150px;
 }
 
+.opponentShipRender {
+    font-size: 60px;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: red;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-image: url(assets/water\ triangle.gif);
+    background-size: contain;
+    background-position-y: 40%;
+    border: solid red;
+    height: 150px;
+    width: 150px;
+}
+
 .gameViewShipSelectorCaption {
     background-color: black;
     color: white;
@@ -218,40 +234,49 @@
 
 .gameViewMenuButton {
     font-size: 20px;
-    width: 125%;
-    height: 75px;
+    width: 30%;
+    height: 40px;
     color: black;
     margin-top: 10px;
     margin-bottom: 10px;
     border: black solid 1px;
+    animation: float 5s ease-in-out infinite;
 }
 
 .gameViewMenuButtonContainer {
-    height: 25%;
-    position: fixed;
-    right: 0;
+    height: 75px;
+    width: 25%;
+    position: absolute;
+    right: 65%;
     bottom: 0;
-    margin-right: 50px;
+    margin-right: 25px;
 }
 
 .fleet {
     color: white;
     padding-left: 5px;
     padding-top: 5px;
-    position: fixed;
-    right: 0;
+    /* position: fixed;
+    right: 0; */
 }
 
 .fleetTitleText {
     font-size: 50px;
     color: white;
     background-image: url(assets/vhs_static.gif);
-    position: fixed;
+    position: absolute;
     left: 65%;
-    width: 250px;
+    width: 35%;
     text-align: center;
     height: 50px;
-    margin-top: 25px;
+}
+
+.opponentTitleText {
+    font-size: 50px;
+    background-image: url(assets/vhs_static.gif);
+    width: 100%;
+    text-align: center;
+    height: 70px;
 }
 
 @keyframes float {
@@ -281,11 +306,21 @@
         grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
 }
 
+.opponentShipRender:hover {
+    background-image: url(assets/opponent.gif);
+    background-size: cover;
+    color: white;
+    background-position-y: 35%;
+    animation: float 2s ease-in-out infinite;
+    filter:
+        grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+}
+
 .gameViewMenuButton:hover {
     background-image: url(assets/dots-grid.gif);
     background-size: cover;
     color: white;
-    background-position-y: 35%;
+    background-position-y: 50%;
     animation: float 2s ease-in-out infinite;
     filter:
         grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
