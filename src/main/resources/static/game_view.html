@@ -11,16 +11,50 @@
 </head>
 
 <body>
-    <div class="mb-5 pb-5 game_view_background" id="app">
+    <div class="game_view_background" id="app">
+        <div class="fleetTitleText d-flex justify-content-center align-items-center">
+            <hp> FLEET </hp>
+        </div>
+        <div class="gameViewMenu">
+            <div class="fleet d-flex">
+                <div class="d-flex flex-wrap justify-content-between">
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 2 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> PATROL BOAT </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 3 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> DESTROYER </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 3 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> SUBMARINE </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 4 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> BATTLESHIP </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 5 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> AIRCRAFT CARRIER </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gameViewMenuButtonContainer">
+                    <button class="gameViewMenuButton"> How to Play </button>
+                    <button class="gameViewMenuButton"> Forfeit </button>
+                    <button class="gameViewMenuButton"> Log Out </button>
+                </div>
+            </div>
+        </div>
         <div class="pt-2 d-flex flex-column">
-            <h1 class="viewTitleText"> S A L V O </h1>
+            <h1 class="viewTitleText mt-4"> S A L V O </h1>
         </div>
         <div class="d-flex justify-content-around align-items-center">
             <div class="m-3 d-flex mainTable2 align-items-center">
                 <table class="d-flex" id="shipGrid">
                 </table>
             </div>
-            <div class="d-flex flex-column side-board-column">
+            <div class="d-flex flex-column side-board-column pr-5">
                 <div class="sideTable2">
                     <h3 class="text-center"> Shots fired </h3>
                     <table class="mx-3 my-3 d-flex justify-content-center" id="hitGrid">
@@ -45,7 +79,7 @@
                     </div>
                     <div v-if="player.id == 2" class="d-flex mx-3">
                         <div v-for="(ship, index) in player.ships" :key="ships.id"
-                            class="border border-white bg-danger px-2 mb-2">
+                            class="border border-white bg-danger px-2">
                             <div class="d-flex align-items-center">
                                 <h5 class="my-2 text-light font-italic"> {{ship.type}} –
                                     &#40{{ship.locationOnBoard.length}}&#41</h5>
@@ -55,6 +89,13 @@
                 </div>
             </div>
         </div>
+        <!-- <div class="tooltip"> HOW TO PLAY
+            <span class="tooltiptext">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur iste suscipit obcaecati tempore,
+                veritatis unde laborum error quasi aperiam. At non officia explicabo adipisci, suscipit id voluptatum
+                quae maiores excepturi.
+            </span>
+        </div> -->
     </div>
 </body>
 
