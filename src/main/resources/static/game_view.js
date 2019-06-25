@@ -3,11 +3,13 @@ new Vue({
     data() {
         return {
             games_URL: "http://localhost:8080/api/gameplayers/" + this.urlParse(),
-            shipsURL: "http://localhost:8080/api/games/players/gameId=" + this.gamePlayerId + "/ships",
+            shipsURL: "http://localhost:8080/api/games/players/" + this.gamePlayerId + "/ships",
             currentUserURL: "http://localhost:8080/api/username",
             logoutURL: "http://localhost:8080/api/logout",
             gamePlayerId: "",
             currentUser: [],
+            readyToFire: false,
+            startGame: false,
             player: [],
             hits: [],
             misses: [],
@@ -64,6 +66,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         getPlayerShips(shipsURL) {
+            console.log(shipsURL)
             fetch(shipsURL, {
                 headers: {
                     "Content-Type": "application/json"
@@ -78,10 +81,38 @@ new Vue({
                     console.log(this.ships);
                 })
         },
+        sendShips(ships) {
+            fetch(this.newGameURL, {
+                method: "POST"
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.joinData = data;
+                    console.log(this.joinData)
+                    window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
+                })
+                .catch(err => console.log(err))
+        },
+        drag(event) {
+            event.dataTransfer.setData("text", ev.target.id);
+        },
+        allowDrop(event) {
+            event.preventDefault();
+        },
+        drop(event) {
+            event.preventDefault();
+            let info = event.dataTransfer.getData("text");
+            event.target.innerHTML(document.getElementById(info));
+        },
         urlParse() {
             let url = new URL(window.location.href);
             let searchParams = new URLSearchParams(url.search);
             return searchParams.get('userid');
+        },
+        clickEventListenerTest(cell) {
+            console.log(cell.id)
         },
         mainGridMaker(numeralArray, alphaArray) {
             const table = document.getElementById("shipGrid");
@@ -89,7 +120,7 @@ new Vue({
             alphaArray.forEach(alpha => {
                 let row = table.insertRow();
                 numeralArray.forEach(numeral => {
-                    let cell = row.insertCell();
+                    let cell = row.insertCell(); 
                     cell.innerHTML = alpha + numeral;
                     cell.id = alpha + numeral;
                     cell.className = "grid-cell text-dark text-center bg-light";
@@ -105,10 +136,16 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = "hit" + alpha + numeral;
-                    cell.className = "px-3 py-2 font-weight-bold text-dark bg-light border border-dark text-center";
+                    cell.className = "grid-cell px-3 py-2 font-weight-bold text-dark bg-light border border-dark text-center";
                 })
             })
-            //this.hitOrMissSideBoard(this.player);
+        },
+        howToPlay() {
+            alert("HOW TO PLAY\n\nThe rules are simple.\n\n1) Begin by placing your ships on the board. Your fleet is located at the top of the screen. The number inside each cutout indicates the length of the ship as seen on the board. Click 'Change Orientation' if you want to switch between a horizontal and vertical placement tof the ship. When you have placed all five ships on the board and are happy to begin the game, click PLAY, located on the right hand side of the viewport.\n\n 2) Once your opponenent has readied up, the game will begin. Select five vectors on the attack board, located on the righthand side, to unleash a salvo in each location. You won't attack, and the game won't progress, until both you and your opponent hit 'FIRE'.\n\n 3) To win the game, you must destroy all of your opponent's ships before they can do the same to yours. Because both teams fire in unison, it is possible for the game to result in a draw. \n\nPlayers are awarded a score of 1 for winning, 0.5 for drawing, and 0 for a loss. Visit the 'GAMES' page to see your rank on the leaderboards.");
+        },
+        alertTest(event) {
+            alert(event.target.id);
+            event.target.className = "grid-cell text-light text-center bg-danger missMarker";
         },
         mainShipLocator(p1) {
             let locations = [];

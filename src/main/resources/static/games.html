@@ -13,7 +13,9 @@
 <body class="games-page">
     <div id="app">
         <div class="loginContainer d-flex justify-content-between">
-            <h1 class="titleText pb-3 pr-5"> S A L V O </h1>
+            <div class="d-flex justify-content-center">
+                <h1 class="titleText pb-3 pr-5"> S A L V O </h1>
+            </div>
             <div v-if="!loginStatus" class="pt-3 pr-3">
                 <div class="d-flex flex-column">
                     <div class="d-flex flex-column align-items-end pr-3">
@@ -80,7 +82,8 @@
                                         <ol>
                                             <p> Username: {{oneGamePlayer.player.username}}</p>
                                         </ol>
-                                        <div v-if="oneGamePlayer.player.username == currentUser.username" class="d-flex justify-content-center align-items-center">
+                                        <div v-if="oneGamePlayer.player.username == currentUser.username"
+                                            class="d-flex justify-content-center align-items-center">
                                             <button @click="rejoin(oneGamePlayer.gamePlayerID)"> Rejoin Game </button>
                                         </div>
                                     </div>

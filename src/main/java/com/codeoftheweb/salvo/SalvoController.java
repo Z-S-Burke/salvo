@@ -153,17 +153,46 @@ public class SalvoController {
     }
 
     @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.GET)
-    public Map<String, Object> getPlayerShips (@PathVariable Long id, Authentication authentication) {
+    public Map<String, Object> getPlayerShips (@RequestParam Long id, Authentication authentication) {
 
         System.out.println(id);
         Map<String, Object> playerShips = new LinkedHashMap<>();
         GamePlayer thisGamePlayer = gamePlayerRepo.findById(id);
+        System.out.println(thisGamePlayer);
             if(thisGamePlayer.getPlayer().getUsername() == authentication.getName()) {
                 playerShips.put("ships", thisGamePlayer.getShips());
             }
 
         return playerShips;
 
+    }
+
+    @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.POST)
+    public ResponseEntity<Object> postShips (@RequestParam Long id, String username, Authentication authentication) {
+
+
+        Boolean validUser = playerRepo.findByUsername(username).getUsername() == authentication.getName() ?  true : false;
+        Boolean matchingGamePlayer = gamePlayerRepo.findById(id) == null ? false : true;
+
+
+        if (validUser) {
+            GamePlayer thisUser = gamePlayerRepo.findById(id);
+            //This user.stream().forEach( ship -> {
+            //thisUser.add(ship)
+
+            //but this isn't a a Java object it's being sent, so how will it identify those different parts?
+            //or can I make the object in JS, it just won't have any meaning until it's sent to the Spring server?
+        }
+        else if (!validUser){
+            System.out.println("You do not have permission to alter another user's data.");
+        }
+        else if (!matchingGamePlayer) {
+            System.out.println("This gameplayer does not exist.");
+        }
+        else {
+            System.out.println("An inscrutable error occurred.");
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping("/api/players/player_info")
@@ -196,11 +225,8 @@ public class SalvoController {
     public Long joinExistingGame(@RequestParam Long id, Authentication authentication) {
 
         Game game = gameRepo.findById(id);
-        System.out.println(game);
 
         GamePlayer newGamePlayer = new GamePlayer(game, playerRepo.findByUsername(authentication.getName()));
-        System.out.println(newGamePlayer);
-        System.out.println(playerRepo.findByUsername(authentication.getName()));
 
         gameRepo.save(game);
         gamePlayerRepo.save(newGamePlayer);
