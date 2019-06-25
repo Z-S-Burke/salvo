@@ -11,69 +11,77 @@
 </head>
 
 <body>
-    <div class="game_view_background" id="app">
-        <div class="pt-2 fleetTitleText d-flex justify-content-center align-items-center">
-            <p> YOUR CREW, WHO YOU LOVE </p>
-        </div>
-        <div class="mt-2 d-flex align-items-center justify-content-between">
-            <h1 class="viewTitleText mt-4"> S A L V O </h1>
-            <div class="d-flex flex-wrap justify-content-around mt-2 pt-5 pr-3">
-                <div class="d-flex flex-column">
-                    <button class="gameViewShipSelector"> 2 </button>
-                    <div class="gameViewShipSelectorCaption text-center"> PATROL BOAT </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <button class="gameViewShipSelector"> 3 </button>
-                    <div class="gameViewShipSelectorCaption text-center"> DESTROYER </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <button class="gameViewShipSelector"> 3 </button>
-                    <div class="gameViewShipSelectorCaption text-center"> SUBMARINE </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <button class="gameViewShipSelector"> 4 </button>
-                    <div class="gameViewShipSelectorCaption text-center"> BATTLESHIP </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <button class="gameViewShipSelector"> 5 </button>
-                    <div class="gameViewShipSelectorCaption text-center"> AIRCRAFT CARRIER </div>
-                </div>
+    <div class="game_view_background my-5" id="app">
+        <div class="d-flex flex-column justify-content-between align-items-end gameViewMenuButtonContainer">
+            <div class="usernameDisplay d-flex align-items-center justify-content-center"> {{currentUser.username}}
             </div>
+            <button class="gameViewMenuButton"> How to Play </button>
+            <button class="gameViewMenuButton"> Forfeit </button>
+            <button class="gameViewMenuButton"> Log Out </button>
+            <!-- <button id="logoutButton" type="submit" class="gameViewMenuButton" v-on:click="logout">
+                Log Out
+            </button> -->
         </div>
         <div class="d-flex justify-content-around">
-            <div class="m-3 d-flex mainTable2 align-items-center">
+            <div class="d-flex flex-column mainTable2 justify-content-around pl-5">
+                <h1 class="viewTitleText mt-4"> S A L V O </h1>
                 <table class="d-flex" id="shipGrid">
                 </table>
             </div>
-            <div class="d-flex flex-column side-board-column pr-5">
-                <div class="sideTable2">
-                    <table class="mx-3 my-3 d-flex justify-content-center" id="hitGrid">
-                    </table>
-                </div>
-                <div class="d-flex flex-wrap pt-3">
+            <div class="d-flex flex-column side-board-column pr-5 sideTable">
+                <div class="fleetTitleText d-flex justify-content-center align-items-center"> YOUR
+                    FLEET, WHO YOU LOVE </div>
+                <div class="d-flex justify-content-around mb-5 mt-2">
                     <div class="d-flex flex-column">
-                        <div class="gameViewShipSelectorCaption text-center"> PATROL BOAT </div>
+                        <button class="gameViewShipSelector"> 2 </button>
+                        <div class="gameViewShipSelectorCaption text-center" id="patrolBoat"> PATROL BOAT </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 3 </button>
+                        <div class="gameViewShipSelectorCaption text-center" id="destroyer"> DESTROYER </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 3 </button>
+                        <div class="gameViewShipSelectorCaption text-center" id="submarine"> SUBMARINE </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 4 </button>
+                        <div class="gameViewShipSelectorCaption text-center" id="battleship"> BATTLESHIP </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <button class="gameViewShipSelector"> 5 </button>
+                        <div class="gameViewShipSelectorCaption text-center" id="aircraftCarrier"> AIRCRAFT CARRIER
+                        </div>
+                    </div>
+                </div>
+                <table class="mx-3 my-3 d-flex justify-content-center" id="hitGrid">
+                </table>
+                <div class="d-flex pt-5">
+                    <div class="d-flex flex-column">
                         <button class="opponentShipRender pb-3"> 2 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> PATROL BOAT </div>
                     </div>
                     <div class="d-flex flex-column">
+                        <button class="opponentShipRender pb-3"> 3 </button>
                         <div class="gameViewShipSelectorCaption text-center"> DESTROYER </div>
-                        <button class="opponentShipRender pb-3"> 3 </button>
                     </div>
                     <div class="d-flex flex-column">
-                        <div class="gameViewShipSelectorCaption text-center"> SUBMARINE </div>                        
                         <button class="opponentShipRender pb-3"> 3 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> SUBMARINE </div>
                     </div>
                     <div class="d-flex flex-column">
-                        <div class="gameViewShipSelectorCaption text-center"> BATTLESHIP </div>                        
                         <button class="opponentShipRender pb-3"> 4 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> BATTLESHIP </div>
                     </div>
                     <div class="d-flex flex-column">
-                        <div class="gameViewShipSelectorCaption text-center"> AIRCRAFT CARRIER </div>
                         <button class="opponentShipRender pb-3"> 5 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> AIRCRAFT CARRIER </div>
                     </div>
                 </div>
-                <div class="opponentTitleText text-danger"> YOUR OPPONENT, WHO YOU HATE </div>
-                <div v-for="(player, index) in players" :key="players.id" class="d-flex text-white align-items-center">
+                <div class="opponentTitleText text-danger mt-4 d-flex justify-content-center align-items-center"> YOUR
+                    ENEMY, WHO YOU HATE </div>
+
+                <!-- <div v-for="(player, index) in players" :key="players.id" class="d-flex text-white align-items-center">
                     <div v-if="player.id == 1" class="bg-light border border-dark text-dark my-2 p-2">
                         <h3> {{player.player.username}} </h3>
                     </div>
@@ -99,13 +107,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center gameViewMenuButtonContainer">
-            <button class="gameViewMenuButton"> How to Play </button>
-            <button class="gameViewMenuButton"> Forfeit </button>
-            <button class="gameViewMenuButton"> Log Out </button>
         </div>
         <!-- <div class="tooltip"> HOW TO PLAY
             <span class="tooltiptext">

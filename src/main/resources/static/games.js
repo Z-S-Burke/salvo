@@ -21,8 +21,8 @@ new Vue({
         };
     },
     methods: {
-        getData(games_URL) {
-            fetch(games_URL, {
+        getData(gamesURL) {
+            fetch(gamesURL, {
                 headers: {
                     "Content-Type": "application/json"
                 },

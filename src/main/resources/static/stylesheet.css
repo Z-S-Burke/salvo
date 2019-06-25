@@ -1,6 +1,7 @@
 .board {
-    height: 700px;
-    width: 700px;
+    height: 750px;
+    width: 750px;
+    border: solid 10px black;
 }
 
 .games-page {
@@ -28,7 +29,6 @@
 }
 
 .ship-location {
-    box-shadow: 5px 5px 10px 5px black;
     background-image: url("assets/shipTexture.jpeg");
     background-size: cover;
 }
@@ -42,48 +42,16 @@
     align-content: center;
 }
 
-/* .grid-cell-unmarked {
-    border-right: white;
-    border-bottom: white;
-} */
-
-.mainTable {
-    border-top: double;
-    border-right: double;
-    border-bottom: solid;
-    border-width: 80px;
-    border-color: black;
-}
-
 .mainTable2 {
-    border-top: double;
     border-left: double;
-    border-bottom: double;
     border-width: 80px;
     border-color: black;
-}
-
-.mainTable3 {
-    border-top: double;
-    border-right: double;
-    border-bottom: double;
-    border-width: 80px;
-    border-color: black;
+    border-radius: 100px;
 }
 
 .sideTable {
-    border-top: double;
-    border-left: double;
-    border-width: 35px;
-    border-color: black;
-}
-
-.sideTable2 {
-    border-top: double;
-    border-right: double;
-    border-bottom: double;
-    border-width: 80px;
-    border-color: black;
+    border-right: double 90px black;
+    border-radius: 100px;
 }
 
 .hitBoard {
@@ -136,11 +104,8 @@
     background-image: url(assets/vhs_static.gif);
     background-size: cover;
     animation: float 5s ease-in-out infinite;
-    width: 41%;
-    border: inset white;
-    padding-left: 25px;
-    padding-right: 25px;
-    margin-left: 100px;
+
+    border: solid white;
 }
 
 .viewTitleTextMirror {
@@ -185,9 +150,6 @@
 .gameViewMenu {
     width: 25%;
     height: 25%;
-    /* position: absolute;
-    top: 0;
-    right: 0; */
     padding-top: 80px;
     margin-right: 50px;
     display: flex;
@@ -204,7 +166,7 @@
     margin-bottom: 5px;
     background-image: url(assets/tumblr_mstgowIyZT1rdu90go1_1280.gif);
     background-size: cover;
-    border: solid white;
+    border: solid skyblue;
     height: 150px;
     width: 150px;
 }
@@ -234,49 +196,50 @@
 
 .gameViewMenuButton {
     font-size: 20px;
-    width: 30%;
+    width: 50%;
     height: 40px;
-    color: black;
+    background-color: black;
+    color: white;
     margin-top: 10px;
     margin-bottom: 10px;
-    border: black solid 1px;
-    animation: float 5s ease-in-out infinite;
+    border: white solid 1px;
+}
+
+.usernameDisplay {
+    font-size: 30px;
+    width: 60%;
+    height: 60px;
+    background: white;
+    color: black;
+    border-bottom: solid 5px black;
+    text-transform: uppercase;
 }
 
 .gameViewMenuButtonContainer {
-    height: 75px;
-    width: 25%;
+    left: 85%;
     position: absolute;
-    right: 65%;
-    bottom: 0;
-    margin-right: 25px;
-}
-
-.fleet {
-    color: white;
-    padding-left: 5px;
-    padding-top: 5px;
-    /* position: fixed;
-    right: 0; */
+    bottom: 40%;
+    width: 13%;
+    background-color: white;
 }
 
 .fleetTitleText {
     font-size: 50px;
-    color: white;
+    color: skyblue;
+    border-bottom: solid white;
+    border-left: solid white;
     background-image: url(assets/vhs_static.gif);
-    position: absolute;
-    left: 65%;
-    width: 35%;
+    width: 100%;
     text-align: center;
-    height: 50px;
 }
 
 .opponentTitleText {
     font-size: 50px;
+    border-top: solid white;
+    border-left: solid white;
     background-image: url(assets/vhs_static.gif);
     width: 100%;
     text-align: center;
-    height: 70px;
 }
 
 @keyframes float {
@@ -303,7 +266,7 @@
     background-position-y: 35%;
     animation: float 2s ease-in-out infinite;
     filter:
-        grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+        grayscale(100%) brightness(100%) sepia(100%) hue-rotate(190deg) saturate(600%) contrast(1);
 }
 
 .opponentShipRender:hover {
@@ -321,59 +284,6 @@
     background-size: cover;
     color: white;
     background-position-y: 50%;
-    animation: float 2s ease-in-out infinite;
     filter:
         grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
-}
-
-/* Tooltip container */
-.tooltip {
-    position: fixed;
-    background-image: url(35mm.gif);
-    height: 50px;
-    width: 100px;
-    bottom: 0;
-    right: 0;
-    border-bottom: 1px dotted black;
-    /* If you want dots under the hoverable text */
-}
-
-/* Tooltip text */
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-
-    /* Position the tooltip text */
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-
-    /* Fade in tooltip */
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-/* Tooltip arrow */
-.tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
 }

@@ -3,12 +3,22 @@ new Vue({
     data() {
         return {
             games_URL: "http://localhost:8080/api/gameplayers/" + this.urlParse(),
+            shipsURL: "http://localhost:8080/api/games/players/gameId=" + this.gamePlayerId + "/ships",
+            currentUserURL: "http://localhost:8080/api/username",
+            logoutURL: "http://localhost:8080/api/logout",
+            gamePlayerId: "",
+            currentUser: [],
             player: [],
             hits: [],
             misses: [],
             p1: [],
-            p2: [],
             ships: [],
+            gamePlayerShips: [],
+            patrolBoat: [],
+            destroyer: [],
+            submarine: [],
+            battleship: [],
+            aircraftCarrier: [],
             numeralArray: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             alphaArray: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         };
@@ -26,12 +36,47 @@ new Vue({
                 })
                 .then(data => {
                     this.player = data;
+                    console.log(this.player)
+                    this.gamePlayerId = this.player.id;
+                    console.log(this.gamePlayerId)
                     this.ships = this.player.ships;
+                    console.log(this.ships)
+                    this.accountStatus();
+                    this.getPlayerShips();
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
 
                 })
                 .catch(err => console.log(err))
+        },
+        accountStatus() {
+            fetch(this.currentUserURL, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.currentUser = data;
+                })
+                .catch(err => console.log(err))
+        },
+        getPlayerShips(shipsURL) {
+            fetch(shipsURL, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+                .then(response => {
+                    response.json()
+                })
+                .then(data => {
+                    this.ships = data;
+                    console.log(this.ships);
+                })
         },
         urlParse() {
             let url = new URL(window.location.href);
@@ -126,6 +171,24 @@ new Vue({
                 })
             })
         }
+    },
+    logout() {
+        fetch(this.logoutURL, {
+            method: "POST"
+        })
+            .then(response => {
+                if (response.status == 200) {
+                    console.log("You have successfully logged out")
+                    this.loginStatus = false;
+                    this.username = "";
+                    this.password = "";
+                    this.userGames = [];
+                    this.currentUser = [];
+                    this.joinableGames = [];
+                }
+                return response.json();
+            })
+            .catch(err => console.log(err))
     },
     mounted() {
         this.getPlayerData(this.games_URL);

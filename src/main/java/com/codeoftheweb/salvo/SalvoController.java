@@ -152,15 +152,29 @@ public class SalvoController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.GET)
+    public Map<String, Object> getPlayerShips (@PathVariable Long id, Authentication authentication) {
+
+        System.out.println(id);
+        Map<String, Object> playerShips = new LinkedHashMap<>();
+        GamePlayer thisGamePlayer = gamePlayerRepo.findById(id);
+            if(thisGamePlayer.getPlayer().getUsername() == authentication.getName()) {
+                playerShips.put("ships", thisGamePlayer.getShips());
+            }
+
+        return playerShips;
+
+    }
+
     @RequestMapping("/api/players/player_info")
     public List<Map> getPlayerIDs() {
 
 
         List<Map> playerList = new ArrayList<>();
+        Map<String, Object> onePlayerMap = new HashMap<>();
         playerRepo.findAll().stream().forEach(onePlayer -> {
-            Map<String, Object> onePlayerMap = new HashMap<>();
-            onePlayerMap.put("Username:", onePlayer.getUsername());
-            onePlayerMap.put("ID", onePlayer.getId());
+            onePlayerMap.put("username:", onePlayer.getUsername());
+            onePlayerMap.put("id", onePlayer.getId());
             playerList.add(onePlayerMap);
         });
         return  playerList;
@@ -179,7 +193,7 @@ public class SalvoController {
     }
 
     @RequestMapping(value="/api/games/{id}", method = RequestMethod.POST)
-    public Long joinExistingGame(@PathVariable Long id, Authentication authentication) {
+    public Long joinExistingGame(@RequestParam Long id, Authentication authentication) {
 
         Game game = gameRepo.findById(id);
         System.out.println(game);
