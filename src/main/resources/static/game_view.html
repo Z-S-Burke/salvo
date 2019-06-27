@@ -24,42 +24,41 @@
                 </button> -->
         </div>
         <div class="d-flex justify-content-around">
-            <div class="d-flex flex-column justify-content-between pl-5">
-                <table class="d-flex" id="shipGrid" @click="alertTest" @ondrop="drop(event)"
-                    @ondragover="allowDrop(event)">
+            <div class="d-flex flex-column justify-content-between mr-5">
+                <table class="d-flex" id="shipGrid" @click="alertTest">
                 </table>
                 <div class="fleetTitleText d-flex justify-content-center align-items-center my-3"> YOUR
                     FLEET, WHO YOU LOVE </div>
                 <div class="d-flex justify-content-around mb-5 mt-2">
                     <div class="d-flex flex-column">
-                        <button class="gameViewShipSelector" draggable="true" @ondragstart="drag(event)"> 2 </button>
+                        <button class="gameViewShipSelector" @click="placePatrolBoat"> 2 </button>
                         <div class="gameViewShipSelectorCaption text-center" id="patrolBoat"> PATROL BOAT </div>
                     </div>
                     <div class="d-flex flex-column">
-                        <button class="gameViewShipSelector" draggable="true"> 3 </button>
+                        <button class="gameViewShipSelector" @click="placeDestroyer"> 3 </button>
                         <div class="gameViewShipSelectorCaption text-center" id="destroyer"> DESTROYER </div>
                     </div>
                     <div class="d-flex flex-column">
-                        <button class="gameViewShipSelector" draggable="true"> 3 </button>
+                        <button class="gameViewShipSelector" @click="placeSubmarine"> 3 </button>
                         <div class="gameViewShipSelectorCaption text-center" id="submarine"> SUBMARINE </div>
                     </div>
                     <div class="d-flex flex-column">
-                        <button class="gameViewShipSelector" draggable="true"> 4 </button>
+                        <button class="gameViewShipSelector" @click="placeBattleship"> 4 </button>
                         <div class="gameViewShipSelectorCaption text-center" id="battleship"> BATTLESHIP </div>
                     </div>
                     <div class="d-flex flex-column">
-                        <button class="gameViewShipSelector" draggable="true"> 5 </button>
+                        <button class="gameViewShipSelector" @click="placeAircraftCarrier"> 5 </button>
                         <div class="gameViewShipSelectorCaption text-center" id="aircraftCarrier"> AIRCRAFT CARRIER
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="d-flex flex-column side-board-column ml-4 pr-5">
-                <table class="d-flex justify-content-end my-4" @click="alertTest" id="hitGrid">
+            <div class="d-flex flex-column align-items-end side-board-column ml-5">
+                <table class="d-flex my-4" @click="alertTest" id="hitGrid">
                 </table>
                 <div class="opponentTitleText text-danger my-3 d-flex justify-content-center align-items-center"> YOUR
                     ENEMY, WHO YOU HATE </div>
-                <div class="d-flex pt-4">
+                <div class="d-flex mb-5 mt-2">
                     <div class="d-flex flex-column">
                         <button class="opponentShipRender pb-3"> 5 </button>
                         <div class="gameViewShipSelectorCaption text-center"> AIRCRAFT CARRIER </div>
@@ -82,9 +81,13 @@
                         <div class="gameViewShipSelectorCaption text-center"> PATROL BOAT </div>
                     </div>
                 </div>
-
             </div>
         </div>
+        <button v-if="verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION (VERTICAL) </button>
+        <button V-IF="!verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION (HORIZONTAL) </button>
+        <button class="gameViewMenuButton"> RESET BOARD </button>
+        <button class="gameViewMenuButton"> SEND OUT YOUR FLEET </button>
+
     </div>
 </body>
 

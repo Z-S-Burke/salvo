@@ -126,14 +126,14 @@
 }
 
 .viewTitleText {
-    font-size: 70px;
+    font-size: 100px;
     display: flex;
     width: 100%;
+    margin-left: 10px;
+    margin-top: 10px;
     justify-content: center;
-    color: white;
-    background-image: url(assets/vhs_static.gif);
-    background-size: cover;
-
+    color: black;
+    background-color: white;
     border: solid white;
 }
 
@@ -221,17 +221,18 @@
     color: white;
     margin-left: 25px;
     width: 125px;
+    border: solid white;
 }
 
 .gameViewMenuButton {
     font-size: 20px;
-    width: 50%;
+    width: 33%;
     height: 40px;
     background-color: black;
     color: white;
     margin-top: 10px;
     margin-bottom: 10px;
-    border: white solid 1px;
+    border: white solid 5px;
 }
 
 .usernameDisplay {
@@ -246,8 +247,8 @@
 
 .gameViewMenuButtonContainer {
     background-image: url(assets/35mm.gif);
-    background-blend-mode: difference;
 }
+
 
 .fleetTitleText {
     font-size: 50px;
@@ -310,4 +311,8 @@
     background-position-y: 50%;
     filter:
         grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+}
+
+.grid-cell:hover #patrolBoat {
+
 }
