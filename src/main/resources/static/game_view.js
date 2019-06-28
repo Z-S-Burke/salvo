@@ -12,6 +12,7 @@ new Vue({
             startGame: false,
             shipLocations: [],
             selectedLength: null,
+            shipValidated: false,
             player: [],
             hits: [],
             misses: [],
@@ -47,7 +48,6 @@ new Vue({
                     this.ships = this.player.ships;
                     console.log(this.ships)
                     this.accountStatus();
-                    this.getPlayerShips();
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
 
@@ -78,7 +78,7 @@ new Vue({
             this.patrolBoat = false;
             this.battleship = false;
             this.aircraftCarrier = false;
-            this.selectedLength = 3;
+            this.selectedLength = 2;
             console.log(this.submarine);
         },
         placeBattleship() {
@@ -87,7 +87,7 @@ new Vue({
             this.submarine = false;
             this.patrolBoat = false;
             this.aircraftCarrier = false;
-            this.selectedLength = 4;
+            this.selectedLength = 3;
             console.log(this.battleship);
         },
         placeAircraftCarrier() {
@@ -96,7 +96,7 @@ new Vue({
             this.submarine = false;
             this.battleship = false;
             this.patrolBoat = false;
-            this.selectedLength = 5;
+            this.selectedLength = 4;
             console.log(this.aircraftCarrier);
         },
         accountStatus() {
@@ -127,6 +127,10 @@ new Vue({
                     this.ships = data;
                 })
                 .catch(err => console.log(err))
+        },
+        resetBoard() {
+            this.shipLocations = [];
+            console.log(this.shipLocations);
         },
         sendShips(ships) {
             fetch(this.newGameURL, {
@@ -159,6 +163,9 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = alpha + numeral;
+                    cell.addEventListener("mouseover", this.alertTest);
+                    cell.addEventListener("mouseout", this.clearPreview);
+                    cell.addEventListener("click", this.submitShip);
                     cell.className = "grid-cell text-dark text-center bg-light";
                 })
             }
@@ -185,80 +192,167 @@ new Vue({
             console.log(this.verticalOrientation)
         },
         alertTest(event) {
-            alert(event.target.id);
-            let invalidPlacement = false;
-            let coordinate = event.target.id;
-            coordinate = coordinate.match(/[^\d]+|\d+/g);
-            let x = coordinate[0];
-            const y = coordinate[1];
-            for (let alpha in this.alphaArray) {
-                if (x === alpha) {
-                    x = this.alphaArray[alpha];
+
+            this.shipBuilder = [];
+
+            if (this.selectedLength != null) {
+                let finalPreview = "";
+                let invalidPlacement = false;
+                let coordinate = event.target.id;
+                console.log(coordinate)
+                coordinate = coordinate.match(/[^\d]+|\d+/g);
+                let x = coordinate[0];
+                const y = Number(coordinate[1]);
+                for (let alpha in this.alphaArray) {
+                    if (x === alpha) {
+                        x = Number(this.alphaArray[alpha]);
+                    }
                 }
-            }
-            if (this.verticalOrientation) {
-                console.log("y = " + y)
-                console.log("x = " + x)
-                if (0 < y + this.selectedLength < 11 || 0 < y + this.selectedLength < 11) {
-                    console.log("Selected Length: " + this.selectedLength)
-                    this.shipLocations.forEach(location => {
-                        if (location != event.target.id && this.selectedLength != null) {
+                if (this.verticalOrientation) {
+                    if (0 < y + this.selectedLength < 11 || 0 < y + this.selectedLength < 11) {
+                        this.shipLocations.forEach(location => {
+                            // console.log(String(location) + " vs. " + event.target.id)
+                            // if (location == event.target.id || this.selectedLength == null) {
+                            //     this.invalidPlacement = true;
+                            // }
+                            // if (!this.invalidPlacement) {
                             let checkY = 0;
                             for (let i = 0; i <= this.selectedLength; i++) {
-                                let checkY = x + i;
-                                for (let alpha in this.alphaArray) {
-                                    if (checkY === this.alphaArray[alpha]) {
-                                        let checkY = alpha;
-                                        this.shipBuilder.push(checkY.concat(y));
-                                        console.log("location = " + location + "/" + checkY.concat(y))
-                                        if (location == checkY.concat(y)) {
-                                            invalidPlacement = true;
-                                            console.log("This is not a valid location. " + location + "/" + checkY.concat(y))
+                                checkY = x + i;
+                                if (checkY < 11) {
+                                    for (let alpha in this.alphaArray) {
+                                        if (checkY === this.alphaArray[alpha]) {
+                                            let checkY = alpha;
+                                            if (location == checkY.concat(y)) {
+                                                invalidPlacement = true;
+                                            }
+                                            else {
+                                                this.shipBuilder.push(checkY.concat(y));
+                                            }
                                         }
                                     }
+                                } else {
+                                    invalidPlacement = true;
                                 }
                             }
-                            if (invalidPlacement == true) {
-                                console.log(coordinate[0] + y + "is not a valid location")
+                        })
+                    } else {
+                        invalidPlacement = true;
+                    }
+                } else {
+                    if (0 < x + this.selectedLength < 11 || 0 < x + this.selectedLength < 11) {
+                        console.log(x)
+                        this.shipLocations.forEach(location => {
+                            if (location != event.target.id && this.selectedLength != null) {
+                                let staticPoint = String(x);
+                                for (let alpha in this.alphaArray) {
+                                    if (x === this.alphaArray[alpha]) {
+                                        staticPoint = alpha;
+                                    }
+                                }
+                                let checkX = 0;
+                                for (let i = 0; i <= this.selectedLength; i++) {
+                                    checkX = Number(y) + i;
+                                    if (checkX < 11) {
+                                        for (let alpha in this.alphaArray) {
+                                            if (location == staticPoint.concat(checkX)) {
+                                                invalidPlacement = true;
+                                            }
+                                            else {
+                                                if (x === this.alphaArray[alpha]) {
+                                                    this.shipBuilder.push(staticPoint.concat(checkX));
+                                                }
+                                            }
+
+                                        }
+                                    } else {
+                                        invalidPlacement = true;
+                                    }
+                                }
+                            } else {
+                                invalidPlacement = true;
                             }
-                        }
-                        else {
-                            console.log("This is not a valid location or you have not chosen a ship to place.")
-                        }
+                        })
+                    }
+                }
+
+                if (invalidPlacement == true) {
+                    this.shipValidated = false;
+                    this.shipBuilder = [...new Set(this.shipBuilder)];
+                    this.shipBuilder.forEach(location => {
+                        finalPreview = document.getElementById(location);
+                        finalPreview.className = "invalidLocation grid-cell text-light text-center";
                     })
+                } else {
+                    this.shipBuilder = [...new Set(this.shipBuilder)];
+                    console.log("setting up submit")
+                    console.log(this.shipBuilder)
+
+                    this.shipValidated = true;
+
+                    this.shipBuilder.forEach(location => {
+                        finalPreview = document.getElementById(location);
+                        finalPreview.classList.add("validLocation", "grid-cell", "text-dark", "text-center");
+                    })
+                    // document.getElementById(event.target.id).addEventListener("click", this.submitShip;
                 }
             }
-            else {
-                if (0 < x + this.selectedLength < 11 || 0 < x + this.selectedLength < 11) {
-                    this.shipLocations.forEach(location => {
-                        if (location != event.target.id && this.selectedLength != null) {
-                            let checkX = 0;
-                            for (let i = 0; i <= this.selectedLength; i++) {
-                                let checkX = x + i;
-
-                                // if (location != checkX.concat(y)) {
-                                //     console.log(checkX.concat(y) + " is a valid location")
-                                // }
-                                // else {
-                                //     console.log("CONFLICT")
-                                // }
-                            }
-                        }
-                    })
-                    console.log(x + y + " is a valid location")
-                }
-            }
-            if (invalidPlacement == true) {
-                event.target.className = "grid-cell bg-danger"
-            }
-            else {
-                event.target.className = "grid-cell text-light text-center bg-danger missMarker";
-            }
-
-            this.shipBuilder = [...new Set(this.shipBuilder)];
-            console.log("new ship location ---- " + this.shipBuilder)
         },
-        mainShipLocator(p1) {
+        submitShip() {
+            console.log(this.shipValidated)
+            if (this.shipValidated) {
+                let submissionStyle = "";
+                console.log("submit ship")
+                let ship = {};
+                if (this.patrolBoat == true) {
+                    ship = { 'type': "patrol boat", 'locationOnBoard': this.shipBuilder };
+                    this.patrolBoat = false;
+                } else if (this.destroyer == true) {
+                    ship = { 'type': "destroyer", 'locationOnBoard': this.shipBuilder };
+                    this.destroyer = false;
+                } else if (this.submarine == true) {
+                    ship = { 'type': "submarine", 'locationOnBoard': this.shipBuilder };
+                    this.submarine = false;
+                } else if (this.battleship == true) {
+                    ship = { 'type': "battleship", 'locationOnBoard': this.shipBuilder };
+                    this.battleship = false;
+                } else {
+                    ship = { 'type': "aircraft carrier", 'locationOnBoard': this.shipBuilder };
+                    this.aircraftCarrier = false;
+                }
+                this.ships.push(ship);
+                this.shipBuilder.forEach(location => {
+                    submissionStyle = document.getElementById(location).classList.add("roll-in-blurred-top");
+                    this.shipLocations.push(location);
+                })
+            }
+            this.selectedLength = null;
+            this.clearPreview();
+            this.shipValidated = false;
+            this.shipBuilder = [];
+        },
+        clearPreview() {
+            console.log("clearPreview")
+            let endPreview = "";
+            this.shipBuilder.forEach(location => {
+                endPreview = document.getElementById(location);
+                this.shipLocations.forEach(vector => {
+                    if (String(vector) != String(location)) {
+                        endPreview.className = "";
+                        endPreview.className = "grid-cell text-dark bg-light text-center";
+                    } else {
+                        endPreview.className = "";
+                        endPreview.className = "ship-location text-light text-center";
+                    }
+                })
+            })
+            this.shipLocations.forEach(vector => {
+                endPreview = document.getElementById(vector);
+                endPreview.className = "";
+                endPreview.className = "ship-location text-light text-center";
+            })
+        },
+        mainShipLocator() {
             let locations = [];
             locations.push(this.ships);
             locations.forEach(target => {
