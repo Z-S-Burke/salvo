@@ -43,7 +43,7 @@ new Vue({
                 .then(data => {
                     this.player = data;
                     console.log(this.player)
-                    this.gamePlayerId = this.player.id;
+                    this.gamePlayerId = Number(this.player.id);
                     console.log(this.gamePlayerId)
                     this.ships = this.player.ships;
                     console.log(this.ships)
@@ -61,7 +61,6 @@ new Vue({
             this.battleship = false;
             this.aircraftCarrier = false;
             this.selectedLength = 1;
-            console.log(this.patrolBoat + " length  = " + this.selectedLength);
         },
         placeDestroyer() {
             this.destroyer = !this.destroyer;
@@ -70,7 +69,6 @@ new Vue({
             this.battleship = false;
             this.aircraftCarrier = false;
             this.selectedLength = 2;
-            console.log(this.destroyer);
         },
         placeSubmarine() {
             this.submarine = !this.submarine;
@@ -79,7 +77,6 @@ new Vue({
             this.battleship = false;
             this.aircraftCarrier = false;
             this.selectedLength = 2;
-            console.log(this.submarine);
         },
         placeBattleship() {
             this.battleship = !this.battleship;
@@ -88,7 +85,6 @@ new Vue({
             this.patrolBoat = false;
             this.aircraftCarrier = false;
             this.selectedLength = 3;
-            console.log(this.battleship);
         },
         placeAircraftCarrier() {
             this.aircraftCarrier = !this.aircraftCarrier;
@@ -97,7 +93,6 @@ new Vue({
             this.battleship = false;
             this.patrolBoat = false;
             this.selectedLength = 4;
-            console.log(this.aircraftCarrier);
         },
         accountStatus() {
             fetch(this.currentUserURL, {
@@ -132,7 +127,7 @@ new Vue({
             this.shipLocations = [];
             console.log(this.shipLocations);
         },
-        sendShips(ships) {
+        sendShips() {
             fetch(this.newGameURL, {
                 method: "POST"
             })
@@ -163,9 +158,9 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = alpha + numeral;
-                    cell.addEventListener("mouseover", this.alertTest);
+                    cell.addEventListener("mouseover", this.shipTest);
                     cell.addEventListener("mouseout", this.clearPreview);
-                    cell.addEventListener("click", this.submitShip);
+                    cell.addEventListener("click", this.addShip);
                     cell.className = "grid-cell text-dark text-center bg-light";
                 })
             }
@@ -191,7 +186,7 @@ new Vue({
             this.verticalOrientation = !this.verticalOrientation;
             console.log(this.verticalOrientation)
         },
-        alertTest(event) {
+        shipTest(event) {
 
             this.shipBuilder = [];
 
@@ -209,13 +204,38 @@ new Vue({
                     }
                 }
                 if (this.verticalOrientation) {
+                    console.log("vert = " + this.verticalOrientation)
+                    console.log("y = " + y + " select.leng. = " + this.selectedLength)
                     if (0 < y + this.selectedLength < 11 || 0 < y + this.selectedLength < 11) {
-                        this.shipLocations.forEach(location => {
-                            // console.log(String(location) + " vs. " + event.target.id)
-                            // if (location == event.target.id || this.selectedLength == null) {
-                            //     this.invalidPlacement = true;
-                            // }
-                            // if (!this.invalidPlacement) {
+                        if (this.shipLocations.length != 0) {
+                            console.log(this.shipLocations)
+                            this.shipLocations.forEach(location => {
+                                console.log(location)
+                                console.log("location = " + location + " vert = " + this.verticalOrientation)
+                                let checkY = 0;
+                                for (let i = 0; i <= this.selectedLength; i++) {
+                                    checkY = x + i;
+                                    if (checkY < 11) {
+                                        if (location != null) {
+                                            for (let alpha in this.alphaArray) {
+                                                if (checkY === this.alphaArray[alpha]) {
+                                                    let checkY = alpha;
+                                                    if (location == checkY.concat(y)) {
+                                                        invalidPlacement = true;
+                                                    }
+                                                    else {
+                                                        this.shipBuilder.push(checkY.concat(y));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        invalidPlacement = true;
+                                    }
+                                }
+                            })
+                        } else {
+                            console.log("the desired else")
                             let checkY = 0;
                             for (let i = 0; i <= this.selectedLength; i++) {
                                 checkY = x + i;
@@ -223,67 +243,94 @@ new Vue({
                                     for (let alpha in this.alphaArray) {
                                         if (checkY === this.alphaArray[alpha]) {
                                             let checkY = alpha;
-                                            if (location == checkY.concat(y)) {
-                                                invalidPlacement = true;
-                                            }
-                                            else {
-                                                this.shipBuilder.push(checkY.concat(y));
-                                            }
+                                            console.log("Alpha = " + checkY)
+                                            this.shipBuilder.push(checkY.concat(y));
                                         }
                                     }
-                                } else {
+                                }
+                                else {
                                     invalidPlacement = true;
                                 }
                             }
-                        })
+                        }
                     } else {
                         invalidPlacement = true;
                     }
                 } else {
                     if (0 < x + this.selectedLength < 11 || 0 < x + this.selectedLength < 11) {
                         console.log(x)
-                        this.shipLocations.forEach(location => {
-                            if (location != event.target.id && this.selectedLength != null) {
-                                let staticPoint = String(x);
-                                for (let alpha in this.alphaArray) {
-                                    if (x === this.alphaArray[alpha]) {
-                                        staticPoint = alpha;
-                                    }
-                                }
-                                let checkX = 0;
-                                for (let i = 0; i <= this.selectedLength; i++) {
-                                    checkX = Number(y) + i;
-                                    if (checkX < 11) {
-                                        for (let alpha in this.alphaArray) {
-                                            if (location == staticPoint.concat(checkX)) {
-                                                invalidPlacement = true;
-                                            }
-                                            else {
-                                                if (x === this.alphaArray[alpha]) {
-                                                    this.shipBuilder.push(staticPoint.concat(checkX));
-                                                }
-                                            }
-
+                        if (this.shipLocations.length != 0) {
+                            this.shipLocations.forEach(location => {
+                                if (location != event.target.id && this.selectedLength != null) {
+                                    let staticPoint = String(x);
+                                    for (let alpha in this.alphaArray) {
+                                        if (x === this.alphaArray[alpha]) {
+                                            staticPoint = alpha;
                                         }
-                                    } else {
-                                        invalidPlacement = true;
                                     }
+                                    let checkX = 0;
+                                    for (let i = 0; i <= this.selectedLength; i++) {
+                                        checkX = Number(y) + i;
+                                        if (checkX < 11) {
+                                            for (let alpha in this.alphaArray) {
+                                                if (location == staticPoint.concat(checkX)) {
+                                                    invalidPlacement = true;
+                                                }
+                                                else {
+                                                    if (x === this.alphaArray[alpha]) {
+                                                        this.shipBuilder.push(staticPoint.concat(checkX));
+                                                    }
+                                                }
+
+                                            }
+                                        } else {
+                                            invalidPlacement = true;
+                                        }
+                                    }
+                                } else {
+                                    invalidPlacement = true;
                                 }
-                            } else {
-                                invalidPlacement = true;
+                            })
+                        } else {
+                            let staticPoint = String(x);
+                            for (let alpha in this.alphaArray) {
+                                if (x === this.alphaArray[alpha]) {
+                                    staticPoint = alpha;
+                                }
                             }
-                        })
+                            let checkX = 0;
+                            for (let i = 0; i <= this.selectedLength; i++) {
+                                checkX = Number(y) + i;
+                                if (checkX < 11) {
+                                    for (let alpha in this.alphaArray) {
+                                        if (location == staticPoint.concat(checkX)) {
+                                            invalidPlacement = true;
+                                        }
+                                        else {
+                                            if (x === this.alphaArray[alpha]) {
+                                                this.shipBuilder.push(staticPoint.concat(checkX));
+                                            }
+                                        }
+
+                                    }
+                                } else {
+                                    invalidPlacement = true;
+                                }
+                            }
+                        }
                     }
                 }
 
                 if (invalidPlacement == true) {
                     this.shipValidated = false;
                     this.shipBuilder = [...new Set(this.shipBuilder)];
+                    console.log(this.shipBuilder)
                     this.shipBuilder.forEach(location => {
                         finalPreview = document.getElementById(location);
                         finalPreview.className = "invalidLocation grid-cell text-light text-center";
                     })
                 } else {
+                    console.log(this.shipBuilder)
                     this.shipBuilder = [...new Set(this.shipBuilder)];
                     console.log("setting up submit")
                     console.log(this.shipBuilder)
@@ -298,15 +345,16 @@ new Vue({
                 }
             }
         },
-        submitShip() {
+        addShip() {
             console.log(this.shipValidated)
-            if (this.shipValidated) {
+            if (this.shipValidated && this.ships.length <= 5) {
                 let submissionStyle = "";
                 console.log("submit ship")
                 let ship = {};
                 if (this.patrolBoat == true) {
                     ship = { 'type': "patrol boat", 'locationOnBoard': this.shipBuilder };
                     this.patrolBoat = false;
+                    this.patrolBoat.submitted = true;
                 } else if (this.destroyer == true) {
                     ship = { 'type': "destroyer", 'locationOnBoard': this.shipBuilder };
                     this.destroyer = false;
@@ -330,41 +378,68 @@ new Vue({
             this.clearPreview();
             this.shipValidated = false;
             this.shipBuilder = [];
+            console.log(this.ships)
+        },
+        submitShips() {
+            fetch(this.shipsURL, {
+                method: "POST",
+                body: JSON.stringify(this.ships)
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.ships = data;
+                    console.log(this.ships)
+                })
+                .catch(err => console.log(err))
         },
         clearPreview() {
             console.log("clearPreview")
             let endPreview = "";
-            this.shipBuilder.forEach(location => {
-                endPreview = document.getElementById(location);
-                this.shipLocations.forEach(vector => {
-                    if (String(vector) != String(location)) {
-                        endPreview.className = "";
-                        endPreview.className = "grid-cell text-dark bg-light text-center";
-                    } else {
-                        endPreview.className = "";
-                        endPreview.className = "ship-location text-light text-center";
-                    }
-                })
-            })
-            this.shipLocations.forEach(vector => {
-                endPreview = document.getElementById(vector);
-                endPreview.className = "";
-                endPreview.className = "ship-location text-light text-center";
-            })
-        },
-        mainShipLocator() {
-            let locations = [];
-            locations.push(this.ships);
-            locations.forEach(target => {
-                target.forEach(ship => {
-                    ship.locationOnBoard.forEach(cell => {
-                        let location = document.getElementById(cell);
-                        this.shipLocations.push(location.id);
-                        location.classList.remove("grid-cell");
-                        location.className = "ship-location bg-danger text-light text-center";
+            if (this.shipLocations.length != 0) {
+                this.shipBuilder.forEach(location => {
+                    endPreview = document.getElementById(location);
+                    this.shipLocations.forEach(vector => {
+                        if (String(vector) != String(location)) {
+                            endPreview.className = "";
+                            endPreview.className = "grid-cell text-dark bg-light text-center";
+                        } else {
+                            endPreview.className = "";
+                            endPreview.className = "ship-location text-light text-center";
+                        }
                     })
                 })
-            })
+            } else {
+                this.shipBuilder.forEach(location => {
+                    endPreview = document.getElementById(location);
+                    endPreview.className = "";
+                    endPreview.className = "grid-cell text-dark bg-light text-centter";
+                })
+            }
+            if (this.shipLocations.length != 0) {
+                this.shipLocations.forEach(vector => {
+                    endPreview = document.getElementById(vector);
+                    endPreview.className = "";
+                    endPreview.className = "ship-location text-light text-center";
+                })
+            }
+        },
+        mainShipLocator() {
+            if (this.ships) {
+                let locations = [];
+                locations.push(this.ships);
+                locations.forEach(target => {
+                    target.forEach(ship => {
+                        ship.locationOnBoard.forEach(cell => {
+                            let location = document.getElementById(cell);
+                            this.shipLocations.push(location.id);
+                            location.classList.remove("grid-cell");
+                            location.className = "ship-location bg-danger text-light text-center";
+                        })
+                    })
+                })
+            }
             //this.hitOrMissMainBoard(locations, this.player)
         },
         hitOrMissMainBoard(userShipLocations, user, opponent) {

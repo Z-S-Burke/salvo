@@ -152,6 +152,23 @@ public class SalvoController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @RequestMapping(value="/api/games/players/{id}/ships", method = RequestMethod.POST)
+    public Set<Ship> submitShips(@RequestParam Long id, List<Ship> ships, Authentication authentication) {
+
+        System.out.println("id = " + id + " ships = " + ships);
+
+        GamePlayer user = gamePlayerRepo.findById(id);
+        Boolean userAuthorized = user.getPlayer().getUsername() == authentication.getName() ? true : false;
+
+        if (userAuthorized) {
+            ships.stream().forEach(ship -> {
+                user.addShip(ship);
+            });
+        }
+
+        return user.getShips();
+    }
+
     @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.GET)
     public Map<String, Object> getPlayerShips (@RequestParam Long id, Authentication authentication) {
 
@@ -167,33 +184,33 @@ public class SalvoController {
 
     }
 
-    @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.POST)
-    public ResponseEntity<Object> postShips (@RequestParam Long id, String username, Authentication authentication) {
-
-
-        Boolean validUser = playerRepo.findByUsername(username).getUsername() == authentication.getName() ?  true : false;
-        Boolean matchingGamePlayer = gamePlayerRepo.findById(id) == null ? false : true;
-
-
-        if (validUser) {
-            GamePlayer thisUser = gamePlayerRepo.findById(id);
-            //This user.stream().forEach( ship -> {
-            //thisUser.add(ship)
-
-            //but this isn't a a Java object it's being sent, so how will it identify those different parts?
-            //or can I make the object in JS, it just won't have any meaning until it's sent to the Spring server?
-        }
-        else if (!validUser){
-            System.out.println("You do not have permission to alter another user's data.");
-        }
-        else if (!matchingGamePlayer) {
-            System.out.println("This gameplayer does not exist.");
-        }
-        else {
-            System.out.println("An inscrutable error occurred.");
-        }
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+//    @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.POST)
+//    public ResponseEntity<Object> postShips (@RequestParam Long id, String username, Authentication authentication) {
+//
+//
+//        Boolean validUser = playerRepo.findByUsername(username).getUsername() == authentication.getName() ?  true : false;
+//        Boolean matchingGamePlayer = gamePlayerRepo.findById(id) == null ? false : true;
+//
+//
+//        if (validUser) {
+//            GamePlayer thisUser = gamePlayerRepo.findById(id);
+//            //This user.stream().forEach( ship -> {
+//            //thisUser.add(ship)
+//
+//            //but this isn't a a Java object it's being sent, so how will it identify those different parts?
+//            //or can I make the object in JS, it just won't have any meaning until it's sent to the Spring server?
+//        }
+//        else if (!validUser){
+//            System.out.println("You do not have permission to alter another user's data.");
+//        }
+//        else if (!matchingGamePlayer) {
+//            System.out.println("This gameplayer does not exist.");
+//        }
+//        else {
+//            System.out.println("An inscrutable error occurred.");
+//        }
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
 
     @RequestMapping("/api/players/player_info")
     public List<Map> getPlayerIDs() {
@@ -234,6 +251,7 @@ public class SalvoController {
 
         return newGamePlayer.getId();
     }
+
 
     @RequestMapping(value = "/api/games/{id}", method = RequestMethod.GET)
     public Map<String, Object> getGamePlayerMatchInfo (@PathVariable Long id, Authentication authentication) {

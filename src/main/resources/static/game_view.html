@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="d-flex flex-column align-items-end side-board-column ml-5">
-                <table class="d-flex my-4" @click="alertTest" id="hitGrid">
+                <table class="d-flex my-4" id="hitGrid">
                 </table>
                 <div class="opponentTitleText text-danger my-3 d-flex justify-content-center align-items-center"> YOUR
                     ENEMY, WHO YOU HATE </div>
@@ -86,7 +86,7 @@
         <button v-if="verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION (VERTICAL) </button>
         <button V-IF="!verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION (HORIZONTAL) </button>
         <button class="gameViewMenuButton" @click="resetBoard"> RESET BOARD </button>
-        <button class="gameViewMenuButton"> SEND OUT YOUR FLEET </button>
+        <button class="gameViewMenuButton" @click="submitShips"> SEND OUT YOUR FLEET </button>
 
     </div>
 </body>
