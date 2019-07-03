@@ -4,15 +4,19 @@ new Vue({
         return {
             games_URL: "http://localhost:8080/api/gameplayers/" + this.urlParse(),
             shipsURL: "http://localhost:8080/api/games/players/" + this.gamePlayerId + "/ships",
+            salvoResultsURL: "http://localhost:8080/api/games/players/" + 1 + "/salvos",
             currentUserURL: "http://localhost:8080/api/username",
             logoutURL: "http://localhost:8080/api/logout",
-            gamePlayerId: "",
+            gamePlayerId: 0,
             currentUser: [],
             readyToFire: false,
             startGame: false,
             shipLocations: [],
             selectedLength: null,
             shipValidated: false,
+            shotsFiredThisRound: [],
+            allShotsFired: [],
+            fleetDeployed: false,
             player: [],
             hits: [],
             misses: [],
@@ -43,14 +47,87 @@ new Vue({
                 .then(data => {
                     this.player = data;
                     console.log(this.player)
-                    this.gamePlayerId = Number(this.player.id);
+                    this.gamePlayerId = this.player.id;
                     console.log(this.gamePlayerId)
                     this.ships = this.player.ships;
-                    console.log(this.ships)
+                    this.allShotsFired = this.player.salvoes;
+                    this.salvoResultsFetch();
+                    console.log(this.allShotsFired)
                     this.accountStatus();
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
 
+                })
+                .catch(err => console.log(err))
+        },
+        singleSalvo(event) {
+            let location = document.getElementById(event.target.id);
+            let shotValid = true;
+            console.log(event.target.id)
+            if (this.shotsFiredThisRound.length < 5) {
+                if (this.shotsFiredThisRound.length == 0) {
+                    shotValid = true;
+                }
+                else {
+
+                    this.shotsFiredThisRound.forEach(shot => {
+                        if (shot.location == event.target.id.substring(3)) {
+                            shotValid = false;
+                        }
+                    })
+
+                    this.allShotsFired.forEach(pastShot => {
+                        if (event.target.id.substring(3) == pastShot.location) {
+                            console.log(event.target.id.substring(3) + "!!!!" + pastShot.location)
+                            shotValid = false;
+                        }
+                    })
+                }
+
+                if (shotValid) {
+                    location.classList.add("pendingHit");
+                    let salvo = { 'turnFired': this.turnCounter, 'location': event.target.id.substring(3) };
+
+                    this.shotsFiredThisRound.push(salvo);
+                }
+            }
+            console.log(this.shotsFiredThisRound);
+        },
+        fireAway() {
+            $.post({
+                url: "http://localhost:8080/api/games/players/" + this.gamePlayerId + "/salvos",
+                data: JSON.stringify(this.shotsFiredThisRound),
+                dataType: "text",
+                contentType: "application/json"
+            })
+                .then(response => {
+                    console.log(response)
+                        this.clearCannons();
+                        console.log(this.allShotsFired)
+                })
+        },
+        clearCannons() {
+            this.shotsFiredThisRound.forEach(shot => {
+                let cleanCannon = document.getElementById("hit" + shot.location);
+                cleanCannon.classList.remove("pendingHit");
+                this.allShotsFired.push(shot);
+            })
+            this.shotsFiredThisRound = [];
+            console.log(this.shotsFiredThisRound)
+            this.salvoResultsFetch();
+        },
+        salvoResultsFetch() {
+            fetch(this.salvoResultsURL, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.allShotsFired = data;
+                    this.hitOrMissSideBoard();
                 })
                 .catch(err => console.log(err))
         },
@@ -175,6 +252,7 @@ new Vue({
                     let cell = row.insertCell();
                     cell.innerHTML = alpha + numeral;
                     cell.id = "hit" + alpha + numeral;
+                    cell.addEventListener("click", this.singleSalvo);
                     cell.className = "grid-cell text-dark bg-light text-center";
                 })
             }
@@ -190,7 +268,7 @@ new Vue({
 
             this.shipBuilder = [];
 
-            if (this.selectedLength != null) {
+            if (this.selectedLength != null && this.ships.length <= 4) {
                 let finalPreview = "";
                 let invalidPlacement = false;
                 let coordinate = event.target.id;
@@ -348,25 +426,28 @@ new Vue({
         addShip() {
             console.log(this.shipValidated)
             if (this.shipValidated && this.ships.length <= 5) {
-                let submissionStyle = "";
-                console.log("submit ship")
                 let ship = {};
+                let disable = "";
                 if (this.patrolBoat == true) {
                     ship = { 'type': "patrol boat", 'locationOnBoard': this.shipBuilder };
                     this.patrolBoat = false;
-                    this.patrolBoat.submitted = true;
+                    disable = document.getElementById('patrolBoat');
                 } else if (this.destroyer == true) {
                     ship = { 'type': "destroyer", 'locationOnBoard': this.shipBuilder };
                     this.destroyer = false;
+                    disable = document.getElementById('destroyer');
                 } else if (this.submarine == true) {
                     ship = { 'type': "submarine", 'locationOnBoard': this.shipBuilder };
                     this.submarine = false;
+                    disable = document.getElementById('submarine');
                 } else if (this.battleship == true) {
                     ship = { 'type': "battleship", 'locationOnBoard': this.shipBuilder };
                     this.battleship = false;
+                    disable = document.getElementById('battleship');
                 } else {
                     ship = { 'type': "aircraft carrier", 'locationOnBoard': this.shipBuilder };
                     this.aircraftCarrier = false;
+                    disable = document.getElementById('aircraftCarrier');
                 }
                 this.ships.push(ship);
                 this.shipBuilder.forEach(location => {
@@ -378,21 +459,21 @@ new Vue({
             this.clearPreview();
             this.shipValidated = false;
             this.shipBuilder = [];
+            disable.removeEventListener('click');
+
             console.log(this.ships)
         },
         submitShips() {
-            fetch(this.shipsURL, {
-                method: "POST",
-                body: JSON.stringify(this.ships)
+            $.post({
+                url: "http://localhost:8080/api/games/players/" + this.gamePlayerId + "/ships",
+                data: JSON.stringify(this.ships),
+                dataType: "text",
+                contentType: "application/json"
             })
                 .then(response => {
-                    return response.json();
+                    console.log(response);
+                    this.fleetDeployed = true;
                 })
-                .then(data => {
-                    this.ships = data;
-                    console.log(this.ships)
-                })
-                .catch(err => console.log(err))
         },
         clearPreview() {
             console.log("clearPreview")
@@ -414,7 +495,7 @@ new Vue({
                 this.shipBuilder.forEach(location => {
                     endPreview = document.getElementById(location);
                     endPreview.className = "";
-                    endPreview.className = "grid-cell text-dark bg-light text-centter";
+                    endPreview.className = "grid-cell text-dark bg-light text-center";
                 })
             }
             if (this.shipLocations.length != 0) {
@@ -466,47 +547,60 @@ new Vue({
                 })
             })
         },
-        hitOrMissSideBoard(user, opponent) {
-            let userSalvoes = user.salvoes;
-            let opponentShipLocations = opponent.ships;
-            userSalvoes.forEach(salvo => {
-                opponentShipLocations.forEach(ship => {
-                    ship.locationOnBoard.forEach(vector => {
-                        if (vector == salvo.location) {
-                            let hitMarker = document.getElementById("hit" + vector);
-                            hitMarker.className = "hitMarker2";
-                            hitMarker.innerHTML = "";
-                        } else if (salvo.location != vector) {
-                            let missMarker = document.getElementById("hit" + salvo.location);
-                            if (missMarker.className == "hitMarker2") {
-                                console.log("Don't touch this")
-                            } else {
-                                missMarker.className = "missMarker2";
-                                missMarker.innerHTML = "";
-                            }
-                        }
-                    })
+        logout() {
+            fetch(this.logoutURL, {
+                method: "POST"
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        console.log("You have successfully logged out")
+                        this.loginStatus = false;
+                        this.username = "";
+                        this.password = "";
+                        this.userGames = [];
+                        this.currentUser = [];
+                        this.joinableGames = [];
+                    }
+                    return response.json();
                 })
-            })
-        }
-    },
-    logout() {
-        fetch(this.logoutURL, {
-            method: "POST"
-        })
-            .then(response => {
-                if (response.status == 200) {
-                    console.log("You have successfully logged out")
-                    this.loginStatus = false;
-                    this.username = "";
-                    this.password = "";
-                    this.userGames = [];
-                    this.currentUser = [];
-                    this.joinableGames = [];
+                .catch(err => console.log(err))
+        },
+        hitOrMissSideBoard() {
+            console.log(this.allShotsFired)
+            this.allShotsFired.forEach(shot => {
+                console.log(shot.hit)
+                if(shot.hit) {
+                    let hitMarker = document.getElementById("hit" + shot.location);
+                    hitMarker.classList.add("hitMarker");
+                    console.log("hit!")
                 }
-                return response.json();
+                else {
+                    let missMarker = document.getElementById("hit" + shot.location)
+                    missMarker.classList.add("missMarker");
+                    console.log("miss!")
+                }
             })
-            .catch(err => console.log(err))
+            // let opponentShipLocations = opponent.ships;
+            // userSalvoes.forEach(salvo => {
+            //     opponentShipLocations.forEach(ship => {
+            //         ship.locationOnBoard.forEach(vector => {
+            //             if (vector == salvo.location) {
+            //                 let hitMarker = document.getElementById("hit" + vector);
+            //                 hitMarker.className = "hitMarker2";
+            //                 hitMarker.innerHTML = "";
+            //             } else if (salvo.location != vector) {
+            //                 let missMarker = document.getElementById("hit" + salvo.location);
+            //                 if (missMarker.className == "hitMarker2") {
+            //                     console.log("Don't touch this")
+            //                 } else {
+            //                     missMarker.className = "missMarker2";
+            //                     missMarker.innerHTML = "";
+            //                 }
+            //             }
+            //         })
+            //     })
+            // })
+        }
     },
     mounted() {
         this.getPlayerData(this.games_URL);

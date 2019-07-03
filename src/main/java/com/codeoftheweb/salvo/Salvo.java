@@ -18,6 +18,7 @@ public class Salvo {
     public Long id;
     public int turnFired;
     public String location;
+    public Boolean hit;
 
 
     Salvo () {};
@@ -33,9 +34,18 @@ public class Salvo {
         return gamePlayer;
     }
 
+    public Boolean getHit() {
+        return hit;
+    }
+
+    public void setHit(Boolean hit) {
+        this.hit = hit;
+    }
+
     public void setGamePlayer (GamePlayer gameplayer) {
         this.gamePlayer = gameplayer;
     }
+
 
     public String getLocation() {
         return location;

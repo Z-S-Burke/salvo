@@ -4,7 +4,6 @@ new Vue({
         return {
             gamesURL: "http://localhost:8080/api/games",
             games: [],
-            joinURL: "",
             joinData: [],
             newGameURL: "http://localhost:8080/api/newGame",
             currentUserURL: "http://localhost:8080/api/username",
@@ -15,7 +14,7 @@ new Vue({
             loginURL: "http://localhost:8080/api/login",
             logoutURL: "http://localhost:8080/api/logout",
             registerURL: "http://localhost:8080/api/players",
-            joinGameURL: "http://localhost:8080/api/games",
+            joinGameURL: "http://localhost:8080/api/games/",
             username: "",
             password: ""
         };
@@ -81,7 +80,7 @@ new Vue({
             })
         },
         addPlayerToGame(gameID) {
-            fetch(this.joinGameURL + "/" + gameID, {
+            fetch(this.joinGameURL + "join/" + gameID, {
                 method: "POST",
             })
                 .then(response => {

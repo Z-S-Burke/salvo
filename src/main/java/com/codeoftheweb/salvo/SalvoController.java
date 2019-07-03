@@ -2,6 +2,7 @@ package com.codeoftheweb.salvo;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -152,21 +153,24 @@ public class SalvoController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value="/api/games/players/{id}/ships", method = RequestMethod.POST)
-    public Set<Ship> submitShips(@RequestParam Long id, List<Ship> ships, Authentication authentication) {
+    @RequestMapping(value="/api/games/players/{id}/ships", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> submitShips(@PathVariable Long id, @RequestBody List<Ship> ships, Authentication authentication) {
 
-        System.out.println("id = " + id + " ships = " + ships);
+        System.out.println("id = " + id);
 
         GamePlayer user = gamePlayerRepo.findById(id);
         Boolean userAuthorized = user.getPlayer().getUsername() == authentication.getName() ? true : false;
 
         if (userAuthorized) {
             ships.stream().forEach(ship -> {
-                user.addShip(ship);
+                Ship newShip = new Ship(ship.getType(), ship.getLocationOnBoard());
+                user.addShip(newShip);
+                shipRepo.save(newShip);
+                gamePlayerRepo.save(user);
             });
         }
 
-        return user.getShips();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.GET)
@@ -182,6 +186,66 @@ public class SalvoController {
 
         return playerShips;
 
+    }
+
+    @RequestMapping(value="/api/games/players/{id}/salvos", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> fireSalvoes (@PathVariable Long id, @RequestBody List<Salvo> salvos, Authentication authentication) {
+
+        System.out.println("id = " + id);
+
+        GamePlayer user = gamePlayerRepo.findById(id);
+        Boolean userAuthorized = user.getPlayer().getUsername() == authentication.getName() ? true : false;
+
+        if (userAuthorized) {
+            salvos.stream().forEach(salvo -> {
+                Salvo newSalvo = new Salvo(salvo.getTurnFired(), salvo.getLocation(), user);
+                user.addSalvo(newSalvo);
+                salvoRepo.save(newSalvo);
+                gamePlayerRepo.save(user);
+            });
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value="/api/games/players/{id}/salvos", method = RequestMethod.GET)
+    public Set<Salvo> getPlayerSalvoResults (@PathVariable Long id, Authentication authentication) {
+
+        System.out.println("salvo id = " + id);
+
+        GamePlayer user = gamePlayerRepo.findById(id);
+        Boolean userAuthorized = user.getPlayer().getUsername() == authentication.getName() ? true : false;
+
+        if (userAuthorized) {
+            System.out.println("authorized");
+            Game thisGame = gameRepo.findById(user.getGameInstance().id);
+            System.out.println("in game");
+            thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
+                System.out.println("in gameplayer");
+                if(user.getId() != gamePlayer.getId()) {
+                    System.out.println("opponent access");
+                    Set<Ship> opponentLocations = gamePlayer.getShips();
+                    opponentLocations.stream().forEach(ship -> {
+                        System.out.println("for each ship");
+                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
+                            System.out.println("ship location" + shipLocation);
+                            user.getSalvoes().stream().forEach(salvo -> {
+                                System.out.println("for each salvo " + salvo);
+                                if(salvo.getLocation() == shipLocation) {
+                                    System.out.println("hit because " + salvo.getLocation() + " == " + shipLocation);
+                                    salvo.setHit(true);
+                                } else {
+                                    salvo.setHit(false);
+                                    System.out.println("miss because " + salvo.getLocation() + " != " + shipLocation);
+                                }
+                            });
+                        });
+                    });
+                }
+            });
+        }
+
+        return user.getSalvoes();
     }
 
 //    @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.POST)
@@ -238,8 +302,8 @@ public class SalvoController {
         return gamePlayerRepo.findById(id);
     }
 
-    @RequestMapping(value="/api/games/{id}", method = RequestMethod.POST)
-    public Long joinExistingGame(@RequestParam Long id, Authentication authentication) {
+    @RequestMapping(value="/api/games/join/{id}", method = RequestMethod.POST)
+    public Long joinExistingGame(@PathVariable Long id, Authentication authentication) {
 
         Game game = gameRepo.findById(id);
 

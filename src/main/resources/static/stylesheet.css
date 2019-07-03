@@ -27,6 +27,7 @@
     height: 70px;
     width: 70px;
 }
+
 .validLocation {
     background-image: url(assets/shipTexture.jpeg);
     filter:
@@ -102,19 +103,19 @@
 
 .hitMarker {
     background-size: cover;
-    background-image: url("assets/fire.gif");
+    background-image: url("assets/hitMarker.gif");
     filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
 }
 
-.hitMarker2 {
-    background-color: red;
-    filter: brightness(80%);
-    border: solid;
+.pendingHit {
+    background-image: url("assets/pendingHit.gif");
+    background-size: cover;
+    /* filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8); */
 }
 
 .missMarker {
     background-size: cover;
-    background-image: url("assets/missMarker2.png");
+    background-image: url("assets/missMarker.gif");
 }
 
 .missMarker2 {
@@ -242,7 +243,6 @@
 .gameViewMenuButton {
     font-size: 20px;
     width: 33%;
-    height: 40px;
     background-color: black;
     color: white;
     margin-top: 10px;
@@ -262,8 +262,56 @@
 
 .gameViewMenuButtonContainer {
     background-image: url(assets/35mm.gif);
+    margin-bottom: 30px;
 }
 
+.salvoButton {
+    width: 300px;
+    height: 200px;
+    color: white;
+    font-size: 50px;
+    background-image: url(assets/vhs_static.gif);
+    font-weight: bold;
+    bottom: 50%;
+    left: 43%;
+    opacity: .9;
+    border: solid 1px white;
+    position: absolute;
+}
+
+.salvoButton:hover {
+    background-image: url(assets/attackAnimation.gif);
+    background-size: cover;
+    color: white;
+    background-position-y: 35%;
+    animation: float 2s ease-in-out infinite;
+    filter:
+        grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+}
+
+.shipOutButton {
+    width: 300px;
+    height: 200px;
+    color: white;
+    font-size: 50px;
+    background-image: url(assets/vhs_static.gif);
+    font-weight: bold;
+    bottom: 30%;
+    left: 43%;
+    opacity: .9;
+    border: solid 1px white;
+    position: absolute;
+}
+
+.shipOutButton:hover {
+    background-image: url(assets/shipOut.gif);
+    background-size: cover;
+    color: white;
+    background-position-y: 35%;
+    animation: float 2s ease-in-out infinite;
+    filter:
+        grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-170deg) saturate(600%) contrast(0.8);
+}
 
 .fleetTitleText {
     font-size: 50px;

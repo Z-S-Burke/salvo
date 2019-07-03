@@ -6,15 +6,18 @@
     <title>Salvo - Game </title>
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="game_view_background my-5" id="app">
-        <div class="d-flex justify-content-between align-items-end gameViewMenuButtonContainer mb-5">
+    <div class="game_view_background" id="app">
+        <div class="d-flex justify-content-between align-items-center gameViewMenuButtonContainer mb-5">
             <h1 class="viewTitleText"> S A L V O </h1>
-            <div class="usernameDisplay d-flex align-items-center justify-content-center"> {{currentUser.username}}
+            <div class="usernameDisplay d-flex align-items-center justify-content-center">
+                {{currentUser.username}}
             </div>
             <button class="gameViewMenuButton" @click="howToPlay"> How to Play </button>
             <button class="gameViewMenuButton"> Forfeit </button>
@@ -22,6 +25,14 @@
             <!-- <button id="logoutButton" type="submit" class="gameViewMenuButton" v-on:click="logout">
                     Log Out
                 </button> -->
+        </div>
+        <div v-if="shotsFiredThisRound.length == 5" class="d-flex justify-content-center align-items-center">
+            <button @click="fireAway" class="salvoButton" onmouseout="this.innerHTML='READY TO FIRE'"
+                onmouseover="this.innerHTML='FIRE!'"> READY TO FIRE </button>
+        </div>
+        <div v-if="ships.length == 5 && !fleetDeployed" class="d-flex justify-content-center align-items-center">
+            <button @click="submitShips" class="shipOutButton" onmouseout="this.innerHTML='FLEET READY'"
+                onmouseover="this.innerHTML='SHIP OUT!'"> FLEET READY </button>
         </div>
         <div class="d-flex justify-content-around">
             <div class="d-flex flex-column justify-content-between mr-5">
@@ -83,11 +94,15 @@
                 </div>
             </div>
         </div>
-        <button v-if="verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION (VERTICAL) </button>
-        <button V-IF="!verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION (HORIZONTAL) </button>
+        <button v-if="verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION (VERTICAL)
+        </button>
+        <button V-IF="!verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION
+            (HORIZONTAL) </button>
+        <button class="gameViewMenuButton py-3 font-weight-bold" @click="submitShips"> SEND OUT YOUR FLEET </button>
         <button class="gameViewMenuButton" @click="resetBoard"> RESET BOARD </button>
-        <button class="gameViewMenuButton" @click="submitShips"> SEND OUT YOUR FLEET </button>
 
+
+        <p> {{this.ships}} </p>
     </div>
 </body>
 
