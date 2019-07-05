@@ -2,6 +2,8 @@ package com.codeoftheweb.salvo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.*;
@@ -52,6 +54,16 @@ public class Ship {
 
     public Ship (String type, Set<String> location) { this.type = type; this.locationOnBoard = location; }
 
+    //SHIP SINK STATUS
+    public Boolean sink;
+
+    public Boolean getSink() {
+        return sink;
+    }
+
+    public void setSink(Boolean sink) {
+        this.sink = sink;
+    }
 
     //SHIP.GAMEPLAYER
     @ManyToOne(fetch = FetchType.EAGER)

@@ -4,7 +4,7 @@ new Vue({
         return {
             games_URL: "http://localhost:8080/api/gameplayers/" + this.urlParse(),
             shipsURL: "http://localhost:8080/api/games/players/" + this.gamePlayerId + "/ships",
-            salvoResultsURL: "http://localhost:8080/api/games/players/" + 1 + "/salvos",
+            salvoResultsURL: "http://localhost:8080/api/games/players/" + this.gamePlayerId + "/salvos",
             currentUserURL: "http://localhost:8080/api/username",
             logoutURL: "http://localhost:8080/api/logout",
             gamePlayerId: 0,
@@ -16,6 +16,8 @@ new Vue({
             shipValidated: false,
             shotsFiredThisRound: [],
             allShotsFired: [],
+            allEnemyShotsFired: [],
+            opponent: [],
             fleetDeployed: false,
             player: [],
             hits: [],
@@ -60,6 +62,9 @@ new Vue({
                 })
                 .catch(err => console.log(err))
         },
+        findOpponentId() {
+            this.player.ga
+        },
         singleSalvo(event) {
             let location = document.getElementById(event.target.id);
             let shotValid = true;
@@ -102,8 +107,8 @@ new Vue({
             })
                 .then(response => {
                     console.log(response)
-                        this.clearCannons();
-                        console.log(this.allShotsFired)
+                    this.clearCannons();
+                    console.log(this.allShotsFired)
                 })
         },
         clearCannons() {
@@ -117,7 +122,7 @@ new Vue({
             this.salvoResultsFetch();
         },
         salvoResultsFetch() {
-            fetch(this.salvoResultsURL, {
+            fetch("http://localhost:8080/api/games/players/" + this.player.id + "/salvos", {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -127,7 +132,41 @@ new Vue({
                 })
                 .then(data => {
                     this.allShotsFired = data;
+                    console.log(this.allShotsFired)
                     this.hitOrMissSideBoard();
+                    this.opponentFetch(this.player.id);
+                })
+                .catch(err => console.log(err))
+        },
+        opponentFetch(id) {
+            fetch("http://localhost:8080/api/games/vs/" + id, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.opponent = data;
+                    console.log(this.opponent)
+                    this.opponentSalvoFetch(this.opponent.gamePlayerID);
+                })
+                .catch(err => console.log(err))
+        },
+        opponentSalvoFetch(id) {
+            fetch("http://localhost:8080/api/games/players/opponent/" + id + "/salvos", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.allEnemyShotsFired = data;
+                    console.log(this.allEnemyShotsFired)
+                    this.hitOrMissMainBoard();
                 })
                 .catch(err => console.log(err))
         },
@@ -223,8 +262,26 @@ new Vue({
             let searchParams = new URLSearchParams(url.search);
             return searchParams.get('userid');
         },
+        urlParseOpponent() {
+            let url = new URL(window.location.href);
+            let searchParams = new URLSearchParams(url.search);
+            return searchParams.get('opponentId');
+        },
         clickEventListenerTest(cell) {
             console.log(cell.id)
+        },
+        lockFleet(numeralArray, alphaArray) {
+            const table = document.getElementById("shipGrid");
+            table.className = "board";
+            for (let alpha in alphaArray) {
+                let row = table.insertRow();
+                numeralArray.forEach(numeral => {
+                    let cell = document.getElementById(alpha + numeral);
+                    cell.removeEventListener("mouseover");
+                    cell.removeEventListener("mouseout");
+                    cell.removeEventListener("click");
+                })
+            }
         },
         mainGridMaker(numeralArray, alphaArray) {
             const table = document.getElementById("shipGrid");
@@ -473,37 +530,40 @@ new Vue({
                 .then(response => {
                     console.log(response);
                     this.fleetDeployed = true;
+                    this.lockFleet(this.alphaArray, this.numeralArray);
                 })
         },
         clearPreview() {
-            console.log("clearPreview")
-            let endPreview = "";
-            if (this.shipLocations.length != 0) {
-                this.shipBuilder.forEach(location => {
-                    endPreview = document.getElementById(location);
-                    this.shipLocations.forEach(vector => {
-                        if (String(vector) != String(location)) {
-                            endPreview.className = "";
-                            endPreview.className = "grid-cell text-dark bg-light text-center";
-                        } else {
-                            endPreview.className = "";
-                            endPreview.className = "ship-location text-light text-center";
-                        }
+            if (this.fleetDeployed) {
+                console.log("clearPreview")
+                let endPreview = "";
+                if (this.shipLocations.length != 0) {
+                    this.shipBuilder.forEach(location => {
+                        endPreview = document.getElementById(location);
+                        this.shipLocations.forEach(vector => {
+                            if (String(vector) != String(location)) {
+                                endPreview.className = "";
+                                endPreview.className = "grid-cell text-dark bg-light text-center";
+                            } else {
+                                endPreview.className = "";
+                                endPreview.className = "ship-location text-light text-center";
+                            }
+                        })
                     })
-                })
-            } else {
-                this.shipBuilder.forEach(location => {
-                    endPreview = document.getElementById(location);
-                    endPreview.className = "";
-                    endPreview.className = "grid-cell text-dark bg-light text-center";
-                })
-            }
-            if (this.shipLocations.length != 0) {
-                this.shipLocations.forEach(vector => {
-                    endPreview = document.getElementById(vector);
-                    endPreview.className = "";
-                    endPreview.className = "ship-location text-light text-center";
-                })
+                } else {
+                    this.shipBuilder.forEach(location => {
+                        endPreview = document.getElementById(location);
+                        endPreview.className = "";
+                        endPreview.className = "grid-cell text-dark bg-light text-center";
+                    })
+                }
+                if (this.shipLocations.length != 0) {
+                    this.shipLocations.forEach(vector => {
+                        endPreview = document.getElementById(vector);
+                        endPreview.className = "";
+                        endPreview.className = "ship-location text-light text-center";
+                    })
+                }
             }
         },
         mainShipLocator() {
@@ -523,28 +583,19 @@ new Vue({
             }
             //this.hitOrMissMainBoard(locations, this.player)
         },
-        hitOrMissMainBoard(userShipLocations, user, opponent) {
-            let opponentSalvoes = opponent.salvoes;
-            opponentSalvoes.forEach(salvo => {
-                userShipLocations.forEach(shipMap => {
-                    shipMap.forEach(ship => {
-                        ship.locationOnBoard.forEach(vector => {
-                            if (vector == salvo.location) {
-                                let hitMarker = document.getElementById(vector);
-                                hitMarker.className = "hitMarker";
-                                hitMarker.innerHTML = "";
-                            } else if (salvo.location != vector) {
-                                let missMarker = document.getElementById(salvo.location);
-                                if (missMarker.className == "hitMarker") {
-                                    console.log("Please don't touch this");
-                                } else {
-                                    missMarker.className = "missMarker";
-                                    missMarker.innerHTML = "";
-                                }
-                            }
-                        })
-                    })
-                })
+        hitOrMissMainBoard() {
+            console.log(this.allEnemyShotsFired)
+            this.allEnemyShotsFired.forEach(shot => {
+                if (shot.hit) {
+                    let hitMarker = document.getElementById(shot.location);
+                    hitMarker.classList.add("hitMarker");
+                    console.log("hit!" + shot.hit)
+                }
+                else {
+                    let missMarker = document.getElementById(shot.location)
+                    missMarker.classList.add("missMarker");
+                    console.log("miss!" + shot.hit)
+                }
             })
         },
         logout() {
@@ -566,40 +617,18 @@ new Vue({
                 .catch(err => console.log(err))
         },
         hitOrMissSideBoard() {
-            console.log(this.allShotsFired)
             this.allShotsFired.forEach(shot => {
-                console.log(shot.hit)
-                if(shot.hit) {
+                if (shot.hit) {
                     let hitMarker = document.getElementById("hit" + shot.location);
                     hitMarker.classList.add("hitMarker");
-                    console.log("hit!")
+                    console.log("hit!" + shot.hit)
                 }
                 else {
                     let missMarker = document.getElementById("hit" + shot.location)
                     missMarker.classList.add("missMarker");
-                    console.log("miss!")
+                    console.log("miss!" + shot.hit)
                 }
             })
-            // let opponentShipLocations = opponent.ships;
-            // userSalvoes.forEach(salvo => {
-            //     opponentShipLocations.forEach(ship => {
-            //         ship.locationOnBoard.forEach(vector => {
-            //             if (vector == salvo.location) {
-            //                 let hitMarker = document.getElementById("hit" + vector);
-            //                 hitMarker.className = "hitMarker2";
-            //                 hitMarker.innerHTML = "";
-            //             } else if (salvo.location != vector) {
-            //                 let missMarker = document.getElementById("hit" + salvo.location);
-            //                 if (missMarker.className == "hitMarker2") {
-            //                     console.log("Don't touch this")
-            //                 } else {
-            //                     missMarker.className = "missMarker2";
-            //                     missMarker.innerHTML = "";
-            //                 }
-            //             }
-            //         })
-            //     })
-            // })
         }
     },
     mounted() {

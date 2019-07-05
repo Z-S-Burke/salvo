@@ -67,12 +67,9 @@
 }
 
 .ship-location {
-    background-image: url("assets/abstract-free-old-black-surface-vector-texture.jpg");
-    border: double black 10px;
-    border-radius: 70px;
-    /* background-size: cover; */
-    /* filter:
-        brightness(300%) sepia(100%) hue-rotate(190deg) saturate(600%) contrast(1); */
+    background-image: url("assets/shipTexture.jpeg");
+    filter:
+        brightness(200%) sepia(100%) hue-rotate(190deg) saturate(600%) contrast(1);
 }
 
 

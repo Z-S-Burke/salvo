@@ -211,32 +211,20 @@ public class SalvoController {
     @RequestMapping(value="/api/games/players/{id}/salvos", method = RequestMethod.GET)
     public Set<Salvo> getPlayerSalvoResults (@PathVariable Long id, Authentication authentication) {
 
-        System.out.println("salvo id = " + id);
 
         GamePlayer user = gamePlayerRepo.findById(id);
         Boolean userAuthorized = user.getPlayer().getUsername() == authentication.getName() ? true : false;
 
         if (userAuthorized) {
-            System.out.println("authorized");
             Game thisGame = gameRepo.findById(user.getGameInstance().id);
-            System.out.println("in game");
             thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
-                System.out.println("in gameplayer");
                 if(user.getId() != gamePlayer.getId()) {
-                    System.out.println("opponent access");
                     Set<Ship> opponentLocations = gamePlayer.getShips();
                     opponentLocations.stream().forEach(ship -> {
-                        System.out.println("for each ship");
                         ship.getLocationOnBoard().stream().forEach(shipLocation -> {
-                            System.out.println("ship location" + shipLocation);
                             user.getSalvoes().stream().forEach(salvo -> {
-                                System.out.println("for each salvo " + salvo);
-                                if(salvo.getLocation() == shipLocation) {
-                                    System.out.println("hit because " + salvo.getLocation() + " == " + shipLocation);
+                                if(salvo.getLocation().equals(shipLocation)) {
                                     salvo.setHit(true);
-                                } else {
-                                    salvo.setHit(false);
-                                    System.out.println("miss because " + salvo.getLocation() + " != " + shipLocation);
                                 }
                             });
                         });
@@ -248,33 +236,40 @@ public class SalvoController {
         return user.getSalvoes();
     }
 
-//    @RequestMapping(value = "/api/games/players/{id}/ships", method = RequestMethod.POST)
-//    public ResponseEntity<Object> postShips (@RequestParam Long id, String username, Authentication authentication) {
-//
-//
-//        Boolean validUser = playerRepo.findByUsername(username).getUsername() == authentication.getName() ?  true : false;
-//        Boolean matchingGamePlayer = gamePlayerRepo.findById(id) == null ? false : true;
-//
-//
-//        if (validUser) {
-//            GamePlayer thisUser = gamePlayerRepo.findById(id);
-//            //This user.stream().forEach( ship -> {
-//            //thisUser.add(ship)
-//
-//            //but this isn't a a Java object it's being sent, so how will it identify those different parts?
-//            //or can I make the object in JS, it just won't have any meaning until it's sent to the Spring server?
-//        }
-//        else if (!validUser){
-//            System.out.println("You do not have permission to alter another user's data.");
-//        }
-//        else if (!matchingGamePlayer) {
-//            System.out.println("This gameplayer does not exist.");
-//        }
-//        else {
-//            System.out.println("An inscrutable error occurred.");
-//        }
-//        return new ResponseEntity<>(HttpStatus.CREATED);
-//    }
+    @RequestMapping(value="/api/games/players/opponent/{id}/salvos", method = RequestMethod.GET)
+    public Set<Salvo> getOpponentSalvoResults (@PathVariable Long id, Authentication authentication) {
+
+        System.out.println("salvo id = " + id);
+
+        GamePlayer opponent = gamePlayerRepo.findById(id);
+
+            Game thisGame = gameRepo.findById(opponent.getGameInstance().id);
+            System.out.println("in game");
+            thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
+                System.out.println("in gameplayer");
+                if(opponent.getId() != gamePlayer.getId()) {
+                    System.out.println("user access");
+                    Set<Ship> userLocations = gamePlayer.getShips();
+                    userLocations.stream().forEach(ship -> {
+                        System.out.println("for each ship");
+                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
+                            System.out.println("ship location" + shipLocation);
+                            opponent.getSalvoes().stream().forEach(salvo -> {
+                                System.out.println("for each salvo " + salvo);
+                                if(salvo.getLocation().equals(shipLocation)) {
+                                    System.out.println("hit because " + salvo.getLocation() + " == " + shipLocation);
+                                    salvo.setHit(true);
+                                } else {
+                                    System.out.println("miss because " + salvo.getLocation() + " != " + shipLocation);
+                                }
+                            });
+                        });
+                    });
+                }
+            });
+
+        return opponent.getSalvoes();
+    }
 
     @RequestMapping("/api/players/player_info")
     public List<Map> getPlayerIDs() {
@@ -333,6 +328,22 @@ public class SalvoController {
         });
 
         return gamePlayerMap;
+    }
+
+    @RequestMapping(value = "/api/games/vs/{id}", method = RequestMethod.GET)
+    public Map<String, Object> versusInfo (@PathVariable Long id, Authentication authentication) {
+
+        Map<String, Object> gameVersusInfo = new LinkedHashMap<>();
+
+        Game currentGame = gameRepo.findById(id);
+        currentGame.getGamePlayers().stream().forEach(gamePlayer -> {
+            if (gamePlayer.getPlayer().getUsername() != authentication.getName()) {
+                GamePlayer opponent = gamePlayer;
+                gameVersusInfo.put("gamePlayerID", opponent.getId());
+            }
+        });
+
+        return gameVersusInfo;
     }
 
     @RequestMapping(value = "/game_view.html/{id}", method = RequestMethod.GET)
@@ -427,33 +438,3 @@ public class SalvoController {
             };
         }
     }
-
-
-
-
-
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.web.servlet.config.annotation.CorsRegistry;
-//import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-//import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-//
-//public class SalvoController {
-//
-//    @Configuration
-//    public class MyConfiguration {
-//
-//        @Bean
-//        public WebMvcConfigurer corsConfigurer() {
-//            return new WebMvcConfigurerAdapter() {
-//                @Override
-//                public void addCorsMappings(CorsRegistry registry) {
-//                    registry.addMapping("/**")
-//                            .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
-//                }
-//            };
-//        }
-//    }
-//
-//}
-//disables all of CORS
