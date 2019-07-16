@@ -44,17 +44,16 @@ new Vue({
                 mode: "cors"
             })
                 .then(response => {
+                    console.log(response);
                     return response.json();
                 })
                 .then(data => {
                     this.player = data;
                     console.log(this.player)
                     this.gamePlayerId = this.player.id;
-                    console.log(this.gamePlayerId)
                     this.ships = this.player.ships;
                     this.allShotsFired = this.player.salvoes;
                     this.salvoResultsFetch();
-                    console.log(this.allShotsFired)
                     this.accountStatus();
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
@@ -62,13 +61,9 @@ new Vue({
                 })
                 .catch(err => console.log(err))
         },
-        findOpponentId() {
-            this.player.ga
-        },
         singleSalvo(event) {
             let location = document.getElementById(event.target.id);
             let shotValid = true;
-            console.log(event.target.id)
             if (this.shotsFiredThisRound.length < 5) {
                 if (this.shotsFiredThisRound.length == 0) {
                     shotValid = true;
@@ -96,7 +91,6 @@ new Vue({
                     this.shotsFiredThisRound.push(salvo);
                 }
             }
-            console.log(this.shotsFiredThisRound);
         },
         fireAway() {
             $.post({
@@ -106,9 +100,7 @@ new Vue({
                 contentType: "application/json"
             })
                 .then(response => {
-                    console.log(response)
                     this.clearCannons();
-                    console.log(this.allShotsFired)
                 })
         },
         clearCannons() {
@@ -118,7 +110,6 @@ new Vue({
                 this.allShotsFired.push(shot);
             })
             this.shotsFiredThisRound = [];
-            console.log(this.shotsFiredThisRound)
             this.salvoResultsFetch();
         },
         salvoResultsFetch() {
@@ -131,8 +122,8 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    this.allShotsFired = data;
-                    console.log(this.allShotsFired)
+                    console.log(data);
+                    this.allShotsFired = data.salvoes;
                     this.hitOrMissSideBoard();
                     this.opponentFetch(this.player.id);
                 })
@@ -149,13 +140,12 @@ new Vue({
                 })
                 .then(data => {
                     this.opponent = data;
-                    console.log(this.opponent)
                     this.opponentSalvoFetch(this.opponent.gamePlayerID);
                 })
                 .catch(err => console.log(err))
         },
         opponentSalvoFetch(id) {
-            fetch("http://localhost:8080/api/games/players/opponent/" + id + "/salvos", {
+            fetch("http://localhost:8080/api/games/players/" + id + "/salvos", {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -164,8 +154,8 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    this.allEnemyShotsFired = data;
-                    console.log(this.allEnemyShotsFired)
+                    console.log(data)
+                    this.allEnemyShotsFired = data.salvoes;
                     this.hitOrMissMainBoard();
                 })
                 .catch(err => console.log(err))
@@ -486,7 +476,7 @@ new Vue({
                 let ship = {};
                 let disable = "";
                 if (this.patrolBoat == true) {
-                    ship = { 'type': "patrol boat", 'locationOnBoard': this.shipBuilder };
+                    ship = { 'type': "patrolBoat", 'locationOnBoard': this.shipBuilder };
                     this.patrolBoat = false;
                     disable = document.getElementById('patrolBoat');
                 } else if (this.destroyer == true) {
@@ -502,7 +492,7 @@ new Vue({
                     this.battleship = false;
                     disable = document.getElementById('battleship');
                 } else {
-                    ship = { 'type': "aircraft carrier", 'locationOnBoard': this.shipBuilder };
+                    ship = { 'type': "aircraftCarrier", 'locationOnBoard': this.shipBuilder };
                     this.aircraftCarrier = false;
                     disable = document.getElementById('aircraftCarrier');
                 }
@@ -511,12 +501,12 @@ new Vue({
                     submissionStyle = document.getElementById(location).classList.add("roll-in-blurred-top");
                     this.shipLocations.push(location);
                 })
+                disable.removeEventListener('click');
             }
             this.selectedLength = null;
             this.clearPreview();
             this.shipValidated = false;
             this.shipBuilder = [];
-            disable.removeEventListener('click');
 
             console.log(this.ships)
         },
@@ -530,41 +520,41 @@ new Vue({
                 .then(response => {
                     console.log(response);
                     this.fleetDeployed = true;
-                    this.lockFleet(this.alphaArray, this.numeralArray);
+                    this.lockFleet();
                 })
         },
         clearPreview() {
-            if (this.fleetDeployed) {
-                console.log("clearPreview")
-                let endPreview = "";
-                if (this.shipLocations.length != 0) {
-                    this.shipBuilder.forEach(location => {
-                        endPreview = document.getElementById(location);
-                        this.shipLocations.forEach(vector => {
-                            if (String(vector) != String(location)) {
-                                endPreview.className = "";
-                                endPreview.className = "grid-cell text-dark bg-light text-center";
-                            } else {
-                                endPreview.className = "";
-                                endPreview.className = "ship-location text-light text-center";
-                            }
-                        })
-                    })
-                } else {
-                    this.shipBuilder.forEach(location => {
-                        endPreview = document.getElementById(location);
-                        endPreview.className = "";
-                        endPreview.className = "grid-cell text-dark bg-light text-center";
-                    })
-                }
-                if (this.shipLocations.length != 0) {
+            // if (this.fleetDeployed) {
+            console.log("clearPreview")
+            let endPreview = "";
+            if (this.shipLocations.length != 0) {
+                this.shipBuilder.forEach(location => {
+                    endPreview = document.getElementById(location);
                     this.shipLocations.forEach(vector => {
-                        endPreview = document.getElementById(vector);
-                        endPreview.className = "";
-                        endPreview.className = "ship-location text-light text-center";
+                        if (String(vector) != String(location)) {
+                            endPreview.className = "";
+                            endPreview.className = "grid-cell text-dark bg-light text-center";
+                        } else {
+                            endPreview.className = "";
+                            endPreview.className = "ship-location text-light text-center";
+                        }
                     })
-                }
+                })
+            } else {
+                this.shipBuilder.forEach(location => {
+                    endPreview = document.getElementById(location);
+                    endPreview.className = "";
+                    endPreview.className = "grid-cell text-dark bg-light text-center";
+                })
             }
+            if (this.shipLocations.length != 0) {
+                this.shipLocations.forEach(vector => {
+                    endPreview = document.getElementById(vector);
+                    endPreview.className = "";
+                    endPreview.className = "ship-location text-light text-center";
+                })
+            }
+            // }
         },
         mainShipLocator() {
             if (this.ships) {
@@ -576,7 +566,7 @@ new Vue({
                             let location = document.getElementById(cell);
                             this.shipLocations.push(location.id);
                             location.classList.remove("grid-cell");
-                            location.className = "ship-location bg-danger text-light text-center";
+                            location.className = "ship-location bg-black text-light text-center";
                         })
                     })
                 })
@@ -584,7 +574,6 @@ new Vue({
             //this.hitOrMissMainBoard(locations, this.player)
         },
         hitOrMissMainBoard() {
-            console.log(this.allEnemyShotsFired)
             this.allEnemyShotsFired.forEach(shot => {
                 if (shot.hit) {
                     let hitMarker = document.getElementById(shot.location);

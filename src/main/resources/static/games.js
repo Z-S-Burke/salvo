@@ -54,7 +54,6 @@ new Vue({
                         this.accountStatus();
                         this.getData(this.gamesURL);
                     }
-                    return response.json();
                 })
                 .catch(err => console.log(err))
         },
@@ -119,6 +118,7 @@ new Vue({
                 })
                 .then(data => {
                     this.currentUser = data;
+                    console.log(this.currentUser)
                 })
                 .catch(err => console.log(err))
         },

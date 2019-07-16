@@ -198,18 +198,18 @@ public class SalvoController {
 
         if (userAuthorized) {
             salvos.stream().forEach(salvo -> {
-                Salvo newSalvo = new Salvo(salvo.getTurnFired(), salvo.getLocation(), user);
-                user.addSalvo(newSalvo);
-                salvoRepo.save(newSalvo);
+                user.addSalvo(salvo);
+                salvoRepo.save(salvo);
                 gamePlayerRepo.save(user);
             });
         }
 
+        user.setFleetDeployed(true);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(value="/api/games/players/{id}/salvos", method = RequestMethod.GET)
-    public Set<Salvo> getPlayerSalvoResults (@PathVariable Long id, Authentication authentication) {
+    public GamePlayer getPlayerSalvoResults (@PathVariable Long id, Authentication authentication) {
 
 
         GamePlayer user = gamePlayerRepo.findById(id);
@@ -219,21 +219,30 @@ public class SalvoController {
             Game thisGame = gameRepo.findById(user.getGameInstance().id);
             thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
                 if(user.getId() != gamePlayer.getId()) {
-                    Set<Ship> opponentLocations = gamePlayer.getShips();
-                    opponentLocations.stream().forEach(ship -> {
-                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
-                            user.getSalvoes().stream().forEach(salvo -> {
-                                if(salvo.getLocation().equals(shipLocation)) {
-                                    salvo.setHit(true);
-                                }
-                            });
-                        });
+                    Set<Ship> opponentShips = gamePlayer.getShips();
+                    opponentShips.stream().forEach(ship -> {
+                        ship.setHits(user.getSalvoes());
                     });
+                    Set<Ship> userShips = user.getShips();
+                    userShips.stream().forEach((ship -> {
+                        ship.setHits((gamePlayer.getSalvoes()));
+                    }));
                 }
+//                    opponentLocations.stream().forEach(ship -> {
+//                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
+//                            user.getSalvoes().stream().forEach(salvo -> {
+//                                if(salvo.getLocation().equals(shipLocation)) {
+//                                    salvo.setHit(true);
+//                                    ship.setHits(user.getSalvoes());
+//                                }
+//                            });
+//                        });
+//                    });
+//                }
             });
         }
 
-        return user.getSalvoes();
+        return user;
     }
 
     @RequestMapping(value="/api/games/players/opponent/{id}/salvos", method = RequestMethod.GET)
@@ -243,30 +252,30 @@ public class SalvoController {
 
         GamePlayer opponent = gamePlayerRepo.findById(id);
 
-            Game thisGame = gameRepo.findById(opponent.getGameInstance().id);
-            System.out.println("in game");
-            thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
-                System.out.println("in gameplayer");
-                if(opponent.getId() != gamePlayer.getId()) {
-                    System.out.println("user access");
-                    Set<Ship> userLocations = gamePlayer.getShips();
-                    userLocations.stream().forEach(ship -> {
-                        System.out.println("for each ship");
-                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
-                            System.out.println("ship location" + shipLocation);
-                            opponent.getSalvoes().stream().forEach(salvo -> {
-                                System.out.println("for each salvo " + salvo);
-                                if(salvo.getLocation().equals(shipLocation)) {
-                                    System.out.println("hit because " + salvo.getLocation() + " == " + shipLocation);
-                                    salvo.setHit(true);
-                                } else {
-                                    System.out.println("miss because " + salvo.getLocation() + " != " + shipLocation);
-                                }
-                            });
-                        });
-                    });
-                }
-            });
+//            Game thisGame = gameRepo.findById(opponent.getGameInstance().id);
+//            System.out.println("in game");
+//            thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
+//                System.out.println("in gameplayer");
+//                if(opponent.getId() != gamePlayer.getId()) {
+//                    System.out.println("user access");
+//                    Set<Ship> userLocations = gamePlayer.getShips();
+//                    userLocations.stream().forEach(ship -> {
+//                        System.out.println("for each ship");
+//                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
+//                            System.out.println("ship location" + shipLocation);
+//                            opponent.getSalvoes().stream().forEach(salvo -> {
+//                                System.out.println("for each salvo " + salvo);
+//                                if(salvo.getLocation().equals(shipLocation)) {
+//                                    System.out.println("hit because " + salvo.getLocation() + " == " + shipLocation);
+//                                    salvo.setHit(true);
+//                                } else {
+//                                    System.out.println("miss because " + salvo.getLocation() + " != " + shipLocation);
+//                                }
+//                            });
+//                        });
+//                    });
+//                }
+//            });
 
         return opponent.getSalvoes();
     }
@@ -292,9 +301,16 @@ public class SalvoController {
     }
 
     @RequestMapping(value="/api/gameplayers/{id}", method= RequestMethod.GET)
-    public GamePlayer findGamePlayer(@PathVariable Long id) {
+    public GamePlayer findGamePlayer(@PathVariable Long id, Authentication authentication) {
 
-        return gamePlayerRepo.findById(id);
+        System.out.println("Authentication" + authentication.getName());
+        System.out.println(playerRepo.findByUsername(authentication.getName()).getGamePlayers());
+//        if(playerRepo.findByUsername(authentication.getName()).getGamePlayers() == gamePlayerRepo.findById(id)) {
+            return gamePlayerRepo.findById(id);
+//        } else {
+//            return null;
+//        }
+
     }
 
     @RequestMapping(value="/api/games/join/{id}", method = RequestMethod.POST)
@@ -350,18 +366,24 @@ public class SalvoController {
     public Map<String, Object> gameView (@PathVariable Long id, Authentication authentication) {
         Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
 
-        Game joiningGame = gameRepo.findById(id);
-        joiningGame.getGamePlayers().stream().forEach(gamePlayer -> {
-            if (gamePlayer.getPlayer().getUsername() == authentication.getName()) {
-                GamePlayer newGamePlayer = gamePlayer;
-                gamePlayerMap.put("gamePlayerID", newGamePlayer.getId());
-                gamePlayerMap.put("player", mapGamePlayerPlayers(newGamePlayer));
-                gamePlayerMap.put("ships", newGamePlayer.getShips());
-                gamePlayerMap.put("salvoes", newGamePlayer.getSalvoes());
-            }
-        });
+        System.out.println(authentication.getName());
 
-        return gamePlayerMap;
+            if (id == playerRepo.findByUsername(authentication.getName()).getId()) {
+                Game joiningGame = gameRepo.findById(id);
+                joiningGame.getGamePlayers().stream().forEach(gamePlayer -> {
+                    if (gamePlayer.getPlayer().getUsername() == authentication.getName()) {
+                        GamePlayer newGamePlayer = gamePlayer;
+                        gamePlayerMap.put("gamePlayerID", newGamePlayer.getId());
+                        gamePlayerMap.put("player", mapGamePlayerPlayers(newGamePlayer));
+                        gamePlayerMap.put("ships", newGamePlayer.getShips());
+                        gamePlayerMap.put("salvoes", newGamePlayer.getSalvoes());
+                    }
+                });
+                return gamePlayerMap;
+            }
+            else {
+                return null;
+            }
     }
 
 

@@ -23,6 +23,16 @@ public class Game {
         this.id = id;
     }
 
+    public Boolean gameOver;
+
+    public Boolean getGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(Boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
     //GAME.CREATIONDATE UTILITIES
     private String creationDate;
 

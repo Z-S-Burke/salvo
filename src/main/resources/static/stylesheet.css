@@ -68,8 +68,6 @@
 
 .ship-location {
     background-image: url("assets/shipTexture.jpeg");
-    filter:
-        brightness(200%) sepia(100%) hue-rotate(190deg) saturate(600%) contrast(1);
 }
 
 
@@ -101,18 +99,19 @@
 .hitMarker {
     background-size: cover;
     background-image: url("assets/hitMarker.gif");
-    filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+    color: white;
 }
+
 
 .pendingHit {
     background-image: url("assets/pendingHit.gif");
     background-size: cover;
-    /* filter: grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8); */
 }
 
 .missMarker {
     background-size: cover;
     background-image: url("assets/missMarker.gif");
+    color: white;
 }
 
 .missMarker2 {
@@ -237,6 +236,10 @@
     border: solid white;
 }
 
+.bg-black {
+    background-color: white;
+    border: solid black 1px;
+}
 .gameViewMenuButton {
     font-size: 20px;
     width: 33%;

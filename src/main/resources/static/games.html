@@ -82,14 +82,13 @@
                                         <ol>
                                             <p> Username: {{oneGamePlayer.player.username}}</p>
                                         </ol>
-                                        <div v-if="oneGamePlayer.player.username == currentUser.username"
-                                            class="d-flex justify-content-center align-items-center">
-                                            <button @click="rejoin(oneGamePlayer.gamePlayerID)"> Rejoin Game </button>
-                                        </div>
                                     </div>
                                 </div>
                                 <h5 class="bg-light text-dark text-center"> Start Date: </h5>
                                 <p class="text-center"> {{game.dateCreated}} </p>
+                                <div class="d-flex justify-content-center align-items-center my-3">
+                                    <button @click="rejoin(currentUser.id)"> Rejoin Game </button>
+                                </div>
                             </div>
                         </div>
                     </div>

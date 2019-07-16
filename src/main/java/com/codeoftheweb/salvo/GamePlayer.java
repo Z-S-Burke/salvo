@@ -1,6 +1,7 @@
 package com.codeoftheweb.salvo;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.access.method.P;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -82,6 +83,14 @@ public class GamePlayer {
     public void addSalvo (Salvo salvo) {
         salvo.setGamePlayer(this);
         salvoes.add(salvo);
+
+        this.getShips().stream().forEach(ship -> {
+            ship.getLocationOnBoard().stream().forEach(location -> {
+                if (salvo.getLocation() == location) {
+                    salvo.setHit(true);
+                }
+            });
+        });
     }
 
     //GAMEPLAYER.CREATIONDATE UTILITIES
@@ -93,5 +102,47 @@ public class GamePlayer {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = game.getCreationDate();
+    }
+
+    //GAMEPLAYER.FINDOPPONENT UTILITIES
+    public Long opponent;
+
+    public Long getOpponent() {
+        return opponent;
+    }
+
+    public void setOpponent(Long opponent) {
+//        if(this.getGameInstance().getGamePlayers().size() > 1)
+//        this.getGameInstance().getGamePlayers().forEach(player -> {
+//            if (player.getId() != this.getId()) {
+//                opponent = player.id;
+//            }
+//        });
+
+        this.opponent = opponent;
+    }
+
+    //GAMEPLAYER.WINNER UTILITIES
+
+    public Boolean winner;
+
+    public Boolean getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Boolean winner) {
+        this.winner = winner;
+    }
+
+    //GAMEPLAYER.WINNER UTILITIES
+
+    public Boolean fleetDeployed;
+
+    public Boolean getFleetDeployed() {
+        return fleetDeployed;
+    }
+
+    public void setFleetDeployed(Boolean fleetDeployed) {
+        this.fleetDeployed = fleetDeployed;
     }
 }

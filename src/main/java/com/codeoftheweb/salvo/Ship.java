@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.*;
@@ -54,6 +55,34 @@ public class Ship {
 
     public Ship (String type, Set<String> location) { this.type = type; this.locationOnBoard = location; }
 
+    //SHIP HITS
+
+    @ElementCollection
+    public Set<String> hits = new HashSet<>();
+
+    public Set<String> getHits() {
+       return hits;
+    }
+
+    public void setHits(Set<Salvo> opponentSalvos) {
+
+        System.out.println("in the function");
+
+        this.getLocationOnBoard().stream().forEach(location -> {
+            System.out.println("in the location: " + location);
+            opponentSalvos.stream().forEach((salvo -> {
+                System.out.println("in the salvos: " + salvo.getLocation());
+                if(salvo.getLocation() == location) {
+                    System.out.println("supposed to register as a hit");
+                    hits.add(salvo.getLocation());
+                    System.out.println(hits);
+                    salvo.setHit(true);
+                    System.out.println("Successful hit set to: " + salvo.getHit());
+                }
+            }));
+        });
+    }
+
     //SHIP SINK STATUS
     public Boolean sink;
 
@@ -61,8 +90,10 @@ public class Ship {
         return sink;
     }
 
-    public void setSink(Boolean sink) {
-        this.sink = sink;
+    public void setSink() {
+        if(this.getHits().size() == this.getLocationOnBoard().size()) {
+            this.sink = true;
+        }
     }
 
     //SHIP.GAMEPLAYER
