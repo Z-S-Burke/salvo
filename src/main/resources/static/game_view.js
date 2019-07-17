@@ -15,6 +15,7 @@ new Vue({
             selectedLength: null,
             shipValidated: false,
             shotsFiredThisRound: [],
+            opponentShipsSunk: [],
             allShotsFired: [],
             allEnemyShotsFired: [],
             opponent: [],
@@ -44,20 +45,20 @@ new Vue({
                 mode: "cors"
             })
                 .then(response => {
-                    console.log(response);
                     return response.json();
                 })
                 .then(data => {
                     this.player = data;
-                    console.log(this.player)
                     this.gamePlayerId = this.player.id;
                     this.ships = this.player.ships;
+                    this.fleetDeployed = this.player.fleetDeployed;
                     this.allShotsFired = this.player.salvoes;
                     this.salvoResultsFetch();
                     this.accountStatus();
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
-
+                    this.userShipStatus(this.player);
+                    this.opponentShipStatusFetch;
                 })
                 .catch(err => console.log(err))
         },
@@ -122,30 +123,17 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data);
+                    console.log(data)
+                    this.player = data;
                     this.allShotsFired = data.salvoes;
+                    this.opponentSalvoFetch(this.player.opponent);
                     this.hitOrMissSideBoard();
-                    this.opponentFetch(this.player.id);
-                })
-                .catch(err => console.log(err))
-        },
-        opponentFetch(id) {
-            fetch("http://localhost:8080/api/games/vs/" + id, {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            })
-                .then(response => {
-                    return response.json();
-                })
-                .then(data => {
-                    this.opponent = data;
-                    this.opponentSalvoFetch(this.opponent.gamePlayerID);
+                    this.hitOrMissMainBoard();
                 })
                 .catch(err => console.log(err))
         },
         opponentSalvoFetch(id) {
-            fetch("http://localhost:8080/api/games/players/" + id + "/salvos", {
+            fetch("http://localhost:8080/api/games/players/opponent/" + id + "/salvos", {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -154,8 +142,7 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data)
-                    this.allEnemyShotsFired = data.salvoes;
+                    this.allEnemyShotsFired = data;
                     this.hitOrMissMainBoard();
                 })
                 .catch(err => console.log(err))
@@ -231,7 +218,7 @@ new Vue({
         },
         resetBoard() {
             this.shipLocations = [];
-            console.log(this.shipLocations);
+            window.location.reload();
         },
         sendShips() {
             fetch(this.newGameURL, {
@@ -242,7 +229,6 @@ new Vue({
                 })
                 .then(data => {
                     this.joinData = data;
-                    console.log(this.joinData)
                     window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log(err))
@@ -257,9 +243,6 @@ new Vue({
             let searchParams = new URLSearchParams(url.search);
             return searchParams.get('opponentId');
         },
-        clickEventListenerTest(cell) {
-            console.log(cell.id)
-        },
         lockFleet(numeralArray, alphaArray) {
             const table = document.getElementById("shipGrid");
             table.className = "board";
@@ -267,9 +250,9 @@ new Vue({
                 let row = table.insertRow();
                 numeralArray.forEach(numeral => {
                     let cell = document.getElementById(alpha + numeral);
-                    cell.removeEventListener("mouseover");
-                    cell.removeEventListener("mouseout");
-                    cell.removeEventListener("click");
+                    cell.removeEventListener("mouseover", this.shipTest);
+                    cell.removeEventListener("mouseout", this.clearPreview);
+                    cell.removeEventListener("click", this.addShip);
                 })
             }
         },
@@ -319,7 +302,6 @@ new Vue({
                 let finalPreview = "";
                 let invalidPlacement = false;
                 let coordinate = event.target.id;
-                console.log(coordinate)
                 coordinate = coordinate.match(/[^\d]+|\d+/g);
                 let x = coordinate[0];
                 const y = Number(coordinate[1]);
@@ -329,14 +311,9 @@ new Vue({
                     }
                 }
                 if (this.verticalOrientation) {
-                    console.log("vert = " + this.verticalOrientation)
-                    console.log("y = " + y + " select.leng. = " + this.selectedLength)
                     if (0 < y + this.selectedLength < 11 || 0 < y + this.selectedLength < 11) {
                         if (this.shipLocations.length != 0) {
-                            console.log(this.shipLocations)
                             this.shipLocations.forEach(location => {
-                                console.log(location)
-                                console.log("location = " + location + " vert = " + this.verticalOrientation)
                                 let checkY = 0;
                                 for (let i = 0; i <= this.selectedLength; i++) {
                                     checkY = x + i;
@@ -360,7 +337,6 @@ new Vue({
                                 }
                             })
                         } else {
-                            console.log("the desired else")
                             let checkY = 0;
                             for (let i = 0; i <= this.selectedLength; i++) {
                                 checkY = x + i;
@@ -368,7 +344,6 @@ new Vue({
                                     for (let alpha in this.alphaArray) {
                                         if (checkY === this.alphaArray[alpha]) {
                                             let checkY = alpha;
-                                            console.log("Alpha = " + checkY)
                                             this.shipBuilder.push(checkY.concat(y));
                                         }
                                     }
@@ -383,7 +358,6 @@ new Vue({
                     }
                 } else {
                     if (0 < x + this.selectedLength < 11 || 0 < x + this.selectedLength < 11) {
-                        console.log(x)
                         if (this.shipLocations.length != 0) {
                             this.shipLocations.forEach(location => {
                                 if (location != event.target.id && this.selectedLength != null) {
@@ -449,16 +423,13 @@ new Vue({
                 if (invalidPlacement == true) {
                     this.shipValidated = false;
                     this.shipBuilder = [...new Set(this.shipBuilder)];
-                    console.log(this.shipBuilder)
                     this.shipBuilder.forEach(location => {
                         finalPreview = document.getElementById(location);
                         finalPreview.className = "invalidLocation grid-cell text-light text-center";
                     })
                 } else {
-                    console.log(this.shipBuilder)
                     this.shipBuilder = [...new Set(this.shipBuilder)];
-                    console.log("setting up submit")
-                    console.log(this.shipBuilder)
+
 
                     this.shipValidated = true;
 
@@ -471,7 +442,6 @@ new Vue({
             }
         },
         addShip() {
-            console.log(this.shipValidated)
             if (this.shipValidated && this.ships.length <= 5) {
                 let ship = {};
                 let disable = "";
@@ -501,14 +471,18 @@ new Vue({
                     submissionStyle = document.getElementById(location).classList.add("roll-in-blurred-top");
                     this.shipLocations.push(location);
                 })
-                disable.removeEventListener('click');
+                disable.removeEventListener('click', this.addShip);
             }
             this.selectedLength = null;
             this.clearPreview();
             this.shipValidated = false;
             this.shipBuilder = [];
-
-            console.log(this.ships)
+            this.patrolBoat = false;
+            this.destroyer = false;
+            this.submarine = false;
+            this.battleship = false;
+            this.aircraftCarrier = false;
+            this.selectedLength = 0;
         },
         submitShips() {
             $.post({
@@ -518,43 +492,43 @@ new Vue({
                 contentType: "application/json"
             })
                 .then(response => {
-                    console.log(response);
                     this.fleetDeployed = true;
                     this.lockFleet();
+                    const stopSubmit = document.getElementById("fleetButton");
+                    stopSubmit.disable;
                 })
         },
         clearPreview() {
-            // if (this.fleetDeployed) {
-            console.log("clearPreview")
-            let endPreview = "";
-            if (this.shipLocations.length != 0) {
-                this.shipBuilder.forEach(location => {
-                    endPreview = document.getElementById(location);
-                    this.shipLocations.forEach(vector => {
-                        if (String(vector) != String(location)) {
-                            endPreview.className = "";
-                            endPreview.className = "grid-cell text-dark bg-light text-center";
-                        } else {
-                            endPreview.className = "";
-                            endPreview.className = "ship-location text-light text-center";
-                        }
+            if (!this.fleetDeployed) {
+                let endPreview = "";
+                if (this.shipLocations.length != 0) {
+                    this.shipBuilder.forEach(location => {
+                        endPreview = document.getElementById(location);
+                        this.shipLocations.forEach(vector => {
+                            if (String(vector) != String(location)) {
+                                endPreview.className = "";
+                                endPreview.className = "grid-cell text-dark bg-light text-center";
+                            } else {
+                                endPreview.className = "";
+                                endPreview.className = "ship-location grid-cell text-light text-center";
+                            }
+                        })
                     })
-                })
-            } else {
-                this.shipBuilder.forEach(location => {
-                    endPreview = document.getElementById(location);
-                    endPreview.className = "";
-                    endPreview.className = "grid-cell text-dark bg-light text-center";
-                })
+                } else {
+                    this.shipBuilder.forEach(location => {
+                        endPreview = document.getElementById(location);
+                        endPreview.className = "";
+                        endPreview.className = "grid-cell text-dark bg-light text-center";
+                    })
+                }
+                if (this.shipLocations.length != 0) {
+                    this.shipLocations.forEach(vector => {
+                        endPreview = document.getElementById(vector);
+                        endPreview.className = "";
+                        endPreview.className = "ship-location text-light text-center";
+                    })
+                }
             }
-            if (this.shipLocations.length != 0) {
-                this.shipLocations.forEach(vector => {
-                    endPreview = document.getElementById(vector);
-                    endPreview.className = "";
-                    endPreview.className = "ship-location text-light text-center";
-                })
-            }
-            // }
         },
         mainShipLocator() {
             if (this.ships) {
@@ -571,21 +545,21 @@ new Vue({
                     })
                 })
             }
-            //this.hitOrMissMainBoard(locations, this.player)
         },
         hitOrMissMainBoard() {
             this.allEnemyShotsFired.forEach(shot => {
                 if (shot.hit) {
                     let hitMarker = document.getElementById(shot.location);
+                    hitMarker.classList.remove("ship-location");
                     hitMarker.classList.add("hitMarker");
-                    console.log("hit!" + shot.hit)
                 }
                 else {
                     let missMarker = document.getElementById(shot.location)
                     missMarker.classList.add("missMarker");
-                    console.log("miss!" + shot.hit)
                 }
             })
+
+            this.userShipStatus(this.player);
         },
         logout() {
             fetch(this.logoutURL, {
@@ -610,15 +584,50 @@ new Vue({
                 if (shot.hit) {
                     let hitMarker = document.getElementById("hit" + shot.location);
                     hitMarker.classList.add("hitMarker");
-                    console.log("hit!" + shot.hit)
                 }
                 else {
                     let missMarker = document.getElementById("hit" + shot.location)
                     missMarker.classList.add("missMarker");
-                    console.log("miss!" + shot.hit)
                 }
             })
-        }
+        },
+        userShipStatus(user) {
+            user.ships.forEach(ship => {
+                if (ship.sink) {
+                    let avatar = document.getElementById(ship.type);
+                    avatar.classList.remove("gameViewShipSelector");
+                    avatar.classList.add("shipSunk");
+                    avatar.innerHTML = "";
+                }
+            })
+
+            this.opponentShipStatusFetch();
+        },
+        opponentShipStatus(shipList) {
+            shipList.forEach(ship => {
+                if (ship.sink) {
+                    let avatar = document.getElementById(ship.type + "Opponent");
+                    avatar.classList.remove("opponentShipRender");
+                    avatar.classList.add("shipSunkOpponent");
+                    avatar.innerHTML = "";
+                }
+            })
+        },
+        opponentShipStatusFetch() {
+            fetch("http://localhost:8080/api/games/opponent/ships/" + this.player.opponent + "/sink", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.opponentShipStatus(data);
+                })
+                .catch(err => console.log(err))
+        },
     },
     mounted() {
         this.getPlayerData(this.games_URL);

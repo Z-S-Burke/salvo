@@ -1,6 +1,6 @@
 .board {
-    height: 750px;
-    width: 750px;
+    height: 700px;
+    width: 700px;
     border: solid 10px black;
 }
 
@@ -29,7 +29,9 @@
 }
 
 .validLocation {
-    background-image: url(assets/shipTexture.jpeg);
+    background-image: url(assets/vhs_static.gif);
+    box-shadow: inset 0px 0px 0px 10px white;
+    box-sizing: border-box;
     filter:
         brightness(100%) sepia(100%) hue-rotate(190deg) saturate(300%) contrast(1);
     opacity: .5;
@@ -37,7 +39,11 @@
 
 .invalidLocation {
     background-color: red;
-    opacity: .5;
+    box-shadow: inset 0px 0px 0px 10px white;
+    box-sizing: border-box;
+    opacity: .7;
+    filter:
+        invert(40%) grayscale(100%) brightness(40%) sepia(100%) hue-rotate(-50deg) saturate(400%) contrast(2);
     background-size: 50%;
 }
 
@@ -67,7 +73,14 @@
 }
 
 .ship-location {
-    background-image: url("assets/shipTexture.jpeg");
+    background-image: url(assets/vhs_static.gif);
+    box-shadow: inset 0px 0px 0px 10px white;
+    box-sizing: border-box;
+    /* Include padding and border in element's width and height */
+    height: 70px;
+    width: 70px;
+    filter:
+        brightness(600%) saturate(.5) contrast(1);
 }
 
 
@@ -102,6 +115,41 @@
     color: white;
 }
 
+.shipSunk {
+    font-size: 60px;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: white;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 150px;
+    background-image: url("assets/userSunk.gif");
+    background-size: cover;
+    border: solid skyblue;
+    height: 150px;
+    filter:
+        grayscale(100%) brightness(200%) saturate(600%) contrast(3);
+}
+
+.shipSunkOpponent {
+    font-size: 60px;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: white;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 150px;
+    background-image: url("assets/userSunk.gif");
+    transform: scaleX(-1);
+    background-size: cover;
+    border: solid skyblue;
+    height: 150px;
+    filter:
+        grayscale(100%) brightness(75%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(1);
+
+}
 
 .pendingHit {
     background-image: url("assets/pendingHit.gif");
@@ -240,6 +288,7 @@
     background-color: white;
     border: solid black 1px;
 }
+
 .gameViewMenuButton {
     font-size: 20px;
     width: 33%;

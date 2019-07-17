@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -166,8 +167,11 @@ public class SalvoController {
                 Ship newShip = new Ship(ship.getType(), ship.getLocationOnBoard());
                 user.addShip(newShip);
                 shipRepo.save(newShip);
-                gamePlayerRepo.save(user);
             });
+
+            user.setFleetDeployed(true);
+            user.setCurrentTurn(user.getCurrentTurn() + 1);
+            gamePlayerRepo.save(user);
         }
 
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -200,11 +204,13 @@ public class SalvoController {
             salvos.stream().forEach(salvo -> {
                 user.addSalvo(salvo);
                 salvoRepo.save(salvo);
-                gamePlayerRepo.save(user);
             });
+
+            user.setCurrentTurn(user.getCurrentTurn() + 1);
+            user.setFleetDeployed(true);
+            gamePlayerRepo.save(user);
         }
 
-        user.setFleetDeployed(true);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -219,13 +225,19 @@ public class SalvoController {
             Game thisGame = gameRepo.findById(user.getGameInstance().id);
             thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
                 if(user.getId() != gamePlayer.getId()) {
+                    gamePlayer.setOpponent(user.getId());
+                    gamePlayerRepo.save(gamePlayer);
                     Set<Ship> opponentShips = gamePlayer.getShips();
                     opponentShips.stream().forEach(ship -> {
                         ship.setHits(user.getSalvoes());
+                        shipRepo.save(ship);
                     });
+                    user.setOpponent(gamePlayer.getId());
+                    gamePlayerRepo.save(user);
                     Set<Ship> userShips = user.getShips();
                     userShips.stream().forEach((ship -> {
                         ship.setHits((gamePlayer.getSalvoes()));
+                        shipRepo.save(ship);
                     }));
                 }
 //                    opponentLocations.stream().forEach(ship -> {
@@ -246,38 +258,39 @@ public class SalvoController {
     }
 
     @RequestMapping(value="/api/games/players/opponent/{id}/salvos", method = RequestMethod.GET)
-    public Set<Salvo> getOpponentSalvoResults (@PathVariable Long id, Authentication authentication) {
+    public Set<Salvo> getOpponentSalvoResults (@PathVariable Long id) {
 
-        System.out.println("salvo id = " + id);
 
         GamePlayer opponent = gamePlayerRepo.findById(id);
+        System.out.println("opponent id search, supposed to be 9, comes out as: " + opponent.getOpponent());
+        GamePlayer user = gamePlayerRepo.findById(opponent.getOpponent());
 
-//            Game thisGame = gameRepo.findById(opponent.getGameInstance().id);
-//            System.out.println("in game");
-//            thisGame.getGamePlayers().stream().forEach(gamePlayer -> {
-//                System.out.println("in gameplayer");
-//                if(opponent.getId() != gamePlayer.getId()) {
-//                    System.out.println("user access");
-//                    Set<Ship> userLocations = gamePlayer.getShips();
-//                    userLocations.stream().forEach(ship -> {
-//                        System.out.println("for each ship");
-//                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
-//                            System.out.println("ship location" + shipLocation);
-//                            opponent.getSalvoes().stream().forEach(salvo -> {
-//                                System.out.println("for each salvo " + salvo);
-//                                if(salvo.getLocation().equals(shipLocation)) {
-//                                    System.out.println("hit because " + salvo.getLocation() + " == " + shipLocation);
-//                                    salvo.setHit(true);
-//                                } else {
-//                                    System.out.println("miss because " + salvo.getLocation() + " != " + shipLocation);
-//                                }
-//                            });
-//                        });
-//                    });
-//                }
-//            });
+        opponent.getShips().stream().forEach(ship -> {
+            ship.setHits(user.getSalvoes());
+        });
+
+        user.getShips().stream().forEach((ship -> {
+            ship.setHits((opponent.getSalvoes()));
+        }));
 
         return opponent.getSalvoes();
+    }
+
+    @RequestMapping(value="/api/games/opponent/ships/{id}/sink", method = RequestMethod.GET)
+    public List<Map> getOpponentShipStatus(@PathVariable Long id) {
+
+        List<Map> sinkList = new ArrayList<>();
+
+        gamePlayerRepo.findById(id).getShips().stream().forEach(ship -> {
+            System.out.println(ship.getType());
+            Map<String, Object> sinkMap = new LinkedHashMap<>();
+            sinkMap.put("sink", ship.getSink());
+            sinkMap.put("type", ship.getType());
+            sinkList.add(sinkMap);
+        });
+
+        System.out.println(sinkList);
+        return sinkList;
     }
 
     @RequestMapping("/api/players/player_info")
@@ -317,13 +330,26 @@ public class SalvoController {
     public Long joinExistingGame(@PathVariable Long id, Authentication authentication) {
 
         Game game = gameRepo.findById(id);
-
         GamePlayer newGamePlayer = new GamePlayer(game, playerRepo.findByUsername(authentication.getName()));
 
         gameRepo.save(game);
         gamePlayerRepo.save(newGamePlayer);
         playerRepo.save(playerRepo.findByUsername(authentication.getName()));
 
+        game.getGamePlayers().stream().forEach(player -> {
+            if(player.getId() != newGamePlayer.getId()) {
+                player.setOpponent(newGamePlayer.getId());
+                Set<Ship> opponentShips = player.getShips();
+                opponentShips.stream().forEach(ship -> {
+                    ship.setHits(newGamePlayer.getSalvoes());
+                });
+                newGamePlayer.setOpponent(player.getId());
+                Set<Ship> userShips = newGamePlayer.getShips();
+                userShips.stream().forEach((ship -> {
+                    ship.setHits((player.getSalvoes()));
+                }));
+            }
+        });
         return newGamePlayer.getId();
     }
 

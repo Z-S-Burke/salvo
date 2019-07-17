@@ -18,7 +18,7 @@ public class Salvo {
     public Long id;
     public int turnFired;
     public String location;
-    public Boolean hit;
+    public Boolean hit = false;
 
 
     Salvo () {};

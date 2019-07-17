@@ -81,10 +81,12 @@ public class Ship {
                 }
             }));
         });
+
+        this.setSink();
     }
 
     //SHIP SINK STATUS
-    public Boolean sink;
+    public Boolean sink = false;
 
     public Boolean getSink() {
         return sink;

@@ -112,14 +112,12 @@ public class GamePlayer {
     }
 
     public void setOpponent(Long opponent) {
-//        if(this.getGameInstance().getGamePlayers().size() > 1)
-//        this.getGameInstance().getGamePlayers().forEach(player -> {
-//            if (player.getId() != this.getId()) {
-//                opponent = player.id;
-//            }
-//        });
 
-        this.opponent = opponent;
+        this.getGameInstance().getGamePlayers().forEach(player -> {
+            if (player.getId() == opponent) {
+                this.opponent = player.getId();
+            }
+        });
     }
 
     //GAMEPLAYER.WINNER UTILITIES
@@ -134,9 +132,9 @@ public class GamePlayer {
         this.winner = winner;
     }
 
-    //GAMEPLAYER.WINNER UTILITIES
+    //GAMEPLAYER.DEPLOYED UTILITIES
 
-    public Boolean fleetDeployed;
+    public Boolean fleetDeployed = false;
 
     public Boolean getFleetDeployed() {
         return fleetDeployed;
@@ -144,5 +142,17 @@ public class GamePlayer {
 
     public void setFleetDeployed(Boolean fleetDeployed) {
         this.fleetDeployed = fleetDeployed;
+    }
+
+    //GAMEPLAYER.CURRENTTURN
+
+    public int currentTurn = 0;
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
     }
 }
