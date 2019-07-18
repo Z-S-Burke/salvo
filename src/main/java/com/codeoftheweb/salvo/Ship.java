@@ -72,7 +72,7 @@ public class Ship {
             System.out.println("in the location: " + location);
             opponentSalvos.stream().forEach((salvo -> {
                 System.out.println("in the salvos: " + salvo.getLocation());
-                if(salvo.getLocation() == location) {
+                if(salvo.getLocation().equals(location)) {
                     System.out.println("supposed to register as a hit");
                     hits.add(salvo.getLocation());
                     System.out.println(hits);
@@ -82,7 +82,9 @@ public class Ship {
             }));
         });
 
-        this.setSink();
+        if(!this.getSink()) {
+            this.setSink();
+        }
     }
 
     //SHIP SINK STATUS
@@ -95,6 +97,10 @@ public class Ship {
     public void setSink() {
         if(this.getHits().size() == this.getLocationOnBoard().size()) {
             this.sink = true;
+            this.getGamePlayer().setFleetRemaining(this.getGamePlayer().getFleetRemaining() - 1);
+            if(this.getGamePlayer().getFleetRemaining() == 0) {
+                this.getGamePlayer().getGameInstance().setGameOver(true);
+            }
         }
     }
 

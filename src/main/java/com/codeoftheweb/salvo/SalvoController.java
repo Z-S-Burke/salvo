@@ -240,17 +240,6 @@ public class SalvoController {
                         shipRepo.save(ship);
                     }));
                 }
-//                    opponentLocations.stream().forEach(ship -> {
-//                        ship.getLocationOnBoard().stream().forEach(shipLocation -> {
-//                            user.getSalvoes().stream().forEach(salvo -> {
-//                                if(salvo.getLocation().equals(shipLocation)) {
-//                                    salvo.setHit(true);
-//                                    ship.setHits(user.getSalvoes());
-//                                }
-//                            });
-//                        });
-//                    });
-//                }
             });
         }
 
@@ -291,6 +280,20 @@ public class SalvoController {
 
         System.out.println(sinkList);
         return sinkList;
+    }
+
+    @RequestMapping(value="/api/games/opponent/{id}/turn", method = RequestMethod.GET)
+    public List<Map> getOpponentTurnStatus(@PathVariable Long id) {
+
+        List<Map> turnInfo = new ArrayList<>();
+        Map<String, Object> turnMap = new LinkedHashMap<>();
+
+        GamePlayer opponent = gamePlayerRepo.findById(id);
+        turnMap.put("currentTurn", opponent.getCurrentTurn());
+        turnMap.put("fleetDeployed", opponent.getFleetDeployed());
+        turnInfo.add(turnMap);
+
+        return turnInfo;
     }
 
     @RequestMapping("/api/players/player_info")

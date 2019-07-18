@@ -20,6 +20,9 @@ new Vue({
             allEnemyShotsFired: [],
             opponent: [],
             fleetDeployed: false,
+            opponentFleetDeployed: false,
+            opponentTurnCounter: 0,
+            enterSalvo: false,
             player: [],
             hits: [],
             misses: [],
@@ -28,10 +31,15 @@ new Vue({
             verticalOrientation: false,
             shipBuilder: [],
             patrolBoat: false,
+            patrolBoatPlaced: false,
             destroyer: false,
+            destroyerPlaced: false,
             submarine: false,
+            submarinePlaced: false,
             battleship: false,
+            battleshipPlaced: false,
             aircraftCarrier: false,
+            aircraftCarrierPlaced: false,
             numeralArray: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             alphaArray: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }
         };
@@ -58,14 +66,66 @@ new Vue({
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
                     this.userShipStatus(this.player);
-                    this.opponentShipStatusFetch;
+                    if (this.player.opponent) {
+                        this.opponentShipStatusFetch;
+                    }
+                    //starts the interval function
+                    let self = this;
+                    this.timer = setInterval(function () {
+                        self.updatePlayerData(self.games_URL);
+                        console.log("Fleet Remaining: " + self.player.fleetRemaining)
+                        console.log("GameOver: " + self.player.gameInstance.gameOver)
+                    }, 3000)
+                })
+                .catch(err => console.log(err))
+        },
+        updatePlayerData(games_URL) {
+            fetch(games_URL, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    if (this.player.opponent) {
+                        this.player = data;
+                        this.gamePlayerId = this.player.id;
+                        if (this.fleetDeployed) {
+                            this.ships = this.player.ships;
+                            this.patrolBoatPlaced = true;
+                            this.destroyerPlaced = true;
+                            this.submarinePlaced = true;
+                            this.battleshipPlaced = true;
+                            this.aircraftCarrierPlaced = true;
+                        }
+                        this.fleetDeployed = this.player.fleetDeployed;
+                        this.allShotsFired = this.player.salvoes;
+                        if (this.opponentTurnCounter == this.player.currentTurn) {
+                            this.salvoResultsFetch();
+                        }
+                        this.accountStatus();
+                        this.userShipStatus(this.player);
+                        this.opponentShipStatusFetch;
+                        if (this.shotsFiredThisRound.length < 5 && this.opponentFleetDeployed &&
+                            this.fleetDeployed && this.opponentTurnCounter >= this.player.currentTurn) {
+                            this.enterSalvo = true;
+                        }
+                        else {
+                            this.enterSalvo = false;
+                        }
+                    }
                 })
                 .catch(err => console.log(err))
         },
         singleSalvo(event) {
             let location = document.getElementById(event.target.id);
             let shotValid = true;
-            if (this.shotsFiredThisRound.length < 5) {
+            if (this.shotsFiredThisRound.length < 5 && this.opponentFleetDeployed &&
+                this.fleetDeployed && this.opponentTurnCounter >= this.player.currentTurn) {
+                this.enterSalvo = true;
                 if (this.shotsFiredThisRound.length == 0) {
                     shotValid = true;
                 }
@@ -91,6 +151,8 @@ new Vue({
 
                     this.shotsFiredThisRound.push(salvo);
                 }
+            } else {
+                this.enterSalvo = false;
             }
         },
         fireAway() {
@@ -448,22 +510,27 @@ new Vue({
                 if (this.patrolBoat == true) {
                     ship = { 'type': "patrolBoat", 'locationOnBoard': this.shipBuilder };
                     this.patrolBoat = false;
+                    this.patrolBoatPlaced = true;
                     disable = document.getElementById('patrolBoat');
                 } else if (this.destroyer == true) {
                     ship = { 'type': "destroyer", 'locationOnBoard': this.shipBuilder };
                     this.destroyer = false;
+                    this.destroyerPlaced = true;
                     disable = document.getElementById('destroyer');
                 } else if (this.submarine == true) {
                     ship = { 'type': "submarine", 'locationOnBoard': this.shipBuilder };
                     this.submarine = false;
+                    this.submarinePlaced = true;
                     disable = document.getElementById('submarine');
                 } else if (this.battleship == true) {
                     ship = { 'type': "battleship", 'locationOnBoard': this.shipBuilder };
                     this.battleship = false;
+                    this.battleshipPlaced = true;
                     disable = document.getElementById('battleship');
                 } else {
                     ship = { 'type': "aircraftCarrier", 'locationOnBoard': this.shipBuilder };
                     this.aircraftCarrier = false;
+                    this.aircraftCarrierPlaced = true;
                     disable = document.getElementById('aircraftCarrier');
                 }
                 this.ships.push(ship);
@@ -473,7 +540,6 @@ new Vue({
                 })
                 disable.removeEventListener('click', this.addShip);
             }
-            this.selectedLength = null;
             this.clearPreview();
             this.shipValidated = false;
             this.shipBuilder = [];
@@ -594,10 +660,14 @@ new Vue({
         userShipStatus(user) {
             user.ships.forEach(ship => {
                 if (ship.sink) {
+                    console.log(ship.type)
                     let avatar = document.getElementById(ship.type);
-                    avatar.classList.remove("gameViewShipSelector");
+                    avatar.classList.remove("gameViewShipSelectorSubmitted");
                     avatar.classList.add("shipSunk");
                     avatar.innerHTML = "";
+                } else {
+                    let avatar = document.getElementById(ship.type);
+                    avatar.innerHTML = ship.locationOnBoard.length;
                 }
             })
 
@@ -625,8 +695,30 @@ new Vue({
                 })
                 .then(data => {
                     this.opponentShipStatus(data);
+                    this.turnCounter();
                 })
                 .catch(err => console.log(err))
+        },
+        turnCounter() {
+            fetch("http://localhost:8080/api/games/opponent/" + this.player.opponent + "/turn", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    this.opponentTurnCounter = data[0].currentTurn;
+                    console.log(this.opponentTurnCounter)
+                    this.opponentFleetDeployed = data[0].fleetDeployed;
+                    console.log(this.opponentFleetDeployed)
+                })
+                .catch(err => console.log(err))
+        },
+        startAnnoying() {
+
         },
     },
     mounted() {

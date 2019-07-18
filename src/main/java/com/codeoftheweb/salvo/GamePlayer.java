@@ -155,4 +155,16 @@ public class GamePlayer {
     public void setCurrentTurn(int currentTurn) {
         this.currentTurn = currentTurn;
     }
+
+    //GAMEPLAYER.FLEETREMAINING
+
+    public int fleetRemaining = 5;
+
+    public int getFleetRemaining() {
+        return fleetRemaining;
+    }
+
+    public void setFleetRemaining(int fleetRemaining) {
+        this.fleetRemaining = fleetRemaining;
+    }
 }

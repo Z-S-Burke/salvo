@@ -60,42 +60,9 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-column">
-            <div v-if="loginStatus" class="gameListContainer">
-                <div class="gameList">
-                    <div class="text-light pr-3">
-                        <h1 class="gamesTitleText"> CARRY ON </h1>
-                    </div>
-                    <div class="d-flex flex-wrap">
-                        <div v-for="(game, index) in userGames" class="text-light border border-light p-2 m-3"
-                            :key="userGames.id">
-                            <div class="matchTitleText border border-light d-flex justify-content-center">
-                                <h3 class="text-light pr-2"> MATCH ID:
-                                </h3>
-                                <h3 class="text-danger"> {{game.gameID}} </h3>
-                            </div>
-                            <div class="gameContainer">
-                                <h5 class="bg-light text-dark text-center"> Players: </h5>
-                                <div v-for="(oneGamePlayer, index) in game.gamePlayers" :key="index"
-                                    class="bg-dark text-light" id="game_list">
-                                    <div class="bg-danger text-light">
-                                        <ol>
-                                            <p> Username: {{oneGamePlayer.player.username}}</p>
-                                        </ol>
-                                    </div>
-                                </div>
-                                <h5 class="bg-light text-dark text-center"> Start Date: </h5>
-                                <p class="text-center"> {{game.dateCreated}} </p>
-                                <div class="d-flex justify-content-center align-items-center my-3">
-                                    <button @click="rejoin(currentUser.id)"> Rejoin Game </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="d-flex flex-column p-5 m-5">
             <div v-if="loginStatus">
-                <div class="newGameListContainer">
+                <div class="newGameListContainer d-flex">
                     <div class="text-light pr-3">
                         <h1 class="gamesTitleText"> START A WAR </h1>
                     </div>
@@ -125,6 +92,39 @@
                                 <p class="text-center"> {{game.dateCreated}} </p>
                                 <div class="d-flex justify-content-center">
                                     <button @click="addPlayerToGame(game.gameID)"> Join Game </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="loginStatus" class="gameListContainer">
+                <div class="gameList">
+                    <div class="text-light pr-3">
+                        <h1 class="gamesTitleText"> CARRY ON </h1>
+                    </div>
+                    <div class="d-flex flex-wrap">
+                        <div v-for="(game, index) in userGames" class="text-light border border-light p-2 m-3"
+                            :key="userGames.id">
+                            <div class="matchTitleText border border-light d-flex justify-content-center">
+                                <h3 class="text-light pr-2"> MATCH ID:
+                                </h3>
+                                <h3 class="text-danger"> {{game.gameID}} </h3>
+                            </div>
+                            <div class="gameContainer">
+                                <h5 class="bg-light text-dark text-center"> Players: </h5>
+                                <div v-for="(oneGamePlayer, index) in game.gamePlayers" :key="index"
+                                    class="bg-dark text-light" id="game_list">
+                                    <div class="bg-danger text-light">
+                                        <ol>
+                                            <p> Username: {{oneGamePlayer.player.username}}</p>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <h5 class="bg-light text-dark text-center"> Start Date: </h5>
+                                <p class="text-center"> {{game.dateCreated}} </p>
+                                <div class="d-flex justify-content-center align-items-center my-3">
+                                    <button @click="rejoin(currentUser.id)"> Rejoin Game </button>
                                 </div>
                             </div>
                         </div>

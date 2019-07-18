@@ -30,10 +30,37 @@
             <button @click="fireAway" class="salvoButton" onmouseout="this.innerHTML='READY TO FIRE'"
                 onmouseover="this.innerHTML='FIRE!'"> READY TO FIRE </button>
         </div>
-        <div v-if="ships.length == 5 && !fleetDeployed" id="fleetButton" class="d-flex justify-content-center align-items-center">
+        <div v-if="ships.length == 5 && !fleetDeployed" id="fleetButton"
+            class="d-flex justify-content-center align-items-center">
             <button @click="submitShips" class="shipOutButton" onmouseout="this.innerHTML='FLEET READY'"
                 onmouseover="this.innerHTML='SHIP OUT!'"> FLEET READY </button>
         </div>
+        <div v-if="enterSalvo && shotsFiredThisRound.length < 5" id="fleetButton"
+            class="d-flex justify-content-center align-items-center">
+            <div class="pickYourShots">
+                <p>
+                    PICK.
+                </p>
+                <p>
+                    YOUR.
+                </p>
+                <p>
+                    SHOTS.
+                </p>
+            </div>
+        </div>
+        <div v-if="opponentTurnCounter < player.currentTurn" id="fleetButton"
+            class="d-flex justify-content-center align-items-center">
+            <div class="waiting">
+                <p> WAITING FOR THE ENEMY TO REVEAL THEMSELVES... </p>
+            </div>
+        </div>
+        <div v-if="player.currentTurn == 1 && !player.opponent" id="fleetButton"
+        class="d-flex justify-content-center align-items-center">
+        <div class="waiting">
+            <p> WAITING FOR THE ENEMY TO REVEAL THEMSELVES... </p>
+        </div>
+    </div>
         <div class="d-flex justify-content-around">
             <div class="d-flex flex-column justify-content-between mr-5">
                 <table class="d-flex" id="shipGrid">
@@ -41,25 +68,51 @@
                 <div class="fleetTitleText d-flex justify-content-center align-items-center my-3"> YOUR
                     FLEET, WHO YOU LOVE </div>
                 <div class="d-flex justify-content-around mb-5 mt-2">
-                    <div class="d-flex flex-column">
+                    <div v-if="!patrolBoatPlaced" class="d-flex flex-column">
                         <button class="gameViewShipSelector" id="patrolBoat" @click="placePatrolBoat"> 2 </button>
-                        <div class="gameViewShipSelectorCaption text-center" > PATROL BOAT </div>
+                        <div class="gameViewShipSelectorCaption text-center"> PATROL BOAT </div>
                     </div>
-                    <div class="d-flex flex-column">
+                    <div v-if="patrolBoatPlaced" class="d-flex flex-column">
+                        <button class="gameViewShipSelectorSubmitted" id="patrolBoat"> 2 </button>
+                        <div class="gameViewShipSelectorCaption text-center"> PATROL BOAT </div>
+                    </div>
+                    <div v-if="!destroyerPlaced" class="d-flex flex-column">
                         <button class="gameViewShipSelector" id="destroyer" @click="placeDestroyer"> 3 </button>
-                        <div class="gameViewShipSelectorCaption text-center" > DESTROYER </div>
+                        <div class="gameViewShipSelectorCaption text-center"> DESTROYER </div>
                     </div>
-                    <div class="d-flex flex-column">
+                    <div v-if="destroyerPlaced" class="d-flex flex-column">
+                        <button class="gameViewShipSelectorSubmitted" id="destroyer" @click="placeDestroyer"> 3
+                        </button>
+                        <div class="gameViewShipSelectorCaption text-center"> DESTROYER </div>
+                    </div>
+                    <div v-if="!submarinePlaced" class="d-flex flex-column">
                         <button class="gameViewShipSelector" id="submarine" @click="placeSubmarine"> 3 </button>
-                        <div class="gameViewShipSelectorCaption text-center" > SUBMARINE </div>
+                        <div class="gameViewShipSelectorCaption text-center"> SUBMARINE </div>
                     </div>
-                    <div class="d-flex flex-column">
+                    <div v-if="submarinePlaced" class="d-flex flex-column">
+                        <button class="gameViewShipSelectorSubmitted" id="submarine" @click="placeSubmarine"> 3
+                        </button>
+                        <div class="gameViewShipSelectorCaption text-center"> SUBMARINE </div>
+                    </div>
+                    <div v-if="!battleshipPlaced" class="d-flex flex-column">
                         <button class="gameViewShipSelector" id="battleship" @click="placeBattleship"> 4 </button>
-                        <div class="gameViewShipSelectorCaption text-center" > BATTLESHIP </div>
+                        <div class="gameViewShipSelectorCaption text-center"> BATTLESHIP </div>
                     </div>
-                    <div class="d-flex flex-column">
-                        <button class="gameViewShipSelector" id="aircraftCarrier" @click="placeAircraftCarrier"> 5 </button>
-                        <div class="gameViewShipSelectorCaption text-center" > AIRCRAFT CARRIER
+                    <div v-if="battleshipPlaced" class="d-flex flex-column">
+                        <button class="gameViewShipSelectorSubmitted" id="battleship" @click="placeBattleship"> 4
+                        </button>
+                        <div class="gameViewShipSelectorCaption text-center"> BATTLESHIP </div>
+                    </div>
+                    <div v-if="!aircraftCarrierPlaced" class="d-flex flex-column">
+                        <button class="gameViewShipSelector" id="aircraftCarrier" @click="placeAircraftCarrier"> 5
+                        </button>
+                        <div class="gameViewShipSelectorCaption text-center"> AIRCRAFT CARRIER
+                        </div>
+                    </div>
+                    <div v-if="aircraftCarrierPlaced" class="d-flex flex-column">
+                        <button class="gameViewShipSelectorSubmitted" id="aircraftCarrier" @click="placeAircraftCarrier"> 5
+                        </button>
+                        <div class="gameViewShipSelectorCaption text-center"> AIRCRAFT CARRIER
                         </div>
                     </div>
                 </div>
@@ -98,7 +151,7 @@
         </button>
         <button V-IF="!verticalOrientation" class="gameViewMenuButton" @click="orientation"> SHIP ORIENTATION
             (HORIZONTAL) </button>
-        <button class="gameViewMenuButton py-3 font-weight-bold" @click="submitShips"> YOUR MILITARY HISTORY </button>
+        <button class="gameViewMenuButton py-3 font-weight-bold" @click="submitShips"> YOUR SERVICE RECORD </button>
         <button class="gameViewMenuButton" @click="resetBoard"> RESET BOARD (PRE-DEPLOYMENT ONLY) </button>
     </div>
 </body>
