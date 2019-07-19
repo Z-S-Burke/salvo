@@ -400,11 +400,10 @@ public class SalvoController {
         Game joiningGame = gameRepo.findById(id);
         joiningGame.getGamePlayers().stream().forEach(gamePlayer -> {
             if (gamePlayer.getPlayer().getUsername() == authentication.getName()) {
-                GamePlayer newGamePlayer = gamePlayer;
-                gamePlayerMap.put("gamePlayerID", newGamePlayer.getId());
-                gamePlayerMap.put("player", mapGamePlayerPlayers(newGamePlayer));
-                gamePlayerMap.put("ships", newGamePlayer.getShips());
-                gamePlayerMap.put("salvoes", newGamePlayer.getSalvoes());
+                gamePlayerMap.put("gamePlayerID", gamePlayer.getId());
+                gamePlayerMap.put("player", mapGamePlayerPlayers(gamePlayer));
+                gamePlayerMap.put("ships", gamePlayer.getShips());
+                gamePlayerMap.put("salvoes", gamePlayer.getSalvoes());
             }
         });
 

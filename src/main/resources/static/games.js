@@ -16,7 +16,8 @@ new Vue({
             registerURL: "http://localhost:8080/api/players",
             joinGameURL: "http://localhost:8080/api/games/",
             username: "",
-            password: ""
+            password: "",
+            stillLoggedIn: false
         };
     },
     methods: {
@@ -48,11 +49,10 @@ new Vue({
                 body: "username=" + this.username + "&password=" + this.password
             })
                 .then(response => {
-                    console.log(response)
                     if (response.status == 200) {
                         this.loginStatus = true;
                         this.accountStatus();
-                        this.getData(this.gamesURL);
+                        // this.getData(this.gamesURL);
                         // let self = this;
                         // this.timer = setInterval(function () {
                         //     self.getData(self.gamesURL);
@@ -121,8 +121,12 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    this.currentUser = data;
-                    console.log(this.currentUser)
+                    if(data.username) {
+                        this.currentUser = data;
+                        this.loginStatus = true;
+                        console.log(this.currentUser)
+                        this.getData(this.gamesURL);
+                    }
                 })
                 .catch(err => console.log(err))
         },
@@ -175,15 +179,9 @@ new Vue({
                 return [Number(key), dataObject[key]];
             });
             return result;
-        },
-        show() {
-            this.$modal.show('hello-world');
-        },
-        hide() {
-            this.$modal.hide('hello-world');
         }
-    },
-    components: {
-
+    }, 
+    mounted() {
+        console.log(this.accountStatus())
     }
 });

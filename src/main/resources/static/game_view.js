@@ -71,6 +71,7 @@ new Vue({
                     this.mainGridMaker(this.numeralArray, this.alphaArray);
                     this.hitGridMaker(this.numeralArray, this.alphaArray);
                     this.userShipStatus(this.player);
+                    this.updatePlayerData(this.games_URL);
                     if (this.player.opponent) {
                         this.opponentShipStatusFetch;
                     }
@@ -82,7 +83,7 @@ new Vue({
                         console.log("GameOver: " + self.player.gameInstance.gameOver)
                         console.log("winner? = " + self.player.winner)
                         console.log("opponentWinner? " + self.opponentTurnCounter)
-                    }, 3000)
+                    }, 10000)
                 })
                 .catch(err => console.log(err))
         },
