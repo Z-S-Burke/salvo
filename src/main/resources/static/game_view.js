@@ -43,6 +43,8 @@ new Vue({
             battleshipPlaced: false,
             aircraftCarrier: false,
             aircraftCarrierPlaced: false,
+            showRecord: false,
+            showRules: false,
             numeralArray: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             alphaArray: { "A": 1, "B": 2, "C": 3, "D": 4, "E": 5, "F": 6, "G": 7, "H": 8, "I": 9, "J": 10 }
         };
@@ -743,7 +745,7 @@ new Vue({
                 mode: "cors"
             })
                 .then(response => {
-                    //this.gameBrowser();
+                    this.gameBrowser();
                     return response.json();
                 })
                 .catch(err => console.log(err))
@@ -787,6 +789,13 @@ new Vue({
         },
         gameBrowser() {
             window.location.replace("http://localhost:8080/games.html");
+        },
+        showUserRecord() {
+            this.showRecord = !this.showRecord;
+            console.log(this.showRecord)
+        },
+        showRulesofWar() {
+            this.showRules = !this.showRules;
         }
     },
     mounted() {

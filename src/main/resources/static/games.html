@@ -62,15 +62,15 @@
         </div>
         <div class="d-flex flex-column p-5 m-5">
             <div v-if="loginStatus">
-                <div class="newGameListContainer d-flex">
+                <div class="newGameListContainer d-flex flex-column">
                     <div class="text-light pr-3">
                         <h1 class="gamesTitleText"> START A WAR </h1>
                     </div>
-                    <div class="gameContainer d-flex justify-content-center align-items-center border border-light text-light m-3 px-2"
-                        v-on:click="newGame">
-                        <h3> NEW GAME </h3>
-                    </div>
-                    <div class="d-flex flex-wrap justify-content-end">
+                    <div class="d-flex flex-wrap">
+                        <div class="gameJoinButton d-flex justify-content-center align-items-center border border-light text-light m-3 px-2"
+                            v-on:click="newGame">
+                            <h3 class="py-3"> NEW GAME </h3>
+                        </div>
                         <div v-for="(game, index) in joinableGames" class="text-light border border-light p-2 m-3"
                             :key="joinableGames.id">
                             <div class="matchTitleText border border-light d-flex justify-content-center">
@@ -90,7 +90,7 @@
                                 </div>
                                 <h5 class="bg-light text-dark text-center"> Start Date: </h5>
                                 <p class="text-center"> {{game.dateCreated}} </p>
-                                <div class="d-flex justify-content-center">
+                                <div class="d-flex justify-content-center gameJoinButton">
                                     <button @click="addPlayerToGame(game.gameID)"> Join Game </button>
                                 </div>
                             </div>
@@ -99,11 +99,11 @@
                 </div>
             </div>
             <div v-if="loginStatus" class="gameListContainer">
-                <div class="gameList">
-                    <div class="text-light pr-3">
-                        <h1 class="gamesTitleText"> CARRY ON </h1>
-                    </div>
-                    <div class="d-flex flex-wrap">
+                <div class="gameList d-flex flex-column">
+                    <div class="d-flex">
+                        <div class="text-light pr-3">
+                            <h1 class="gamesTitleText"> CARRY ON </h1>
+                        </div>
                         <div v-for="(game, index) in userGames" class="text-light border border-light p-2 m-3"
                             :key="userGames.id">
                             <div class="matchTitleText border border-light d-flex justify-content-center">

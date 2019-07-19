@@ -37,14 +37,14 @@ public class SalvoController {
 
     @RequestMapping(value = "/api/username", method = RequestMethod.GET)
     @ResponseBody
-    public Map currentUserName(Authentication authentication) {
+    public Player currentUser(Authentication authentication) {
         currentUser = authentication.getName();
-        Player loggedPlayer = playerRepo.findByUsername(currentUser);
-        Map<String, Object> currentUserMap = new LinkedHashMap<>();
-        currentUserMap.put("username", loggedPlayer.getUsername());
-        currentUserMap.put("id", loggedPlayer.getId());
+//        Player loggedPlayer = playerRepo.findByUsername(currentUser);
+//        Map<String, Object> currentUserMap = new LinkedHashMap<>();
+//        currentUserMap.put("username", loggedPlayer.getUsername());
+//        currentUserMap.put("id", loggedPlayer.getId());
 
-        return currentUserMap;
+        return playerRepo.findByUsername(currentUser);
     }
 
     @RequestMapping("/api/games")
@@ -307,12 +307,15 @@ public class SalvoController {
         if (userAuthorized) {
             if(score == 2) {
                 user.getPlayer().setWin(user.getPlayer().getWin() + 1);
+                playerRepo.save(user.getPlayer());
             }
             else if (score == 1) {
                 user.getPlayer().setDraw(user.getPlayer().getDraw() + 1);
+                playerRepo.save(user.getPlayer());
             }
             else {
                 user.getPlayer().setLose(user.getPlayer().getLose() + 1);
+                playerRepo.save(user.getPlayer());
             }
         }
 

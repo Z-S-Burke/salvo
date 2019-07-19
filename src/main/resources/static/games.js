@@ -175,6 +175,15 @@ new Vue({
                 return [Number(key), dataObject[key]];
             });
             return result;
+        },
+        show() {
+            this.$modal.show('hello-world');
+        },
+        hide() {
+            this.$modal.hide('hello-world');
         }
+    },
+    components: {
+
     }
 });
