@@ -33,6 +33,19 @@ public class Game {
         this.gameOver = gameOver;
     }
 
+//    public void setGameOver(Boolean gameOver) {
+//        this.getGamePlayers().stream().forEach(player -> {
+//            if(player.getWinner() != true) {
+//                player.setWinner(true);
+//            }
+//            else {
+//                player.setWinner(false);
+//            }
+//        });
+//
+//        this.gameOver = gameOver;
+//    }
+
     //GAME.CREATIONDATE UTILITIES
     private String creationDate;
 

@@ -22,6 +22,9 @@ new Vue({
             fleetDeployed: false,
             opponentFleetDeployed: false,
             opponentTurnCounter: 0,
+            gameStatus: null,
+            opponentWinner: false,
+            opponentFleetRemaining: null,
             enterSalvo: false,
             player: [],
             hits: [],
@@ -75,6 +78,8 @@ new Vue({
                         self.updatePlayerData(self.games_URL);
                         console.log("Fleet Remaining: " + self.player.fleetRemaining)
                         console.log("GameOver: " + self.player.gameInstance.gameOver)
+                        console.log("winner? = " + self.player.winner)
+                        console.log("opponentWinner? " + self.opponentTurnCounter)
                     }, 3000)
                 })
                 .catch(err => console.log(err))
@@ -90,9 +95,9 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
+                    this.player = data;
+                    this.gamePlayerId = this.player.id;
                     if (this.player.opponent) {
-                        this.player = data;
-                        this.gamePlayerId = this.player.id;
                         if (this.fleetDeployed) {
                             this.ships = this.player.ships;
                             this.patrolBoatPlaced = true;
@@ -714,12 +719,75 @@ new Vue({
                     console.log(this.opponentTurnCounter)
                     this.opponentFleetDeployed = data[0].fleetDeployed;
                     console.log(this.opponentFleetDeployed)
+                    this.opponentWinner = data[0].winner;
+                    console.log(this.opponentWinner)
+                    this.opponentFleetRemaining = data[0].fleetRemaining;
+                    console.log(this.opponentFleetRemaining)
+                    if (this.opponentWinner == false || this.opponentFleetRemaining == 0) {
+                        this.setWinner();
+                    }
+                    if (this.opponentWinner && this.player.winner) {
+                        this.gameStatus == 1;
+                    }
+                    if (this.opponentWinner && !this.player.winner && this.player.currentTurn == this.opponentTurnCounter) {
+                        this.gameStatus = 0;
+                    }
                 })
                 .catch(err => console.log(err))
         },
-        startAnnoying() {
-
+        submitScore() {
+            fetch("http://localhost:8080/api/scoreSubmission/" + this.player.id + "/" + this.gameStatus, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+                .then(response => {
+                    //this.gameBrowser();
+                    return response.json();
+                })
+                .catch(err => console.log(err))
         },
+        setWinner() {
+            fetch("http://localhost:8080/api/setWinner/" + this.player.id, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    if(this.player.currentTurn != this.opponentTurnCounter) {
+                        console.log("do nothing")
+                    }
+                    else {
+                        if (this.player.winner && this.opponentWinner) {
+                            console.log("playerWinner: " + this.player.winner)
+                            console.log("opponentWinner: " + this.opponentWinner)
+                            console.log("DRAW")
+                            this.gameStatus = 1;
+                        }
+                        else if (this.player.winner && !this.opponentWinner) {
+                            console.log("playerWinner: " + this.player.winner)
+                            console.log("opponentWinner: " + this.opponentWinner)
+                            console.log("WIN")
+                            this.gameStatus = 2;
+                        }
+                        else {
+                            console.log("playerWinner: " + this.player.winner)
+                            console.log("opponentWinner: " + this.opponentWinner)
+                            console.log("LOSE")
+                            this.gameStatus = 0;
+                        }
+                    }
+                })
+                .catch(err => console.log(err))
+        },
+        gameBrowser() {
+            window.location.replace("http://localhost:8080/games.html");
+        }
     },
     mounted() {
         this.getPlayerData(this.games_URL);

@@ -291,9 +291,32 @@ public class SalvoController {
         GamePlayer opponent = gamePlayerRepo.findById(id);
         turnMap.put("currentTurn", opponent.getCurrentTurn());
         turnMap.put("fleetDeployed", opponent.getFleetDeployed());
+        turnMap.put("winner", opponent.getWinner());
+        turnMap.put("fleetRemaining", opponent.getFleetRemaining());
         turnInfo.add(turnMap);
 
         return turnInfo;
+    }
+
+    @RequestMapping(value="/api/scoreSubmission/{id}/{score}", method = RequestMethod.GET)
+    public ResponseEntity<Object> scoreSubmission(@PathVariable Long id, @PathVariable int score, Authentication authentication) {
+
+        GamePlayer user = gamePlayerRepo.findById(id);
+        Boolean userAuthorized = user.getPlayer().getUsername() == authentication.getName() ? true : false;
+
+        if (userAuthorized) {
+            if(score == 2) {
+                user.getPlayer().setWin(user.getPlayer().getWin() + 1);
+            }
+            else if (score == 1) {
+                user.getPlayer().setDraw(user.getPlayer().getDraw() + 1);
+            }
+            else {
+                user.getPlayer().setLose(user.getPlayer().getLose() + 1);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping("/api/players/player_info")
@@ -314,6 +337,16 @@ public class SalvoController {
     public Player findPlayer(@PathVariable Long id) {
 
         return playerRepo.findById(id);
+    }
+
+    @RequestMapping(value="/api/setWinner/{id}", method= RequestMethod.GET)
+    public GamePlayer setWinner(@PathVariable Long id) {
+
+        GamePlayer user = gamePlayerRepo.findById(id);
+        user.setWinner(true);
+        gamePlayerRepo.save(user);
+
+        return user;
     }
 
     @RequestMapping(value="/api/gameplayers/{id}", method= RequestMethod.GET)

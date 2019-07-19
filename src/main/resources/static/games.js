@@ -53,6 +53,10 @@ new Vue({
                         this.loginStatus = true;
                         this.accountStatus();
                         this.getData(this.gamesURL);
+                        // let self = this;
+                        // this.timer = setInterval(function () {
+                        //     self.getData(self.gamesURL);
+                        // }, 3000)
                     }
                 })
                 .catch(err => console.log(err))

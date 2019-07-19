@@ -99,6 +99,7 @@ public class Ship {
             this.sink = true;
             this.getGamePlayer().setFleetRemaining(this.getGamePlayer().getFleetRemaining() - 1);
             if(this.getGamePlayer().getFleetRemaining() == 0) {
+                this.getGamePlayer().setWinner(false);
                 this.getGamePlayer().getGameInstance().setGameOver(true);
             }
         }

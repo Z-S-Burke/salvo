@@ -313,6 +313,16 @@
     border: white solid 5px;
 }
 
+.boardMenuButton {
+    font-size: 20px;
+    width: 100%;
+    background-color: black;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: white solid 5px;  
+}
+
 .usernameDisplay {
     font-size: 30px;
     width: 70%;
@@ -329,14 +339,14 @@
 }
 
 .salvoButton {
-    width: 360px;
-    height: 300px;
+    width: 300px;
+    height: 250px;
     color: white;
     font-size: 50px;
     background-image: url(assets/vhs_static.gif);
     font-weight: bold;
     bottom: 30%;
-    left: 41.5%;
+    left: 45%;
     opacity: .9;
     border: solid 1px white;
     position: absolute;
@@ -360,7 +370,7 @@
     background-image: url(assets/vhs_static.gif);
     font-weight: bold;
     bottom: 30%;
-    left: 43%;
+    left: 45%;
     opacity: .9;
     border: solid 1px white;
     position: absolute;
@@ -377,7 +387,7 @@
 }
 
 .pickYourShots {
-    width: 360px;
+    width: 300px;
     height: 450px;
     color: white;
     font-size: 50px;
@@ -389,7 +399,7 @@
     align-items: center;
     font-weight: bold;
     bottom: 30%;
-    left: 41.5%;
+    left: 45%;
     opacity: .9;
     position: absolute;
 }
@@ -466,6 +476,15 @@
 }
 
 .gameViewMenuButton:hover {
+    background-image: url(assets/dots-grid.gif);
+    background-size: cover;
+    color: white;
+    background-position-y: 50%;
+    filter:
+        grayscale(100%) brightness(80%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(0.8);
+}
+
+.boardMenuButton:hover {
     background-image: url(assets/dots-grid.gif);
     background-size: cover;
     color: white;

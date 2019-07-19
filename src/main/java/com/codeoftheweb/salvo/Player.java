@@ -42,6 +42,55 @@ public class Player {
         this.password = password;
     }
 
+    //WIN
+
+    public int win = 0;
+
+    public int getWin() {
+        return win;
+    }
+
+    public void setWin(int win) {
+        this.win = win;
+        this.setScore(this.getScore() + 2);
+    }
+
+    //DRAW
+
+    public int draw = 0;
+
+    public int getDraw() {
+        return draw;
+    }
+
+    public void setDraw(int draw) {
+        this.draw = draw;
+        this.setScore(this.getScore() + 1);
+    }
+
+    //LOSE
+
+    public int lose = 0;
+
+    public int getLose() {
+        return lose;
+    }
+
+    public void setLose(int lose) {
+        this.lose = lose;
+    }
+
+    //SCORE
+
+    public int score = 0;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 
     //GET
     public long getId() {
