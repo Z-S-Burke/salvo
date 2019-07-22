@@ -23,7 +23,7 @@ public class Game {
         this.id = id;
     }
 
-    public Boolean gameOver;
+    public Boolean gameOver = false;
 
     public Boolean getGameOver() {
         return gameOver;
@@ -32,6 +32,17 @@ public class Game {
     public void setGameOver(Boolean gameOver) {
         this.gameOver = gameOver;
     }
+
+    public Boolean draw = false;
+
+    public Boolean getDraw() {
+        return draw;
+    }
+
+    public void setDraw(Boolean draw) {
+        this.draw = draw;
+    }
+
 
 //    public void setGameOver(Boolean gameOver) {
 //        this.getGamePlayers().stream().forEach(player -> {

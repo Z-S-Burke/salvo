@@ -69,15 +69,11 @@ public class Ship {
         System.out.println("in the function");
 
         this.getLocationOnBoard().stream().forEach(location -> {
-            System.out.println("in the location: " + location);
             opponentSalvos.stream().forEach((salvo -> {
-                System.out.println("in the salvos: " + salvo.getLocation());
                 if(salvo.getLocation().equals(location)) {
-                    System.out.println("supposed to register as a hit");
                     hits.add(salvo.getLocation());
                     System.out.println(hits);
                     salvo.setHit(true);
-                    System.out.println("Successful hit set to: " + salvo.getHit());
                 }
             }));
         });

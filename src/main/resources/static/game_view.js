@@ -58,10 +58,12 @@ new Vue({
                 mode: "cors"
             })
                 .then(response => {
+                    console.log(response)
                     return response.json();
                 })
                 .then(data => {
                     this.player = data;
+                    console.log(data);
                     this.gamePlayerId = this.player.id;
                     this.ships = this.player.ships;
                     this.fleetDeployed = this.player.fleetDeployed;
@@ -83,7 +85,7 @@ new Vue({
                         console.log("GameOver: " + self.player.gameInstance.gameOver)
                         console.log("winner? = " + self.player.winner)
                         console.log("opponentWinner? " + self.opponentTurnCounter)
-                    }, 10000)
+                    }, 1000)
                 })
                 .catch(err => console.log(err))
         },
@@ -357,8 +359,8 @@ new Vue({
                 })
             }
         },
-        howToPlay() {
-            alert("HOW TO PLAY\n\nThe rules are simple.\n\n1) Begin by placing your ships on the board. Your fleet is located at the top of the screen. The number inside each cutout indicates the length of the ship as seen on the board. Click 'Change Orientation' if you want to switch between a horizontal and vertical placement tof the ship. When you have placed all five ships on the board and are happy to begin the game, click PLAY, located on the right hand side of the viewport.\n\n 2) Once your opponenent has readied up, the game will begin. Select five vectors on the attack board, located on the righthand side, to unleash a salvo in each location. You won't attack, and the game won't progress, until both you and your opponent hit 'FIRE'.\n\n 3) To win the game, you must destroy all of your opponent's ships before they can do the same to yours. Because both teams fire in unison, it is possible for the game to result in a draw. \n\nPlayers are awarded a score of 1 for winning, 0.5 for drawing, and 0 for a loss. Visit the 'GAMES' page to see your rank on the leaderboards.");
+        showHowToPlay() {
+          this.showRules = !this.showRules;
         },
         orientation() {
             this.verticalOrientation = !this.verticalOrientation;
@@ -368,7 +370,7 @@ new Vue({
 
             this.shipBuilder = [];
 
-            if (this.selectedLength != null && this.ships.length <= 4) {
+            if (this.selectedLength != null && this.selectedLength != 0 && this.ships.length <= 4) {
                 let finalPreview = "";
                 let invalidPlacement = false;
                 let coordinate = event.target.id;
@@ -649,6 +651,8 @@ new Vue({
                         this.currentUser = [];
                         this.joinableGames = [];
                     }
+                    window.location.replace("http://localhost:8080/games.html");
+
                     return response.json();
                 })
                 .catch(err => console.log(err))
@@ -762,7 +766,7 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    if(this.player.currentTurn != this.opponentTurnCounter) {
+                    if (this.player.currentTurn != this.opponentTurnCounter) {
                         console.log("do nothing")
                     }
                     else {
@@ -795,11 +799,27 @@ new Vue({
             this.showRecord = !this.showRecord;
             console.log(this.showRecord)
         },
-        showRulesofWar() {
-            this.showRules = !this.showRules;
+        authorizeUser() {
+            fetch(this.games_URL + "/authorize", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                mode: "cors"
+            })
+                .then(response => {
+                    console.log(response)
+                    if(response.status == 401) {
+                        window.location.replace("cheat.html");
+                    } else {
+                        this.getPlayerData(this.games_URL);
+                    }
+                    return response.json();
+                })
+                .catch(err => console.log(err))
         }
     },
     mounted() {
-        this.getPlayerData(this.games_URL);
+        // this.getPlayerData(this.games_URL);
+        this.authorizeUser();
     }
 });

@@ -11,6 +11,7 @@ new Vue({
             userGames: [],
             joinableGames: [],
             loginStatus: false,
+            showRecord: false,
             loginURL: "http://localhost:8080/api/login",
             logoutURL: "http://localhost:8080/api/logout",
             registerURL: "http://localhost:8080/api/players",
@@ -33,6 +34,7 @@ new Vue({
                 })
                 .then(data => {
                     this.games = data;
+                    console.log(this.games)
                     this.filterGames(this.games);
                     this.filterJoiningNewGames(this.games);
                 })
@@ -69,6 +71,7 @@ new Vue({
                         this.userGames.push(game);
                     }
                 }
+                console.log(this.userGames)
                 return this.userGames;
             })
         },
@@ -108,8 +111,14 @@ new Vue({
                 })
                 .catch(err => console.log)
         },
-        rejoin(gamePlayerID) {
-            window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + gamePlayerID);
+        rejoin(game) {
+            console.log(game)
+
+            game.gamePlayers.forEach(gamePlayer => {
+                if (gamePlayer.username == this.currentUser.username) {
+                    window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + gamePlayer.gamePlayerID);
+                }
+            })
         },
         accountStatus() {
             fetch(this.currentUserURL, {
@@ -161,6 +170,10 @@ new Vue({
                     return response.json();
                 })
                 .catch(err => console.log(err))
+        },
+        showUserRecord() {
+            this.showRecord = !this.showRecord;
+            console.log(this.showRecord)
         },
         register() {
             $.post("/api/players", {

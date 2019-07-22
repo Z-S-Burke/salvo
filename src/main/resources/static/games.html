@@ -14,7 +14,7 @@
     <div id="app">
         <div class="loginContainer d-flex justify-content-between">
             <div class="d-flex justify-content-center">
-                <h1 class="titleText pb-3 pr-5"> S A L V O </h1>
+                <h1 class="titleText pb-3 pl-5 pr-5"> S A L V O </h1>
             </div>
             <div v-if="!loginStatus" class="pt-3 pr-3">
                 <div class="d-flex flex-column">
@@ -27,16 +27,18 @@
                         </label>
                     </div>
                     <div class="d-flex flex-column align-items-end">
-                        <button v-on:click="login" id="login-btn" type="submit" class="m-3 px-3">
+                        <h4 v-on:click="login" id="login-btn" type="submit"
+                            class="gameJoinButton text-center text-light border border-light my-3">
                             Log In
-                        </button>
+                        </h4>
                     </div>
                     <div class="d-flex flex-column align-items-end">
                         <p class="text-danger pr-3"> Don't have an account? </p>
                         <p class="text-danger pr-3"> Fill in your details above and then click: </p>
-                        <button v-on:click="register" id="signup-btn" type="submit" class="mr-3">
+                        <h4 v-on:click="register" id="signup-btn" type="submit"
+                            class="gameJoinButton text-center text-light border border-light my-3">
                             Register
-                        </button>
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -52,10 +54,15 @@
                             <p class="text-light"> {{currentUser.id}} </p>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end">
-                        <button v-on:click="logout" id="logoutButton" type="submit" class="my-3 mr-3 bg-light">
+                    <div class="d-flex flex-column justify-content-end">
+                        <h3 v-on:click="logout" id="logoutButton" type="submit"
+                            class="gameJoinButton text-center text-light border border-light my-3 py-3">
                             Log Out
-                        </button>
+                        </h3>
+                        <h3 v-on:click="showUserRecord" id="logoutButton" type="submit"
+                            class="gameJoinButton text-center text-light border border-light my-3 py-3">
+                            SERVICE RECORD
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -98,13 +105,13 @@
                     </div>
                 </div>
             </div>
-            <div v-if="loginStatus" class="gameListContainer">
+            <div v-if="loginStatus && userGames.length != 0" class="gameListContainer">
                 <div class="gameList d-flex">
                     <div class="d-flex flex-column">
                         <div class="text-light pr-3">
-                            <h1 class="gamesTitleText"> CARRY ON </h1>
+                            <h1 class="gamesTitleText"> MILITARY HISTORY </h1>
                         </div>
-                        <div class="d-flex">
+                        <div class="d-flex gameListContainer">
                             <div v-for="(game, index) in userGames"
                                 class="gameContainer text-light border border-light p-2 m-3" :key="userGames.id">
                                 <div class="matchTitleText border border-light d-flex justify-content-center">
@@ -112,7 +119,7 @@
                                     </h3>
                                     <h3 class="text-danger"> {{game.gameID}} </h3>
                                 </div>
-                                <div>
+                                <div v-if="!game.gameOver" class="mt-5">
                                     <h5 class="bg-light text-dark text-center"> Players: </h5>
                                     <div v-for="(oneGamePlayer, index) in game.gamePlayers" :key="index"
                                         class="bg-dark text-light" id="game_list">
@@ -125,13 +132,43 @@
                                     <h5 class="bg-light text-dark text-center"> Start Date: </h5>
                                     <p class="text-center"> {{game.dateCreated}} </p>
                                     <div class="d-flex justify-content-center align-items-center my-3">
-                                        <button @click="rejoin(currentUser.id)"> Rejoin Game </button>
+                                        <h3 @click="rejoin(game)"
+                                            class="gameJoinButton text-center border border-light py-3"> REJOIN BATTLE
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div id="win" v-if="game.gameOver && game.winner == currentUser.id && !game.draw"
+                                    class="d-flex display-3 justify-content-center aling-items-end">
+                                    <div class=" d-flex align-items-end justify-content-end">
+                                        WIN
+                                    </div>
+                                </div>
+                                <div id="lose" v-if="game.gameOver && game.winner != currentUser.id && !game.draw"
+                                    class="d-flex display-3 justify-content-center aling-items-center">
+                                    <div class=" d-flex align-items-end justify-content-end">
+                                        LOSE
+                                    </div>
+                                </div>
+                                <div id="draw"
+                                    v-if="game.gameOver && game.gamePlayers[0].winner && game.gamePlayers[1].winner"
+                                    class="d-flex display-3 justify-content-center aling-items-center">
+                                    <div class=" d-flex align-items-end justify-content-end">
+                                        DRAW
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div v-if="showRecord" class="d-flex flex-column record">
+            <p class="display-1 text-white text-center"> {{currentUser.username}} </p>
+            <div class="d-flex justify-content-around stats">
+                <p> Wins: {{currentUser.win}} </p>
+                <p> Losses: {{currentUser.lose}} </p>
+                <p> Draws: {{currentUser.draw}} </p>
+                <p> Total Score: {{currentUser.score}} </p>
             </div>
         </div>
     </div>

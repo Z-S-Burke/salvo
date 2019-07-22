@@ -19,13 +19,50 @@
             <div class="usernameDisplay d-flex align-items-center justify-content-center">
                 {{currentUser.username}}
             </div>
-            <button class="gameViewMenuButton" @click="howToPlay"> How to Play </button>
+            <button class="gameViewMenuButton" @click="showHowToPlay"> How to Play </button>
             <button class="gameViewMenuButton" @click="gameBrowser"> Back to Game Browser </button>
-            <button class="gameViewMenuButton"> Log Out </button>
-            <!-- <button id="logoutButton" type="submit" class="gameViewMenuButton" v-on:click="logout">
-                    Log Out
-                </button> -->
+            <button id="logoutButton" type="submit" class="gameViewMenuButton" v-on:click="logout">
+                Log Out
+            </button>
         </div>
+        <div v-if="showRules" class="rulesContainer text-light d-flex flex-column px-5 mb-2">
+            <div class="rules">
+                <h1>
+                    The rules are simple.
+                </h1>
+                <ol>
+                    <li>
+                        Place your ships on the board. Your
+                        fleet is located at the leftmost portion of the screen. The number inside each cutout indicates
+                        the length of the ship as seen on the board. Click 'Change Orientation' if you want to switch
+                        between a horizontal
+                        and vertical placement tof the ship. When you have placed all five ships on the board and are
+                        happy
+                        to begin the game, click DEPLOY FLEET after it appears in the center of the page.
+                    </li>
+                    <li>
+                        Once your
+                        opponenent has also deployed their fleet, the game will begin. Select five vectors on the enemy board, located
+                        on
+                        the righthand side, to unleash a salvo in each location. Direct hits will result in a red 'X' appearing oncreen, 
+                        whereas each miss will appear as a blue 'X'. When an opponent's ship has been sunk, its corresponding avatar
+                        on the opponent's side of the board will change. The same happens when your own ships are sunk.
+                    </li>
+                    <li> To win the game, you must destroy all
+                        of your opponent's ships before they can do the same to yours. Because both teams fire in
+                        unison, it
+                        is possible for the game to result in a draw. Players are awarded a score of 1 for winning,
+                        0.5
+                        for drawing, and 0 for a loss.
+                    </li>
+                    <li>
+                        Visit the 'GAMES' page to see your rank on the leaderboards.
+                    </li>
+                </ol>
+            </div>
+            <button @click="showHowToPlay" class="text-danger ml-5 bg-light text-dark" style="width: 15%"> CLOSE </button>
+        </div>
+        <div class="display-1" id="rules"> </div>
         <div v-if="shotsFiredThisRound.length == 5" class="d-flex justify-content-center align-items-center">
             <button @click="fireAway" class="salvoButton" onmouseout="this.innerHTML='READY TO FIRE'"
                 onmouseover="this.innerHTML='FIRE!'"> READY TO FIRE </button>
@@ -68,7 +105,7 @@
         <div v-if="gameStatus == 1" class="waiting d-flex flex-column">
             <p class="text-warning display-1"> STALEMATE </p>
             <p> CONGRATULATIONS ON YOUR MUTUALLY ASSURED DESTRUCTION </p>
-            <button> Submit Score (+1) & Return to Game Browser </button>
+            <button @click="submitScore"> Submit Score (+1) & Return to Game Browser </button>
         </div>
         <div v-if="player.currentTurn == 1 && !player.opponent && gameStatus != null" id="fleetButton"
             class="d-flex justify-content-center align-items-center">
@@ -153,7 +190,7 @@
                                     Ship
                                     Orientation
                                     (Horizontal) </button>
-                                <button class="boardMenuButton py-3" @click="resetBoard"> Reset Board
+                                <button class="boardMenuButton py-3" @click="resetBoard"> Reset Board (Pre-Deploy Only)
                                 </button>
                             </div>
                             <button class="boardMenuButton py-3 font-weight-bold" @click="showUserRecord">

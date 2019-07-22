@@ -39,11 +39,6 @@ public class SalvoController {
     @ResponseBody
     public Player currentUser(Authentication authentication) {
         currentUser = authentication.getName();
-//        Player loggedPlayer = playerRepo.findByUsername(currentUser);
-//        Map<String, Object> currentUserMap = new LinkedHashMap<>();
-//        currentUserMap.put("username", loggedPlayer.getUsername());
-//        currentUserMap.put("id", loggedPlayer.getId());
-
         return playerRepo.findByUsername(currentUser);
     }
 
@@ -94,6 +89,15 @@ public class SalvoController {
         oneGameMap.put("gameID", game.getId());
         oneGameMap.put("dateCreated", game.getCreationDate());
         oneGameMap.put("gamePlayers", gamePlayerList);
+        oneGameMap.put("gameOver", game.getGameOver());
+        oneGameMap.put("draw", game.getDraw());
+        if(game.getGameOver() == true) {
+            game.getGamePlayers().stream().forEach(gamePlayer -> {
+                if(gamePlayer.getWinner() == true) {
+                    oneGameMap.put("winner", gamePlayer.getPlayer().getId());
+                }
+            });
+        }
 
 
         return oneGameMap;
@@ -106,9 +110,9 @@ public class SalvoController {
     public static Map mapGamePlayers (GamePlayer gamePlayer) {
         Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
         gamePlayerMap.put("gamePlayerID", gamePlayer.getId());
+        gamePlayerMap.put("username", gamePlayer.getPlayer().getUsername());
+        gamePlayerMap.put("winner", gamePlayer.getWinner());
         gamePlayerMap.put("player", mapGamePlayerPlayers(gamePlayer));
-        gamePlayerMap.put("ships", gamePlayer.getShips());
-        gamePlayerMap.put("salvoes", gamePlayer.getSalvoes());
 
         return gamePlayerMap;
     }
@@ -162,7 +166,7 @@ public class SalvoController {
         GamePlayer user = gamePlayerRepo.findById(id);
         Boolean userAuthorized = user.getPlayer().getUsername() == authentication.getName() ? true : false;
 
-        if (userAuthorized) {
+        if (userAuthorized && ships.size() == 5 && !user.getFleetDeployed()) {
             ships.stream().forEach(ship -> {
                 Ship newShip = new Ship(ship.getType(), ship.getLocationOnBoard());
                 user.addShip(newShip);
@@ -251,7 +255,6 @@ public class SalvoController {
 
 
         GamePlayer opponent = gamePlayerRepo.findById(id);
-        System.out.println("opponent id search, supposed to be 9, comes out as: " + opponent.getOpponent());
         GamePlayer user = gamePlayerRepo.findById(opponent.getOpponent());
 
         opponent.getShips().stream().forEach(ship -> {
@@ -311,7 +314,9 @@ public class SalvoController {
             }
             else if (score == 1) {
                 user.getPlayer().setDraw(user.getPlayer().getDraw() + 1);
+                user.getGameInstance().setDraw(true);
                 playerRepo.save(user.getPlayer());
+                gameRepo.save(user.getGameInstance());
             }
             else {
                 user.getPlayer().setLose(user.getPlayer().getLose() + 1);
@@ -355,14 +360,23 @@ public class SalvoController {
     @RequestMapping(value="/api/gameplayers/{id}", method= RequestMethod.GET)
     public GamePlayer findGamePlayer(@PathVariable Long id, Authentication authentication) {
 
-        System.out.println("Authentication" + authentication.getName());
-        System.out.println(playerRepo.findByUsername(authentication.getName()).getGamePlayers());
-//        if(playerRepo.findByUsername(authentication.getName()).getGamePlayers() == gamePlayerRepo.findById(id)) {
+
+//        if(userAuthorization(id, authentication)) {
             return gamePlayerRepo.findById(id);
 //        } else {
 //            return null;
 //        }
+    }
 
+    @RequestMapping(value="/api/gameplayers/{id}/authorize", method= RequestMethod.GET)
+    public ResponseEntity validateUser(@PathVariable Long id, Authentication authentication) {
+
+
+        if(userAuthorization(id, authentication)) {
+            return new ResponseEntity<String>("test", HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<String>("test", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @RequestMapping(value="/api/games/join/{id}", method = RequestMethod.POST)
@@ -431,8 +445,10 @@ public class SalvoController {
         Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
 
         System.out.println(authentication.getName());
+        Boolean userAuthorized = userAuthorization(id, authentication);
+        System.out.println("User is authorized check:" + userAuthorized);
 
-            if (id == playerRepo.findByUsername(authentication.getName()).getId()) {
+            if (userAuthorized) {
                 Game joiningGame = gameRepo.findById(id);
                 joiningGame.getGamePlayers().stream().forEach(gamePlayer -> {
                     if (gamePlayer.getPlayer().getUsername() == authentication.getName()) {
@@ -448,6 +464,12 @@ public class SalvoController {
             else {
                 return null;
             }
+    }
+
+    private Boolean userAuthorization(Long id, Authentication authentication) {
+        Boolean userAuthorized = gamePlayerRepo.findById(id).getPlayer().getUsername() == authentication.getName() ? true : false;
+
+        return userAuthorized;
     }
 
 
