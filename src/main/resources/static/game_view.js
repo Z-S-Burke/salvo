@@ -7,7 +7,7 @@ new Vue({
             salvoResultsURL: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/salvos",
             currentUserURL: "https://zsburkesalvo.herokuapp.com/api/username",
             logoutURL: "https://zsburkesalvo.herokuapp.com/api/logout",
-            submitShipsURL: "https://zsburkesalvo.herokuapp.com/games/players/" + this.gamePlayerId + "/ships",
+            submitShipsURL: "https://zsburkesalvo.herokuapp.com/games/players/" + this.player.id + "/ships",
             gamePlayerId: 0,
             currentUser: [],
             readyToFire: false,
@@ -82,10 +82,6 @@ new Vue({
                     let self = this;
                     this.timer = setInterval(function () {
                         self.updatePlayerData(self.games_URL);
-                        console.log("Fleet Remaining: " + self.player.fleetRemaining)
-                        console.log("GameOver: " + self.player.gameInstance.gameOver)
-                        console.log("winner? = " + self.player.winner)
-                        console.log("opponentWinner? " + self.opponentTurnCounter)
                     }, 1000)
                 })
                 .catch(err => console.log(err))
@@ -119,7 +115,9 @@ new Vue({
                         }
                         this.accountStatus();
                         this.userShipStatus(this.player);
-                        this.opponentShipStatusFetch;
+                        if(this.player.opponent) {
+                            this.opponentShipStatusFetch;
+                        }
                         if (this.shotsFiredThisRound.length < 5 && this.opponentFleetDeployed &&
                             this.fleetDeployed && this.opponentTurnCounter >= this.player.currentTurn) {
                             this.enterSalvo = true;
