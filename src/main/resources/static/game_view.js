@@ -2,12 +2,11 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "https://zsburkesalvo.herokuapp.com/api/gameplayers/" + this.urlParse(),
-            shipsURL: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/ships",
-            salvoResultsURL: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/salvos",
-            currentUserURL: "https://zsburkesalvo.herokuapp.com/api/username",
-            logoutURL: "https://zsburkesalvo.herokuapp.com/api/logout",
-            submitShipsURL: "https://zsburkesalvo.herokuapp.com/games/players/" + this.player.id + "/ships",
+            games_URL: "http://zsburkesalvo.herokuapp.com/api/gameplayers/" + this.urlParse(),
+            shipsURL: "http://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/ships",
+            salvoResultsURL: "http://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/salvos",
+            currentUserURL: "http://zsburkesalvo.herokuapp.com/api/username",
+            logoutURL: "http://zsburkesalvo.herokuapp.com/api/logout",
             gamePlayerId: 0,
             currentUser: [],
             readyToFire: false,
@@ -82,6 +81,10 @@ new Vue({
                     let self = this;
                     this.timer = setInterval(function () {
                         self.updatePlayerData(self.games_URL);
+                        console.log("Fleet Remaining: " + self.player.fleetRemaining)
+                        console.log("GameOver: " + self.player.gameInstance.gameOver)
+                        console.log("winner? = " + self.player.winner)
+                        console.log("opponentWinner? " + self.opponentTurnCounter)
                     }, 1000)
                 })
                 .catch(err => console.log(err))
@@ -115,9 +118,7 @@ new Vue({
                         }
                         this.accountStatus();
                         this.userShipStatus(this.player);
-                        if(this.player.opponent) {
-                            this.opponentShipStatusFetch;
-                        }
+                        this.opponentShipStatusFetch;
                         if (this.shotsFiredThisRound.length < 5 && this.opponentFleetDeployed &&
                             this.fleetDeployed && this.opponentTurnCounter >= this.player.currentTurn) {
                             this.enterSalvo = true;
@@ -166,7 +167,7 @@ new Vue({
         },
         fireAway() {
             $.post({
-                url: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/salvos",
+                url: "http://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/salvos",
                 data: JSON.stringify(this.shotsFiredThisRound),
                 dataType: "text",
                 contentType: "application/json"
@@ -185,7 +186,7 @@ new Vue({
             this.salvoResultsFetch();
         },
         salvoResultsFetch() {
-            fetch("https://zsburkesalvo.herokuapp.com/api/games/players/" + this.player.id + "/salvos", {
+            fetch("http://zsburkesalvo.herokuapp.com/api/games/players/" + this.player.id + "/salvos", {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -204,7 +205,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         opponentSalvoFetch(id) {
-            fetch("https://zsburkesalvo.herokuapp.com/games/players/opponent/" + id + "/salvos", {
+            fetch("http://zsburkesalvo.herokuapp.com/games/players/opponent/" + id + "/salvos", {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -300,7 +301,7 @@ new Vue({
                 })
                 .then(data => {
                     this.joinData = data;
-                    window.location.replace("https://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
+                    window.location.replace("http://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log(err))
         },
@@ -561,7 +562,7 @@ new Vue({
         },
         submitShips() {
             $.post({
-                url: this.submitShipsURL,
+                url: "http://zsburkesalvo.herokuapp.com/games/players/" + this.gamePlayerId + "/ships",
                 data: JSON.stringify(this.ships),
                 dataType: "text",
                 contentType: "application/json"
@@ -650,7 +651,7 @@ new Vue({
                         this.currentUser = [];
                         this.joinableGames = [];
                     }
-                    window.location.replace("https://zsburkesalvo.herokuapp.com/games.html");
+                    window.location.replace("http://zsburkesalvo.herokuapp.com/games.html");
 
                     return response.json();
                 })
@@ -695,7 +696,7 @@ new Vue({
             })
         },
         opponentShipStatusFetch() {
-            fetch("https://zsburkesalvo.herokuapp.com/api/games/opponent/ships/" + this.player.opponent + "/sink", {
+            fetch("http://zsburkesalvo.herokuapp.com/api/games/opponent/ships/" + this.player.opponent + "/sink", {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -711,7 +712,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         turnCounter() {
-            fetch("https://zsburkesalvo.herokuapp.com/api/games/opponent/" + this.player.opponent + "/turn", {
+            fetch("http://zsburkesalvo.herokuapp.com/api/games/opponent/" + this.player.opponent + "/turn", {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -742,7 +743,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         submitScore() {
-            fetch("https://zsburkesalvo.herokuapp.com/api/scoreSubmission/" + this.player.id + "/" + this.gameStatus, {
+            fetch("http://zsburkesalvo.herokuapp.com/api/scoreSubmission/" + this.player.id + "/" + this.gameStatus, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -755,7 +756,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         setWinner() {
-            fetch("https://zsburkesalvo.herokuapp.com/api/setWinner/" + this.player.id, {
+            fetch("http://zsburkesalvo.herokuapp.com/api/setWinner/" + this.player.id, {
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -792,7 +793,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         gameBrowser() {
-            window.location.replace("https://zsburkesalvo.herokuapp.com/games.html");
+            window.location.replace("http://zsburkesalvo.herokuapp.com/games.html");
         },
         showUserRecord() {
             this.showRecord = !this.showRecord;
