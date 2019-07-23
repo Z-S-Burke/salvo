@@ -2,20 +2,20 @@ new Vue({
     el: "#app",
     data() {
         return {
-            gamesURL: "http://zsburkesalvo.herokuapp.com/api/games",
+            gamesURL: "https://zsburkesalvo.herokuapp.com/api/games",
             games: [],
             joinData: [],
-            newGameURL: "http://zsburkesalvo.herokuapp.com/api/newGame",
-            currentUserURL: "http://zsburkesalvo.herokuapp.com/api/username",
+            newGameURL: "https://zsburkesalvo.herokuapp.com/api/newGame",
+            currentUserURL: "https://zsburkesalvo.herokuapp.com/api/username",
             currentUser: [],
             userGames: [],
             joinableGames: [],
             loginStatus: false,
             showRecord: false,
-            loginURL: "http://zsburkesalvo.herokuapp.com/api/login",
-            logoutURL: "http://zsburkesalvo.herokuapp.com/api/logout",
-            registerURL: "http://zsburkesalvo.herokuapp.com/api/players",
-            joinGameURL: "http://zsburkesalvo.herokuapp.com/api/games/",
+            loginURL: "https://zsburkesalvo.herokuapp.com/api/login",
+            logoutURL: "https://zsburkesalvo.herokuapp.com/api/logout",
+            registerURL: "https://zsburkesalvo.herokuapp.com/api/players",
+            joinGameURL: "https://zsburkesalvo.herokuapp.com/api/games/",
             username: "",
             password: "",
             stillLoggedIn: false
@@ -99,7 +99,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         joinMatch(gameID) {
-            fetch("http://zsburkesalvo.herokuapp.com/api/games/" + gameID, {
+            fetch("https://zsburkesalvo.herokuapp.com/api/games/" + gameID, {
             })
                 .then(response => {
                     return response.json();
@@ -107,7 +107,7 @@ new Vue({
                 .then(data => {
                     this.joinData = data;
                     console.log(this.joinData)
-                    window.location.replace("http://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
+                    window.location.replace("https://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log)
         },
@@ -116,7 +116,7 @@ new Vue({
 
             game.gamePlayers.forEach(gamePlayer => {
                 if (gamePlayer.username == this.currentUser.username) {
-                    window.location.replace("http://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + gamePlayer.gamePlayerID);
+                    window.location.replace("https://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + gamePlayer.gamePlayerID);
                 }
             })
         },
@@ -149,7 +149,7 @@ new Vue({
                 .then(data => {
                     this.joinData = data;
                     console.log(this.joinData)
-                    window.location.replace("http://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
+                    window.location.replace("https://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log(err))
         },
