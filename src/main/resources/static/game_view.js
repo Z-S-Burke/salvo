@@ -85,7 +85,7 @@ new Vue({
                         console.log("GameOver: " + self.player.gameInstance.gameOver)
                         console.log("winner? = " + self.player.winner)
                         console.log("opponentWinner? " + self.opponentTurnCounter)
-                    }, 1000)
+                    }, 10000)
                 })
                 .catch(err => console.log(err))
         },
@@ -205,7 +205,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         opponentSalvoFetch(id) {
-            fetch("https://zsburkesalvo.herokuapp.com/games/players/opponent/" + id + "/salvos", {
+            fetch("https://zsburkesalvo.herokuapp.com/api/games/players/opponent/" + id + "/salvos", {
                 headers: {
                     "Content-Type": "application/json"
                 },
