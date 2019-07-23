@@ -21,14 +21,6 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java. util. Date;
-import java.util.HashSet;
-import java.util.Set;
-
-//import static org.hibernate.cfg.AvailableSettings.USER;
 
 @SpringBootApplication
 public class SalvoApplication extends SpringBootServletInitializer {
@@ -162,12 +154,12 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 				}
 			});
 	};
-	
-	protected void configure(HttpSecurity http) throws Exception {
-		http.requiresChannel()
-				.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-				.requiresSecure();
-	}
+
+//	protected void configure(HttpSecurity http) throws Exception {
+//		http.requiresChannel()
+//				.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+//				.requiresSecure();
+//	}
 
 };
 

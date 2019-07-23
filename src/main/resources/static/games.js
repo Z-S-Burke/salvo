@@ -2,20 +2,20 @@ new Vue({
     el: "#app",
     data() {
         return {
-            gamesURL: "http://localhost:8080/api/games",
+            gamesURL: "http://zsburkesalvo.herokuapp.com/api/games",
             games: [],
             joinData: [],
-            newGameURL: "http://localhost:8080/api/newGame",
-            currentUserURL: "http://localhost:8080/api/username",
+            newGameURL: "http://zsburkesalvo.herokuapp.com/api/newGame",
+            currentUserURL: "http://zsburkesalvo.herokuapp.com/api/username",
             currentUser: [],
             userGames: [],
             joinableGames: [],
             loginStatus: false,
             showRecord: false,
-            loginURL: "http://localhost:8080/api/login",
-            logoutURL: "http://localhost:8080/api/logout",
-            registerURL: "http://localhost:8080/api/players",
-            joinGameURL: "http://localhost:8080/api/games/",
+            loginURL: "http://zsburkesalvo.herokuapp.com/api/login",
+            logoutURL: "http://zsburkesalvo.herokuapp.com/api/logout",
+            registerURL: "http://zsburkesalvo.herokuapp.com/api/players",
+            joinGameURL: "http://zsburkesalvo.herokuapp.com/api/games/",
             username: "",
             password: "",
             stillLoggedIn: false
@@ -99,7 +99,7 @@ new Vue({
                 .catch(err => console.log(err))
         },
         joinMatch(gameID) {
-            fetch("http://localhost:8080/api/games/" + gameID, {
+            fetch("http://zsburkesalvo.herokuapp.com/api/games/" + gameID, {
             })
                 .then(response => {
                     return response.json();
@@ -107,7 +107,7 @@ new Vue({
                 .then(data => {
                     this.joinData = data;
                     console.log(this.joinData)
-                    window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
+                    window.location.replace("http://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log)
         },
@@ -116,7 +116,7 @@ new Vue({
 
             game.gamePlayers.forEach(gamePlayer => {
                 if (gamePlayer.username == this.currentUser.username) {
-                    window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + gamePlayer.gamePlayerID);
+                    window.location.replace("http://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + gamePlayer.gamePlayerID);
                 }
             })
         },
@@ -149,7 +149,7 @@ new Vue({
                 .then(data => {
                     this.joinData = data;
                     console.log(this.joinData)
-                    window.location.replace("http://localhost:8080/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
+                    window.location.replace("http://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log(err))
         },
