@@ -2,9 +2,9 @@ new Vue({
     el: "#app",
     data() {
         return {
-            games_URL: "https://zsburkesalvo.herokuapp.com/api/gameplayers/" + this.urlParse(),
-            shipsURL: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/ships",
-            salvoResultsURL: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/salvos",
+            games_URL: "https://zsburkesalvo.herokuapp.com/api/gameplayers" + this.urlParse(),
+            shipsURL: "https://zsburkesalvo.herokuapp.com/api/games/players" + this.gamePlayerId + "/ships",
+            salvoResultsURL: "https://zsburkesalvo.herokuapp.com/api/games/players" + this.gamePlayerId + "/salvos",
             currentUserURL: "https://zsburkesalvo.herokuapp.com/api/username",
             logoutURL: "https://zsburkesalvo.herokuapp.com/api/logout",
             gamePlayerId: 0,
