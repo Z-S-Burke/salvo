@@ -15,7 +15,7 @@ new Vue({
             loginURL: "https://zsburkesalvo.herokuapp.com/api/login",
             logoutURL: "https://zsburkesalvo.herokuapp.com/api/logout",
             registerURL: "https://zsburkesalvo.herokuapp.com/api/players",
-            joinGameURL: "https://zsburkesalvo.herokuapp.com/api/games",
+            joinGameURL: "https://zsburkesalvo.herokuapp.com/api/games/join/",
             username: "",
             password: "",
             stillLoggedIn: false
@@ -86,7 +86,7 @@ new Vue({
             })
         },
         addPlayerToGame(gameID) {
-            fetch(this.joinGameURL + "join/" + gameID, {
+            fetch(this.joinGameURL + gameID, {
                 method: "POST",
             })
                 .then(response => {
