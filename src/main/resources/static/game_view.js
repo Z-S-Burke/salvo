@@ -7,6 +7,7 @@ new Vue({
             salvoResultsURL: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/salvos",
             currentUserURL: "https://zsburkesalvo.herokuapp.com/api/username",
             logoutURL: "https://zsburkesalvo.herokuapp.com/api/logout",
+            submitShipsURL: "https://zsburkesalvo.herokuapp.com/games/players/" + this.gamePlayerId + "/ships",
             gamePlayerId: 0,
             currentUser: [],
             readyToFire: false,
@@ -562,7 +563,7 @@ new Vue({
         },
         submitShips() {
             $.post({
-                url: "https://zsburkesalvo.herokuapp.com/games/players/" + this.gamePlayerId + "/ships",
+                url: this.submitShipsURL,
                 data: JSON.stringify(this.ships),
                 dataType: "text",
                 contentType: "application/json"
