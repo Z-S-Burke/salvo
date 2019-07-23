@@ -562,7 +562,7 @@ new Vue({
         },
         submitShips() {
             $.post({
-                url: "https://zsburkesalvo.herokuapp.com/games/players/" + this.gamePlayerId + "/ships",
+                url: "https://zsburkesalvo.herokuapp.com/api/games/players/" + this.gamePlayerId + "/ships",
                 data: JSON.stringify(this.ships),
                 dataType: "text",
                 contentType: "application/json"
