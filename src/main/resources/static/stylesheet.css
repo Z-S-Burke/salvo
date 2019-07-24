@@ -1,6 +1,6 @@
 .board {
-    height: 700px;
-    width: 700px;
+    height: 600px;
+    width: 600px;
     border: solid 10px black;
 }
 
@@ -24,8 +24,8 @@
     font-weight: bold;
     background-color: white;
     border: 1px solid black;
-    height: 70px;
-    width: 70px;
+    height: 60px;
+    width: 60px;
 }
 
 .validLocation {
@@ -123,11 +123,11 @@
     color: white;
     margin-top: 5px;
     margin-bottom: 5px;
-    width: 150px;
+    width: 125px;
     background-image: url("assets/userSunk.gif");
     background-size: cover;
     border: solid skyblue;
-    height: 150px;
+    height: 125px;
     filter:
         grayscale(100%) brightness(200%) saturate(600%) contrast(3);
 }
@@ -140,12 +140,12 @@
     color: white;
     margin-top: 5px;
     margin-bottom: 5px;
-    width: 150px;
+    width: 125px;
     background-image: url("assets/userSunk.gif");
     transform: scaleX(-1);
     background-size: cover;
     border: solid skyblue;
-    height: 150px;
+    height: 125px;
     filter:
         grayscale(100%) brightness(75%) sepia(100%) hue-rotate(-50deg) saturate(600%) contrast(1);
 
@@ -259,8 +259,8 @@
     background-image: url(assets/tumblr_mstgowIyZT1rdu90go1_1280.gif);
     background-size: cover;
     border: solid skyblue;
-    height: 150px;
-    width: 150px;
+    height: 125px;
+    width: 125px;
 }
 
 .gameViewShipSelectorSubmitted {
@@ -274,8 +274,8 @@
     background-image: url(assets/4j3b.gif);
     background-size: cover;
     border: solid skyblue;
-    height: 150px;
-    width: 150px;
+    height: 125px;
+    width: 125px;
 }
 
 .opponentShipRender {
@@ -290,14 +290,14 @@
     background-size: contain;
     background-position-y: 40%;
     border: solid red;
-    height: 150px;
-    width: 150px;
+    height: 125px;
+    width: 125px;
 }
 
 .gameViewShipSelectorCaption {
     background-color: black;
     color: white;
-    margin-left: 25px;
+    margin-left: 10px;
     width: 125px;
     border: solid white;
 }
@@ -343,17 +343,14 @@
 }
 
 .salvoButton {
-    width: 300px;
-    height: 250px;
+    width: 250px;
+    height: 150px;
     color: white;
-    font-size: 50px;
+    font-size: 35px;
     background-image: url(assets/vhs_static.gif);
     font-weight: bold;
-    bottom: 30%;
-    left: 45%;
     opacity: .9;
     border: solid 1px white;
-    position: absolute;
 }
 
 .salvoButton:hover {
@@ -367,17 +364,14 @@
 }
 
 .shipOutButton {
-    width: 300px;
-    height: 200px;
+    width: 250px;
+    height: 150px;
     color: white;
-    font-size: 50px;
+    font-size: 35px;
     background-image: url(assets/vhs_static.gif);
     font-weight: bold;
-    bottom: 30%;
-    left: 45%;
     opacity: .9;
     border: solid 1px white;
-    position: absolute;
 }
 
 .shipOutButton:hover {
@@ -391,21 +385,18 @@
 }
 
 .pickYourShots {
-    width: 300px;
-    height: 450px;
+    height: 150px;
+    padding-left: 10px;
+    padding-right: 10px;
     color: white;
     font-size: 50px;
     background-image: url(assets/vhs_static.gif);
     background-size: cover;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    bottom: 30%;
-    left: 45%;
     opacity: .9;
-    position: absolute;
 }
 
 .waiting {
@@ -465,16 +456,18 @@
 }
 
 .fleetTitleText {
-    font-size: 50px;
+    font-size: 30px;
     color: skyblue;
     border: solid white;
     background-image: url(assets/vhs_static.gif);
     width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
     text-align: center;
 }
 
 .opponentTitleText {
-    font-size: 50px;
+    font-size: 30px;
     border: solid white;
     background-image: url(assets/vhs_static.gif);
     width: 100%;
