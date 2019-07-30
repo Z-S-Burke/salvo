@@ -184,6 +184,7 @@ new Vue({
                     window.alert('Registration successful. Please click LOGIN to proceed');
                     this.loginStatus = true;
                     console.log("Login: " + this.loginStatus)
+                    this.login();
                 })
                 .fail(err => console.log(err))
         },

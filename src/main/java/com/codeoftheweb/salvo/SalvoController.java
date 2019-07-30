@@ -151,11 +151,12 @@ public class SalvoController {
             Player newPlayer = new Player(username, password);
             playerRepo.save(newPlayer);
             System.out.println("New player account created");
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         else {
             System.out.println("This player already exists or the password provided did not match the proper format.");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @RequestMapping(value="/api/games/players/{id}/ships", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
