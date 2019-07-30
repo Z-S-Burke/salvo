@@ -130,7 +130,7 @@ new Vue({
                     return response.json();
                 })
                 .then(data => {
-                    if(data.username) {
+                    if (data.username) {
                         this.currentUser = data;
                         this.loginStatus = true;
                         console.log(this.currentUser)
@@ -181,11 +181,9 @@ new Vue({
                 password: this.password
             })
                 .then(response => {
-                    if (response == 200) {
-                        window.alert('Registration successful. Please click LOGIN to proceed');
-                        this.loginStatus = true;
-                        console.log("Login: " + this.loginStatus)
-                    }
+                    window.alert('Registration successful. Please click LOGIN to proceed');
+                    this.loginStatus = true;
+                    console.log("Login: " + this.loginStatus)
                 })
                 .fail(err => console.log(err))
         },
@@ -195,7 +193,7 @@ new Vue({
             });
             return result;
         }
-    }, 
+    },
     mounted() {
         this.accountStatus();
     }
