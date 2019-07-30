@@ -182,7 +182,7 @@ new Vue({
             })
                 .then(response => {
                     if (response == 200) {
-                        this.login();
+                        alert('Registration successful. Please click LOGIN to proceed');
                         this.loginStatus = true;
                     }
                 })
