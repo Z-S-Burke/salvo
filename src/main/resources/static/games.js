@@ -34,7 +34,6 @@ new Vue({
                 })
                 .then(data => {
                     this.games = data;
-                    console.log(this.games)
                     this.filterGames(this.games);
                     this.filterJoiningNewGames(this.games);
                 })
@@ -54,11 +53,10 @@ new Vue({
                     if (response.status == 200) {
                         this.loginStatus = true;
                         this.accountStatus();
-                        // this.getData(this.gamesURL);
-                        // let self = this;
-                        // this.timer = setInterval(function () {
-                        //     self.getData(self.gamesURL);
-                        // }, 3000)
+                        let self = this;
+                        this.timer = setInterval(function () {
+                            self.getData(self.gamesURL);
+                        }, 10000)
                     }
                 })
                 .catch(err => console.log(err))
@@ -71,7 +69,6 @@ new Vue({
                         this.userGames.push(game);
                     }
                 }
-                console.log(this.userGames)
                 return this.userGames;
             })
         },
@@ -90,9 +87,7 @@ new Vue({
                 method: "POST",
             })
                 .then(response => {
-                    console.log(response)
                     if (response.status == 200) {
-                        console.log("success");
                         this.joinMatch(gameID);
                     }
                 })
@@ -106,14 +101,11 @@ new Vue({
                 })
                 .then(data => {
                     this.joinData = data;
-                    console.log(this.joinData)
                     window.location.replace("https://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log)
         },
         rejoin(game) {
-            console.log(game)
-
             game.gamePlayers.forEach(gamePlayer => {
                 if (gamePlayer.username == this.currentUser.username) {
                     window.location.replace("https://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + gamePlayer.gamePlayerID);
@@ -148,7 +140,6 @@ new Vue({
                 })
                 .then(data => {
                     this.joinData = data;
-                    console.log(this.joinData)
                     window.location.replace("https://zsburkesalvo.herokuapp.com/game_view.html" + "?userid=" + this.joinData.gamePlayerID);
                 })
                 .catch(err => console.log(err))
@@ -159,7 +150,6 @@ new Vue({
             })
                 .then(response => {
                     if (response.status == 200) {
-                        console.log("You have successfully logged out")
                         this.loginStatus = false;
                         this.username = "";
                         this.password = "";
@@ -173,7 +163,6 @@ new Vue({
         },
         showUserRecord() {
             this.showRecord = !this.showRecord;
-            console.log(this.showRecord)
         },
         register() {
             $.post("/api/players", {
@@ -183,7 +172,6 @@ new Vue({
                 .then(response => {
                     window.alert('Registration successful. Please click LOGIN to proceed');
                     this.loginStatus = true;
-                    console.log("Login: " + this.loginStatus)
                     this.login();
                 })
                 .fail(err => console.log(err))
