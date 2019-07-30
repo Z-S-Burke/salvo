@@ -182,6 +182,7 @@ new Vue({
             })
                 .then(response => {
                     if (response == 200) {
+                        this.login();
                         this.loginStatus = true;
                     }
                 })
