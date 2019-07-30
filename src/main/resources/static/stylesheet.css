@@ -77,8 +77,8 @@
     box-shadow: inset 0px 0px 0px 10px white;
     box-sizing: border-box;
     /* Include padding and border in element's width and height */
-    height: 70px;
-    width: 70px;
+    height: 60px;
+    width: 60px;
     filter:
         brightness(600%) saturate(.5) contrast(1);
 }
