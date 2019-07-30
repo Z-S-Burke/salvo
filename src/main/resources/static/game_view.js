@@ -85,7 +85,7 @@ new Vue({
                         console.log("GameOver: " + self.player.gameInstance.gameOver)
                         console.log("winner? = " + self.player.winner)
                         console.log("opponentWinner? " + self.opponentTurnCounter)
-                    }, 10000)
+                    }, 5000)
                 })
                 .catch(err => console.log(err))
         },

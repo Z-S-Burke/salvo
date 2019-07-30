@@ -53,10 +53,10 @@ new Vue({
                     if (response.status == 200) {
                         this.loginStatus = true;
                         this.accountStatus();
-                        let self = this;
-                        this.timer = setInterval(function () {
-                            self.getData(self.gamesURL);
-                        }, 10000)
+                        // let self = this;
+                        // this.timer = setInterval(function () {
+                        //     self.getData(self.gamesURL);
+                        // }, 10000)
                     }
                 })
                 .catch(err => console.log(err))
