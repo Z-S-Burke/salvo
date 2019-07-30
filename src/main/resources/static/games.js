@@ -170,7 +170,6 @@ new Vue({
                 password: this.password
             })
                 .then(response => {
-                    window.alert('Registration successful. Please click LOGIN to proceed');
                     this.loginStatus = true;
                     this.login();
                 })
