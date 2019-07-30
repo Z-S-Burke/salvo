@@ -182,8 +182,9 @@ new Vue({
             })
                 .then(response => {
                     if (response == 200) {
-                        alert('Registration successful. Please click LOGIN to proceed');
+                        window.alert('Registration successful. Please click LOGIN to proceed');
                         this.loginStatus = true;
+                        console.log("Login: " + this.loginStatus)
                     }
                 })
                 .fail(err => console.log(err))
@@ -196,6 +197,6 @@ new Vue({
         }
     }, 
     mounted() {
-        console.log(this.accountStatus())
+        this.accountStatus();
     }
 });
