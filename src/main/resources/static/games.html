@@ -78,8 +78,7 @@
                             v-on:click="newGame">
                             <h3 class="py-3"> NEW GAME </h3>
                         </div>
-                        <div v-for="(game, index) in joinableGames"
-                            class="d-flex justify-content-center text-light border border-light p-2 m-3"
+                        <div v-for="(game, index) in joinableGames" class="text-light border border-light p-2 m-3"
                             :key="joinableGames.id">
                             <div class="matchTitleText border border-light d-flex justify-content-center">
                                 <h3 class="text-light pr-2"> MATCH ID:
@@ -98,8 +97,7 @@
                                 </div>
                                 <h5 class="bg-light text-dark text-center"> Start Date: </h5>
                                 <p class="text-center"> {{game.dateCreated}} </p>
-                                <h3 class="gameJoinButton text-light" @click="addPlayerToGame(game.gameID)"> JOIN GAME
-                                </h3>
+                                <h3 class="gameJoinButton text-light text-center" @click="addPlayerToGame(game.gameID)"> JOIN GAME </h3>
                             </div>
                         </div>
                     </div>
