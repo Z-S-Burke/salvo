@@ -27,18 +27,18 @@
                         </label>
                     </div>
                     <div class="d-flex flex-column align-items-end">
-                        <h4 @click="login" id="login-btn" type="submit"
+                        <p @click="login" id="login-btn" type="submit"
                             class="gameJoinButton text-center text-light border border-light my-3">
                             Log In
-                        </h4>
+                        </p>
                     </div>
                     <div class="d-flex flex-column align-items-end">
                         <p class="text-danger pr-3"> Don't have an account? </p>
                         <p class="text-danger pr-3"> Fill in your details above and then click: </p>
-                        <h4 @click="register" id="signup-btn" type="submit"
+                        <p @click="register" id="signup-btn" type="submit"
                             class="gameJoinButton text-center text-light border border-light my-3">
                             Register
-                        </h4>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -55,14 +55,14 @@
                         </div>
                     </div>
                     <div class="d-flex flex-column justify-content-end">
-                        <h3 v-on:click="logout" id="logoutButton" type="submit"
+                        <p v-on:click="logout" id="logoutButton" type="submit"
                             class="gameJoinButton text-center text-light border border-light my-3 py-3">
                             Log Out
-                        </h3>
-                        <h3 v-on:click="showUserRecord" id="logoutButton" type="submit"
+                        </p>
+                        <p v-on:click="showUserRecord" id="logoutButton" type="submit"
                             class="gameJoinButton text-center text-light border border-light my-3 py-3">
                             SERVICE RECORD
-                        </h3>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
             <div v-if="loginStatus">
                 <div class="newGameListContainer d-flex flex-column">
                     <div class="text-light pr-3">
-                        <h1 class="gamesTitleText"> START A WAR </h1>
+                        <h2 class="gamesTitleText"> START A WAR </h2>
                     </div>
                     <div class="d-flex flex-wrap">
                         <div class="gameJoinButton d-flex justify-content-center align-items-center border border-light text-light m-3 px-2"
@@ -109,7 +109,7 @@
                 <div class="gameList d-flex">
                     <div class="d-flex flex-column">
                         <div class="text-light pr-3">
-                            <h1 class="gamesTitleText"> MILITARY HISTORY </h1>
+                            <h2 class="gamesTitleText"> MILITARY HISTORY </h2>
                         </div>
                         <div class="d-flex gameListContainer">
                             <div v-for="(game, index) in userGames"
